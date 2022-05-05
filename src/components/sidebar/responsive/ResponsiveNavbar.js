@@ -10,8 +10,6 @@ function classNames(...classes) {
 
 function ResponsiveNavbar(props) {
   return (
-    <div className="lg:pl-64 flex flex-col">
-      {/* Search header */}
       <div className="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200 lg:hidden">
         <button
           type="button"
@@ -25,7 +23,7 @@ function ResponsiveNavbar(props) {
           <div className="flex-1 flex">
             <form className="w-full flex md:ml-0" action="#" method="GET">
               <label htmlFor="search-field" className="sr-only">
-                Search
+                Buscar
               </label>
               <div className="relative w-full text-gray-400 focus-within:text-gray-600">
                 <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
@@ -166,8 +164,6 @@ function ResponsiveNavbar(props) {
           </div>
         </div>
       </div>
-      <main className="flex-1"></main>
-    </div>
   );
 }
 

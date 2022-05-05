@@ -5,9 +5,9 @@ import {
 } from "@heroicons/react/outline";
 
 const navigation = [
-  { name: "Home", href: "#", icon: HomeIcon, current: true },
-  { name: "My tasks", href: "#", icon: ViewListIcon, current: false },
-  { name: "Recent", href: "#", icon: ClockIcon, current: false },
+  { name: "Visitas", href: "#", icon: HomeIcon, current: true },
+  { name: "Residentes", href: "#", icon: ViewListIcon, current: false },
+  { name: "Placeholder", href: "#", icon: ClockIcon, current: false },
 ];
 
 function classNames(...classes) {

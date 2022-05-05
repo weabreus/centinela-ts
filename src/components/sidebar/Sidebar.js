@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Logo from "./Logo";
 import UserDropdown from "./userdropdown/UserDropdown";
 import SearchBar from "./searchbar/SearchBar";
@@ -51,12 +50,11 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function Sidebar() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+function Sidebar(props) {
 
   return (
     <div>
-      <ResponsiveSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
+      <ResponsiveSidebar sidebarOpen={props.sidebarOpen} setSidebarOpen={props.setSidebarOpen}/>
 
       {/* Static sidebar for desktop */}
       <div className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:border-r lg:border-gray-200 lg:pt-5 lg:pb-4 lg:bg-gray-100">
@@ -72,7 +70,7 @@ function Sidebar() {
         </div>
       </div>
       {/* Main column */}
-      <ResponsiveNavbar setSidebarOpen={setSidebarOpen}/>
+      <ResponsiveNavbar setSidebarOpen={props.setSidebarOpen}/>
     </div>
   );
 }

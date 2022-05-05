@@ -27,7 +27,7 @@ function UserMenu() {
                   "block px-4 py-2 text-sm"
                 )}
               >
-                View profile
+                Ver perfil
               </a>
             )}
           </Menu.Item>
@@ -40,7 +40,7 @@ function UserMenu() {
                   "block px-4 py-2 text-sm"
                 )}
               >
-                Settings
+                Ajustes
               </a>
             )}
           </Menu.Item>
@@ -53,22 +53,7 @@ function UserMenu() {
                   "block px-4 py-2 text-sm"
                 )}
               >
-                Notifications
-              </a>
-            )}
-          </Menu.Item>
-        </div>
-        <div className="py-1">
-          <Menu.Item>
-            {({ active }) => (
-              <a
-                href="#"
-                className={classNames(
-                  active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                  "block px-4 py-2 text-sm"
-                )}
-              >
-                Get desktop app
+                Notificaciones
               </a>
             )}
           </Menu.Item>
@@ -81,7 +66,7 @@ function UserMenu() {
                   "block px-4 py-2 text-sm"
                 )}
               >
-                Support
+                Soporte
               </a>
             )}
           </Menu.Item>

@@ -4,7 +4,7 @@ function SearchBar() {
   return (
     <div className="px-3 mt-5">
       <label htmlFor="search" className="sr-only">
-        Search
+        Buscar
       </label>
       <div className="mt-1 relative rounded-md shadow-sm">
         <div
@@ -21,7 +21,7 @@ function SearchBar() {
           name="search"
           id="search"
           className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-9 sm:leading-9 sm:text-sm border-gray-300 rounded-md"
-          placeholder="Search"
+          placeholder="Buscar"
         />
       </div>
     </div>
