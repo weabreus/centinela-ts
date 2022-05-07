@@ -11,18 +11,17 @@ function UserButton() {
   const authCtx = useContext(AuthContext);
   const userRef = doc(db, "users", authCtx.id);
 
-  let userName = "";
+  if (info.length === 0) {
+    getDoc(userRef).then((doc) => {
+      if (doc.exists) {
+        setInfo(doc.data());
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
+    });
+   }
 
-  const userData = getDoc(userRef).then((doc) => {
-    if (doc.exists) {
-      setInfo(doc.data());
-    } else {
-      // doc.data() will be undefined in this case
-      console.log("No such document!");
-    }
-  });
-
-  console.log(userData);
 
   return (
     <div>

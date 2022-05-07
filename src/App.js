@@ -3,6 +3,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 
 import Layout from "./components/layout/Layout";
 import AuthPage from "./pages/AuthPage";
+import ProfilePage from './pages/ProfilePage';
 import VisitsPage from "./pages/VisitsPage";
 import AuthContext from './store/auth-context';
 
@@ -21,6 +22,9 @@ function App() {
       <Layout>
         <Route path="/visits" exact>
           <VisitsPage />
+        </Route>
+        <Route path="/profile" exact>
+          <ProfilePage />
         </Route>
       </Layout>}
       
