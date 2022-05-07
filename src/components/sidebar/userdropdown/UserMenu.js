@@ -1,11 +1,19 @@
+import { useContext } from 'react';
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import AuthContext from "../../../store/auth-context";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 function UserMenu() {
+  const authCtx = useContext(AuthContext);
+
+  const logoutHandler = () => {
+    authCtx.logout();
+  };
+
   return (
     <Transition
       as={Fragment}
@@ -75,7 +83,7 @@ function UserMenu() {
           <Menu.Item>
             {({ active }) => (
               <a
-                href="#"
+                onClick={logoutHandler}
                 className={classNames(
                   active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                   "block px-4 py-2 text-sm"

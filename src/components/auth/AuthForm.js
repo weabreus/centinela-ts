@@ -16,10 +16,6 @@ function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const switchAuthModeHandler = () => {
-    setIsLogin((prevState) => !prevState);
-  };
-
   const submitHandler = (event) => {
     event.preventDefault();
 
@@ -32,10 +28,10 @@ function AuthForm() {
     let url;
     if (isLogin) {
       url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBZhsabDexE9BhcJbGxnZ4DiRlrCN9xe24";
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDkF_FmJ4wJ6InKcyi25yZgrh-vFNp67KQ";
     } else {
       url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBZhsabDexE9BhcJbGxnZ4DiRlrCN9xe24";
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDkF_FmJ4wJ6InKcyi25yZgrh-vFNp67KQ";
     }
     fetch(url, {
       method: "POST",
@@ -67,7 +63,7 @@ function AuthForm() {
         const expirationTime = new Date(
           new Date().getTime() + +data.expiresIn * 1000
         );
-        authCtx.login(data.idToken, expirationTime.toISOString());
+        authCtx.login(data.idToken, expirationTime.toISOString(), data.localId);
         history.replace("/");
       })
       .catch((err) => {
@@ -83,7 +79,6 @@ function AuthForm() {
           <form
             className="mt-8 space-y-6"
             onSubmit={submitHandler}
-            method="POST"
           >
             <input type="hidden" name="remember" defaultValue="true" />
             <div className="rounded-md shadow-sm -space-y-px">
@@ -99,6 +94,7 @@ function AuthForm() {
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Correo Electronico"
+                  ref={emailInputRef}
                 />
               </div>
               <div>
@@ -113,6 +109,7 @@ function AuthForm() {
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Contraseña"
+                  ref={passwordInputRef}
                 />
               </div>
             </div>
