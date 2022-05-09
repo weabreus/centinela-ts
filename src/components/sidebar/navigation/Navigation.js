@@ -1,24 +1,25 @@
 import { ClockIcon, HomeIcon, ViewListIcon } from "@heroicons/react/outline";
-import { Link } from "react-router-dom";
-
-const navigation = [
-  { name: "Visitas", href: "/visits", icon: HomeIcon, current: true },
-  { name: "Residentes", href: "#", icon: ViewListIcon, current: false },
-  { name: "Placeholder", href: "#", icon: ClockIcon, current: false },
-];
+import { Link, useLocation } from "react-router-dom";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 function Navigation() {
+  const location = useLocation();
+
+  const navigation = [
+    { key: "Visitas", href: "/visits", icon: HomeIcon, current: (location.pathname === "/visits" ? true : false) },
+    { key: "Directorio", href: "/directory", icon: ViewListIcon, current: (location.pathname === "/directory" ? true : false) },
+    { key: "Placeholder", href: "#", icon: ClockIcon, current: (location.pathname === "/placeholder" ? true : false) },
+  ];
   return (
     <nav className="px-3 mt-6">
       <div className="space-y-1">
         {navigation.map((item) => (
           <Link to={item.href}>
             <span
-              key={item.name}
+              key={item.key}
               className={classNames(
                 item.current
                   ? "bg-gray-200 text-gray-900"
@@ -36,7 +37,7 @@ function Navigation() {
                 )}
                 aria-hidden="true"
               />
-              {item.name}
+              {item.key}
             </span>
           </Link>
         ))}

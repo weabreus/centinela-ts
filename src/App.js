@@ -4,6 +4,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import AuthPage from "./pages/AuthPage";
 import ProfilePage from './pages/ProfilePage';
+import UsersPage from './pages/UsersPage';
 import VisitsPage from "./pages/VisitsPage";
 import AuthContext from './store/auth-context';
 
@@ -25,6 +26,9 @@ function App() {
         </Route>
         <Route path="/profile" exact>
           <ProfilePage />
+        </Route>
+        <Route path="/directory" exact>
+          <UsersPage />
         </Route>
       </Layout>}
       
