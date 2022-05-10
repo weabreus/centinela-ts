@@ -53,6 +53,8 @@ function VisitsPage() {
     };
     getVisits();
   }, []);
+
+  console.log(visits);
   return (
     <div>
       {/* Projects list (only on smallest breakpoint) */}

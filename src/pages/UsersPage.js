@@ -1,16 +1,21 @@
 import { useState, useEffect, useRef } from "react";
 
 import db from "../firestore/FirestoreConfig";
-import { collection, getDocs, getDoc, doc, query, where } from "firebase/firestore";
-
 import {
-  FilterIcon,
-  MailIcon,
-  PhoneIcon,
-  SearchIcon,
-} from "@heroicons/react/solid";
+  collection,
+  getDocs,
+  getDoc,
+  doc,
+  query,
+  where,
+} from "firebase/firestore";
+
 import Breadcrumb from "../components/directory/Breadcrumb";
 import ProfileTabs from "../components/directory/ProfileTabs";
+import ProfileHeader from "../components/directory/ProfileHeader";
+import ProfileFields from "../components/directory/ProfileFields";
+import DirectoryList from "../components/directory/DirectoryList";
+import DirectorySearch from "../components/directory/DirectorySearch";
 
 let profile = {
   coverImageUrl:
@@ -51,38 +56,32 @@ function UsersPage() {
 
   const searchHandler = (event) => {
     event.preventDefault();
-    
+
     const getUsers = async () => {
-      const newDirectory = {};
       let count = 0;
       const data = await getDocs(
-        query(collection(db, "users")
-          ,where("name", ">=", searchInputRef.current.value)
-          ,where("name", "<=", searchInputRef.current.value + "\uf8ff"))
+        query(
+          collection(db, "users"),
+          where("name", ">=", searchInputRef.current.value),
+          where("name", "<=", searchInputRef.current.value + "\uf8ff")
+        )
       );
 
-      data.docs.map((doc) => {
-        if (
-          !newDirectory.hasOwnProperty(doc.data().name.charAt(0).toUpperCase())
-        ) {
-          newDirectory[doc.data().name.charAt(0).toUpperCase()] = [];
-          newDirectory[doc.data().name.charAt(0).toUpperCase()].push({
-            ...doc.data(),
-            id: doc.id,
-          });
-          count++;
-        } else {
-          newDirectory[doc.data().name.charAt(0).toUpperCase()].push({
-            ...doc.data(),
-            id: doc.id,
-          });
-          count++;
+      const newDirectory = data.docs.reduce((acc, doc) => {
+        const firstLetter = doc.data().name.charAt(0).toUpperCase();
+
+        if (!acc[firstLetter]) {
+          acc[firstLetter] = [];
         }
-      });
+
+        acc[firstLetter].push({ ...doc.data(), id: doc.id });
+        count++;
+
+        return acc;
+      }, {});
 
       setDirectory(newDirectory);
       setUserCount(count);
-
     };
     getUsers();
   };
@@ -151,182 +150,27 @@ function UsersPage() {
 
               <article className="pb-6">
                 {/* Profile header */}
-                <div>
-                  <div>
-                    <img
-                      className="h-32 w-full object-cover lg:h-48"
-                      src={profile.coverImageUrl}
-                      alt=""
-                    />
-                  </div>
-                  <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5">
-                      <div className="flex">
-                        <img
-                          className="h-24 w-24 rounded-full ring-4 ring-white sm:h-32 sm:w-32"
-                          src={selectedUser.photo}
-                          alt=""
-                        />
-                      </div>
-                      <div className="mt-6 sm:flex-1 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:space-x-6 sm:pb-1">
-                        <div className="sm:hidden 2xl:block mt-6 min-w-0 flex-1">
-                          <h1 className="text-2xl font-bold text-gray-900 truncate">
-                            {selectedUser.name}
-                          </h1>
-                        </div>
-                        <div className="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-                          <button
-                            type="button"
-                            className="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                          >
-                            <MailIcon
-                              className="-ml-1 mr-2 h-5 w-5 text-gray-400"
-                              aria-hidden="true"
-                            />
-                            <span>Message</span>
-                          </button>
-                          <button
-                            type="button"
-                            className="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                          >
-                            <PhoneIcon
-                              className="-ml-1 mr-2 h-5 w-5 text-gray-400"
-                              aria-hidden="true"
-                            />
-                            <span>Call</span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="hidden sm:block 2xl:hidden mt-6 min-w-0 flex-1">
-                      <h1 className="text-2xl font-bold text-gray-900 truncate">
-                        {selectedUser.name}
-                      </h1>
-                    </div>
-                  </div>
-                </div>
+                <ProfileHeader selectedUser={selectedUser} profile={profile} />
 
                 {/* Tabs */}
                 <ProfileTabs />
 
                 {/* Profile Fields */}
-                <div className="mt-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-                  <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
-                    {Object.keys(selectedFields).map((field) => (
-                      <div key={field} className="sm:col-span-1">
-                        <dt className="text-sm font-medium text-gray-500">
-                          {field}
-                        </dt>
-                        <dd className="mt-1 text-sm text-gray-900">
-                          {selectedFields[field]}
-                        </dd>
-                      </div>
-                    ))}
-                    <div className="sm:col-span-2">
-                      <dt className="text-sm font-medium text-gray-500">
-                        About
-                      </dt>
-                      <dd
-                        className="mt-1 max-w-prose text-sm text-gray-900 space-y-5"
-                        dangerouslySetInnerHTML={{ __html: profile.about }}
-                      />
-                    </div>
-                  </dl>
-                </div>
+                <ProfileFields selectedFields={selectedFields} />
               </article>
             </main>
             <aside className="hidden xl:order-first xl:flex xl:flex-col flex-shrink-0 w-96 border-r border-gray-200">
-              <div className="px-6 pt-6 pb-4">
-                <h2 className="text-lg font-medium text-gray-900">
-                  Directorio
-                </h2>
-                <p className="mt-1 text-sm text-gray-600">
-                  Entre los {userCount} usuarios del directorio.
-                </p>
-                <form className="mt-6 flex space-x-4" onSubmit={searchHandler}>
-                  <div className="flex-1 min-w-0">
-                    <label htmlFor="search" className="sr-only">
-                      Buscar
-                    </label>
-                    <div className="relative rounded-md shadow-sm">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <SearchIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                      </div>
-                      <input
-                        type="search"
-                        name="search"
-                        id="search"
-                        className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
-                        placeholder="Buscar"
-                        ref={searchInputRef}
-                      />
-                    </div>
-                  </div>
-                  <button
-                    type="submit"
-                    className="inline-flex justify-center px-3.5 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    <FilterIcon
-                      className="h-5 w-5 text-gray-400"
-                      aria-hidden="true"
-                    />
-                    <span className="sr-only">Buscar</span>
-                  </button>
-                </form>
-              </div>
+              {/* Directory Search */}
+              <DirectorySearch
+                userCount={userCount}
+                searchHandler={searchHandler}
+                searchInputRef={searchInputRef}
+              />
               {/* Directory list */}
-              <nav
-                className="flex-1 min-h-0 overflow-y-auto"
-                aria-label="Directory"
-              >
-                {Object.keys(directory).sort().map((letter) => (
-                  <div key={letter} className="relative">
-                    <div className="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
-                      <h3>{letter}</h3>
-                    </div>
-                    <ul
-                      className="relative z-0 divide-y divide-gray-200"
-                    >
-                      {directory[letter].map((person) => (
-                        <li
-                          key={person.id}
-                          onClick={() => {
-                            selectUserHandler(person.id);
-                          }}
-                        >
-                          <div className="relative px-6 py-5 flex items-center space-x-3 hover:bg-gray-50 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500">
-                            <div className="flex-shrink-0">
-                              <img
-                                className="h-10 w-10 rounded-full"
-                                src={person.photo}
-                                alt=""
-                              />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <a href="#" className="focus:outline-none">
-                                {/* Extend touch target to entire panel */}
-                                <span
-                                  className="absolute inset-0"
-                                  aria-hidden="true"
-                                />
-                                <p className="text-sm font-medium text-gray-900">
-                                  {person.name}
-                                </p>
-                                <p className="text-sm text-gray-500 truncate">
-                                  {person.title ? person.title : ""}
-                                </p>
-                              </a>
-                            </div>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </nav>
+              <DirectoryList
+                directory={directory}
+                selectUserHandler={selectUserHandler}
+              />
             </aside>
           </div>
         </div>

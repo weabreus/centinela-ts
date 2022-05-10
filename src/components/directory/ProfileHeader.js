@@ -7,7 +7,7 @@ import {
 
 function ProfileHeader(props) {
 
-    const [ selectedUser, profile ] = props;
+    const {selectedUser, profile } = props;
 
   return (
     <div>

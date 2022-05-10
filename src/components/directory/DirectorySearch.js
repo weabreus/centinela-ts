@@ -1,7 +1,7 @@
 import { FilterIcon, SearchIcon } from "@heroicons/react/solid";
 
 function DirectorySearch(props) {
-  const [userCount, searchHandler, searchInputRef] = props;
+  const { userCount, searchHandler, searchInputRef } = props;
 
   return (
     <div className="px-6 pt-6 pb-4">

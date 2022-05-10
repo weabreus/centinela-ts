@@ -1,5 +1,5 @@
 function DirectoryList(props) {
-    const [ directory, selectUserHandler ] = props;
+    const { directory, selectUserHandler } = props;
   return (
     <nav className="flex-1 min-h-0 overflow-y-auto" aria-label="Directory">
       {Object.keys(directory)
