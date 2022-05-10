@@ -4,22 +4,18 @@ import db from "../firestore/FirestoreConfig";
 import { collection, getDocs, getDoc, doc, query, where } from "firebase/firestore";
 
 import {
-  ChevronLeftIcon,
   FilterIcon,
   MailIcon,
   PhoneIcon,
   SearchIcon,
 } from "@heroicons/react/solid";
+import Breadcrumb from "../components/directory/Breadcrumb";
+import ProfileTabs from "../components/directory/ProfileTabs";
 
-const tabs = [{ name: "Profile", href: "#", current: true }];
 let profile = {
   coverImageUrl:
     "https://images.unsplash.com/photo-1444628838545-ac4016a5418a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
 };
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 function UsersPage() {
   const [directory, setDirectory] = useState({});
@@ -151,21 +147,7 @@ function UsersPage() {
           <div className="flex-1 relative z-0 flex overflow-hidden">
             <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last">
               {/* Breadcrumb */}
-              <nav
-                className="flex items-start px-4 py-3 sm:px-6 lg:px-8 xl:hidden"
-                aria-label="Breadcrumb"
-              >
-                <a
-                  href="#"
-                  className="inline-flex items-center space-x-3 text-sm font-medium text-gray-900"
-                >
-                  <ChevronLeftIcon
-                    className="-ml-2 h-5 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                  <span>Directory</span>
-                </a>
-              </nav>
+              <Breadcrumb />
 
               <article className="pb-6">
                 {/* Profile header */}
@@ -225,31 +207,9 @@ function UsersPage() {
                 </div>
 
                 {/* Tabs */}
-                <div className="mt-6 sm:mt-2 2xl:mt-5">
-                  <div className="border-b border-gray-200">
-                    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-                      <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-                        {tabs.map((tab) => (
-                          <a
-                            key={tab.name}
-                            href={tab.href}
-                            className={classNames(
-                              tab.current
-                                ? "border-blue-500 text-gray-900"
-                                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
-                              "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
-                            )}
-                            aria-current={tab.current ? "page" : undefined}
-                          >
-                            {tab.name}
-                          </a>
-                        ))}
-                      </nav>
-                    </div>
-                  </div>
-                </div>
+                <ProfileTabs />
 
-                {/* Description list */}
+                {/* Profile Fields */}
                 <div className="mt-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                   <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
                     {Object.keys(selectedFields).map((field) => (
@@ -328,7 +288,6 @@ function UsersPage() {
                       <h3>{letter}</h3>
                     </div>
                     <ul
-                      role="list"
                       className="relative z-0 divide-y divide-gray-200"
                     >
                       {directory[letter].map((person) => (
