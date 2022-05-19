@@ -1,3 +1,5 @@
+import React from 'react';
+
 function DirectoryList(props) {
     const { directory, selectUserHandler } = props;
   return (

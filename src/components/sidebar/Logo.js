@@ -1,3 +1,5 @@
+import React from 'react';
+
 function Logo() {
     return (
         <div className="flex items-center flex-shrink-0 px-6">

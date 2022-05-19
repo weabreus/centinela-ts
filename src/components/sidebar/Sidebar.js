@@ -1,3 +1,4 @@
+import React from 'react';
 import Logo from "./Logo";
 import UserDropdown from "./userdropdown/UserDropdown";
 import SearchBar from "./searchbar/SearchBar";

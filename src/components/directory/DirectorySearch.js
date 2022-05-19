@@ -1,3 +1,4 @@
+import React from 'react';
 import { FilterIcon, SearchIcon } from "@heroicons/react/solid";
 
 function DirectorySearch(props) {

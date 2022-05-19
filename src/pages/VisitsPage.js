@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronRightIcon } from "@heroicons/react/solid";
 import db from "../firestore/FirestoreConfig";
 import {
