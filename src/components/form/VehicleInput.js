@@ -13,13 +13,14 @@ const options = [
 
 
 
-export default function VehicleInput({vehicle, visitor}) {
+export default function VehicleInput({vehicle, visitor, initial}) {
   // const selectedVisitor = visitor.current.getValue()[0].value;
   // La variable anterior contendria el valor del usuario seleccionado en el select de visitantes.
 
   return (
     <div>
       <Select
+        defaultValue={initial}
         options={options}
         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
         ref={vehicle}

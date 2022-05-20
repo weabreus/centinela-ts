@@ -3,7 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import VisitorInput from "../form/VisitorInput";
 import VehicleInput from "../form/VehicleInput";
-import ResidentInput from "../form/ResidentInput copy";
+import ResidentInput from "../form/ResidentInput";
 
 export default function VisitsForm({ open, setOpen }) {
   const visitor = useRef();

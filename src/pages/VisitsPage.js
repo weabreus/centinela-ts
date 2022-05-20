@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/solid";
 import db from "../firestore/FirestoreConfig";
 import {
@@ -24,7 +25,9 @@ function VisitsPage() {
   useEffect(() => {
     const getVisits = async () => {
       const data = await getDocs(visitsCollectionRef);
-      const tempVisits = data.docs.map((doc) => doc.data());
+      const tempVisits = data.docs.map((doc) => {
+        return {...doc.data(), docId: doc.id};
+      });
 
       const visitorsIds = data.docs.map((doc) => doc.data().visitor);
       const usersCollectionRef = query(
@@ -46,7 +49,7 @@ function VisitsPage() {
       const tempResidents = residentData.docs.map((doc) => {
         return { ...doc.data(), id: doc.id };
       });
-
+      console.log(tempVisits);
       setVisits(tempVisits);
       setVisitors(tempVisitors);
       setResidents(tempResidents)
@@ -54,7 +57,6 @@ function VisitsPage() {
     getVisits();
   }, []);
 
-  console.log(visits);
   return (
     <div>
       {/* Projects list (only on smallest breakpoint) */}
@@ -122,7 +124,8 @@ function VisitsPage() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
               {visits.map((visit) => (
-                <tr key={visit.id}>
+                
+                <tr key={visit.docId}>
                   <td className="px-6 py-3 max-w-0 w-full whitespace-nowrap text-sm font-medium text-gray-900">
                     <div className="flex items-center space-x-3 lg:pl-2">
                       <div
@@ -159,12 +162,15 @@ function VisitsPage() {
                     {visit.visitors}
                   </td>
                   <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
+                    <Link to={"/editvisit/" + visit.docId}>
                     <a
                       href="#"
                       className="text-indigo-600 hover:text-indigo-900"
                     >
                       Edit
                     </a>
+                    </Link>
+                    
                   </td>
                 </tr>
               ))}
