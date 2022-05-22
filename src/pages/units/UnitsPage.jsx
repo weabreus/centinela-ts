@@ -72,13 +72,13 @@ export default function UnitsPage() {
                       scope="col"
                       className=" w-2/12 py-3.5 pl-4 pr-3 text-center text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Edificio
+                      Unidad
                     </th>
                     <th
                       scope="col"
                       className=" w-3/12 px-3 py-3.5 text-center text-sm font-semibold text-gray-900"
                     >
-                      Número
+                      Edificio
                     </th>
                     <th
                       scope="col"
@@ -110,10 +110,10 @@ export default function UnitsPage() {
                   {currentTableData.map((unit) => (
                     <tr key={unit.id}>
                       <td className="text-center whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                        {unit.building}
+                        {unit.number}
                       </td>
                       <td className="text-center whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {unit.number}
+                        {unit.building}
                       </td>
                       <td className="text-center whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {unit.residents}

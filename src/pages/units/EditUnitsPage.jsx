@@ -1,12 +1,38 @@
 import { useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import BuildingInput from "../../components/form/BuildingInput";
-import ResidentMultipleInput from "../../components/form/ResidentMultipleInput"
-import ResidentVehicleMultipleInput from "../../components/form/ResidentVehicleMultipleInput"
+import ResidentMultipleInput from "../../components/form/ResidentMultipleInput";
+import ResidentVehicleMultipleInput from "../../components/form/ResidentVehicleMultipleInput";
 import UnitPetsMultipleInput from "../../components/form/UnitPetsMultipleInput";
-import UnitVisitorsMultipleInput from "../../components/form/UnitVisitorsMultipleInput"
+import UnitVisitorsMultipleInput from "../../components/form/UnitVisitorsMultipleInput";
 
 export default function CreateUnitsPage() {
+  const { id } = useParams();
+
+  // Traer unidad de firestore @Lucho2027
+
+  const unit = {
+    id: id,
+    building: [{value: "buildingid1", label: "Building Name 1"}],
+    number: "B01",
+    pets: [
+      { value: "petid1", label: "Pet Name 1" },
+      { value: "petid2", label: "Pet Name 2" },
+    ],
+    residents: [
+      { value: "residentid1", label: "Resident Name 1" },
+      { value: "residentid2", label: "Resident Name 2" },
+    ],
+    vehicles: [
+      { value: "vehicleid1", label: "Vehicle Name 1" },
+      { value: "vehicleid2", label: "Vehicle Name 2" },
+    ],
+    visitors: [
+      { value: "visitorid1", label: "Visitor Name 1" },
+      { value: "visitorid2", label: "Visitor Name 2" },
+    ],
+  };
+
   const number = useRef();
   const building = useRef();
   const residents = useRef();
@@ -23,7 +49,7 @@ export default function CreateUnitsPage() {
       residents: residents.current.getValue(),
       vehicles: vehicles.current.getValue(),
       visitors: visitors.current.getValue(),
-      pets: pets.current.getValue()
+      pets: pets.current.getValue(),
     };
 
     //   Update building data in firestore @Lucho2027
@@ -41,10 +67,10 @@ export default function CreateUnitsPage() {
             <div>
               <div>
                 <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  Crear Unidad
+                  Editar Unidad
                 </h3>
                 <p className="mt-1 text-sm text-gray-500">
-                  Llene los campos requeridos para crear la unidad.
+                  Llene los campos requeridos para editar la unidad.
                 </p>
               </div>
 
@@ -57,7 +83,10 @@ export default function CreateUnitsPage() {
                     Edificio
                   </label>
                   <div className="mt-1">
-                    <BuildingInput building={building}/>
+                    <BuildingInput
+                      building={building}
+                      initial={unit.building}
+                    />
                   </div>
                 </div>
 
@@ -70,6 +99,7 @@ export default function CreateUnitsPage() {
                   </label>
                   <div className="mt-1">
                     <input
+                      value={unit.number}
                       ref={number}
                       required
                       type="text"
@@ -88,7 +118,7 @@ export default function CreateUnitsPage() {
                     Residentes
                   </label>
                   <div className="mt-1">
-                    <ResidentMultipleInput residents={residents}/>
+                    <ResidentMultipleInput residents={residents} initial={unit.residents}/>
                   </div>
                 </div>
 
@@ -100,19 +130,19 @@ export default function CreateUnitsPage() {
                     Vehiculos
                   </label>
                   <div className="mt-1">
-                    <ResidentVehicleMultipleInput vehicles={vehicles}/> 
+                    <ResidentVehicleMultipleInput vehicles={vehicles} initial={unit.vehicles}/>
                   </div>
                 </div>
 
                 <div className="col-span-3 sm:col-span-3">
                   <label
-                    htmlFor="vehicles"
+                    htmlFor="visitors"
                     className="block text-sm font-medium text-gray-700"
                   >
                     Visitantes Autorizados
                   </label>
                   <div className="mt-1">
-                    <UnitVisitorsMultipleInput visitors={visitors}/>
+                    <UnitVisitorsMultipleInput visitors={visitors} initial={unit.visitors} />
                   </div>
                 </div>
 
@@ -124,10 +154,9 @@ export default function CreateUnitsPage() {
                     Mascotas
                   </label>
                   <div className="mt-1">
-                    <UnitPetsMultipleInput pets={pets}/>
+                    <UnitPetsMultipleInput pets={pets} initial={unit.pets} />
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
