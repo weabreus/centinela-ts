@@ -1,9 +1,10 @@
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
+import { ChevronLeftIcon, ChevronRightIcon, DesktopComputerIcon } from "@heroicons/react/solid";
 import classnames from "classnames";
 import { usePagination } from "./usePagination";
 
 export default function TablePagination(props) {
   const {
+    currentTableDataSize,
     onPageChange,
     totalCount,
     siblingCount = 1,
@@ -65,9 +66,15 @@ export default function TablePagination(props) {
           <p className="text-sm text-gray-700">
             Mostrando{" "}
             <span className="font-medium">
-              {pageSize * (currentPage - 1) + 1}
+              
+              { pageSize * (currentPage - 1) + 1}
             </span>{" "}
-            a <span className="font-medium">{pageSize * currentPage}</span> de{" "}
+            a <span className="font-medium">
+              {/* Calculation when current data exceeds page size */}
+              {currentTableDataSize === pageSize && pageSize * currentPage}
+              {/* Calculation when current data is length is lower that page size */}
+              {currentTableDataSize < pageSize && pageSize * (currentPage - 1) + currentTableDataSize}
+              </span> de{" "}
             <span className="font-medium">{totalCount}</span> resultados
           </p>
         </div>

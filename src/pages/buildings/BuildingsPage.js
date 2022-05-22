@@ -141,6 +141,7 @@ export default function BuildingsPage() {
                 </tbody>
               </table>
               <TablePagination
+                currentTableDataSize={currentTableData.length}
                 currentPage={currentPage}
                 totalCount={data.length}
                 pageSize={PageSize}
