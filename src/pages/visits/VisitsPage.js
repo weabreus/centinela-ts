@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/solid";
-import db from "../firestore/FirestoreConfig";
+import db from "../../firestore/FirestoreConfig";
 import {
   collection,
   getDocs,
   query,
   where,
   documentId,
-  doc,
 } from "firebase/firestore";
 import moment from "moment";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 function VisitsPage() {
   const [visits, setVisits] = useState([]);
@@ -95,38 +91,38 @@ function VisitsPage() {
       {/* Projects table (small breakpoint and up) */}
       <div className="hidden sm:block">
         <div className="align-middle inline-block min-w-full border-b border-gray-200">
-          <table className="min-w-full">
+          <table className="table-fixed min-w-full">
             <thead>
               <tr>
-                <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xxs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="w-2/12 px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xxs font-medium text-gray-500 uppercase tracking-wider">
                   <span className="lg:pl-2">Visitante</span>
                 </th>
-                <th className="hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="w-1/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
                   H. Entrada
                 </th>
-                <th className="hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
+                <th  scope="col" className="w-1/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
                   H. Salida
                 </th>
-                <th className="hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="w-2/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
                   Dest.
                 </th>
-                <th className="hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="w-2/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
                   Veh.
                 </th>
-                <th className="hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="w-2/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
                   Id
                 </th>
-                <th className="hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="w-1/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
                   Visitantes
                 </th>
-                <th className="pr-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider" />
+                <th scope="col" className="w-1/12 pr-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider" />
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
               {visits.map((visit) => (
                 
                 <tr key={visit.docId}>
-                  <td className="px-6 py-3 max-w-0 w-full whitespace-nowrap text-sm font-medium text-gray-900">
+                  <td className="px-6 py-3 max-w-0 whitespace-nowrap text-sm font-medium text-gray-900">
                     <div className="flex items-center space-x-3 lg:pl-2">
                       <div
                         className="flex-shrink-0 w-2.5 h-2.5 rounded-full"
@@ -167,7 +163,7 @@ function VisitsPage() {
                       href="#"
                       className="text-indigo-600 hover:text-indigo-900"
                     >
-                      Edit
+                      Editar
                     </a>
                     </Link>
                     

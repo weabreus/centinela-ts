@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { Link, useParams } from "react-router-dom";
-import VisitorInput from "../components/form/VisitorInput";
-import VehicleInput from "../components/form/VehicleInput";
-import ResidentInput from "../components/form/ResidentInput";
+import VisitorInput from "../../components/form/VisitorInput";
+import VehicleInput from "../../components/form/VehicleInput";
+import ResidentInput from "../../components/form/ResidentInput";
 import moment from "moment";
 
 // Traer de firestore @Lucho2027

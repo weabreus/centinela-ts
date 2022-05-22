@@ -3,12 +3,13 @@ import { Switch, Route, Redirect } from "react-router-dom";
 
 import Layout from "./components/layout/Layout";
 import AuthPage from "./pages/AuthPage";
-import BuildingsPage from './pages/BuildingsPage';
-import EditVisitsPage from './pages/EditVisitsPage';
+import BuildingsPage from './pages/buildings/BuildingsPage';
+import EditVisitsPage from './pages/visits/EditVisitsPage';
 import ProfilePage from './pages/ProfilePage';
 import UsersPage from './pages/UsersPage';
-import VisitsPage from "./pages/VisitsPage";
+import VisitsPage from "./pages/visits/VisitsPage";
 import AuthContext from './store/auth-context';
+import CreateBuildingsPage from './pages/buildings/CreateBuildingsPage';
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -37,6 +38,9 @@ function App() {
         </Route>
         <Route path="/buildings" exact>
           <BuildingsPage />
+        </Route>
+        <Route path="/createbuilding" exact>
+          <CreateBuildingsPage />
         </Route>
       </Layout>}
       
