@@ -1,4 +1,4 @@
-import { ChevronLeftIcon, ChevronRightIcon, DesktopComputerIcon } from "@heroicons/react/solid";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import classnames from "classnames";
 import { usePagination } from "./usePagination";
 

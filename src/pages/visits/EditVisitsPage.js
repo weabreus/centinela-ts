@@ -5,22 +5,21 @@ import VisitorVehicleInput from "../../components/form/VisitorVehicleInput";
 import ResidentInput from "../../components/form/ResidentInput";
 import moment from "moment";
 
-// Traer de firestore @Lucho2027
-let visit = {
-  docId: "1Mxcc35jfoQ4Xbx5yNm1",
-  entryTimestamp: 1652068800,
-  exitTimestamp: 1652068800,
-  id: "licencia",
-  resident: "bslESBlpwkOGTowUEJWHBbB9Fiw1",
-  vehicle: "idVehiculo",
-  visitor: "Ow6q4J9KH9Z5VLQMRmp9GWbZecn1",
-  visitors: 1,
-  notes: "notes",
-};
-
 export default function EditVisitsPage() {
   let { id } = useParams();
 
+  // Traer de firestore @Lucho2027
+  let visit = {
+    docId: id,
+    entryTimestamp: 1652068800,
+    exitTimestamp: 1652068800,
+    id: "licencia",
+    resident: "bslESBlpwkOGTowUEJWHBbB9Fiw1",
+    vehicle: "idVehiculo",
+    visitor: "Ow6q4J9KH9Z5VLQMRmp9GWbZecn1",
+    visitors: 1,
+    notes: "notes",
+  };
   const visitor = useRef();
   const vehicle = useRef();
   const resident = useRef();
@@ -30,7 +29,6 @@ export default function EditVisitsPage() {
 
   function submitHandler(event) {
     event.preventDefault();
-
 
     const visitData = {
       visitor: visitor.current.getValue()[0].value,
@@ -72,7 +70,6 @@ export default function EditVisitsPage() {
                   <VisitorInput visitor={visitor} initial={visit.visitor} />
                 </div>
               </div>
-
 
               <div className="sm:col-span-4">
                 <label

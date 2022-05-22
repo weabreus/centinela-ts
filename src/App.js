@@ -14,6 +14,9 @@ import EditBuildingsPage from './pages/buildings/EditBuildingsPage';
 import UnitsPage from './pages/units/UnitsPage';
 import CreateUnitsPage from './pages/units/CreateUnitsPage';
 import EditUnitsPage from './pages/units/EditUnitsPage';
+import ComplexesPage from './pages/complexes/ComplexesPage';
+import CreateComplexPage from './pages/complexes/CreateComplexPage';
+import EditComplexPage from './pages/complexes/EditComplexPage';
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -57,6 +60,15 @@ function App() {
         </Route>
         <Route path="/editunit/:id" exact>
           <EditUnitsPage />
+        </Route>
+        <Route path="/complexes" exact>
+          <ComplexesPage />
+        </Route>
+        <Route path="/createcomplex" exact>
+          <CreateComplexPage />
+        </Route>
+        <Route path="/editcomplex/:id" exact>
+          <EditComplexPage />
         </Route>
       </Layout>}
       
