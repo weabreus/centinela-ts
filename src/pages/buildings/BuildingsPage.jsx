@@ -78,7 +78,7 @@ export default function BuildingsPage() {
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">Edificios</h1>
           <p className="mt-2 text-sm text-gray-700">
-            Lista de todos los edificios registrados en la urbanización.
+            Lista de todos los edificios registrados en el complejo.
           </p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">

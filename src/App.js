@@ -11,6 +11,7 @@ import VisitsPage from "./pages/visits/VisitsPage";
 import AuthContext from './store/auth-context';
 import CreateBuildingsPage from './pages/buildings/CreateBuildingsPage';
 import EditBuildingsPage from './pages/buildings/EditBuildingsPage';
+import UnitsPage from './pages/units/UnitsPage';
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -45,6 +46,9 @@ function App() {
         </Route>
         <Route path="/editbuilding/:id" exact>
           <EditBuildingsPage />
+        </Route>
+        <Route path="/units" exact>
+          <UnitsPage />
         </Route>
       </Layout>}
       

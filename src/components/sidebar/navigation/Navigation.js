@@ -13,6 +13,8 @@ function Navigation() {
     { key: "Visitas", href: "/visits", icon: HomeIcon, current: (location.pathname === "/visits" ? true : false) },
     { key: "Directorio", href: "/directory", icon: ViewListIcon, current: (location.pathname === "/directory" ? true : false) },
     { key: "Edificios", href: "/buildings", icon: OfficeBuildingIcon, current: (location.pathname === "/buildings" ? true : false) },
+    { key: "Unidades", href: "/units", icon: HomeIcon, current: (location.pathname === "/units" ? true : false) },
+
     
   ];
 
