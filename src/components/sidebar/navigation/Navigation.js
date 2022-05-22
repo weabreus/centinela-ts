@@ -1,5 +1,5 @@
 import React from 'react';
-import { ClockIcon, HomeIcon, ViewListIcon } from "@heroicons/react/outline";
+import { HomeIcon, ViewListIcon, OfficeBuildingIcon } from "@heroicons/react/outline";
 import { Link, useLocation } from "react-router-dom";
 
 function classNames(...classes) {
@@ -12,8 +12,11 @@ function Navigation() {
   const navigation = [
     { key: "Visitas", href: "/visits", icon: HomeIcon, current: (location.pathname === "/visits" ? true : false) },
     { key: "Directorio", href: "/directory", icon: ViewListIcon, current: (location.pathname === "/directory" ? true : false) },
-    { key: "Placeholder", href: "#", icon: ClockIcon, current: (location.pathname === "/placeholder" ? true : false) },
+    { key: "Edificios", href: "/buildings", icon: OfficeBuildingIcon, current: (location.pathname === "/buildings" ? true : false) },
+    
   ];
+
+  
   return (
     <nav className="px-3 mt-6">
       <div className="space-y-1">

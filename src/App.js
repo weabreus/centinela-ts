@@ -3,6 +3,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 
 import Layout from "./components/layout/Layout";
 import AuthPage from "./pages/AuthPage";
+import BuildingsPage from './pages/BuildingsPage';
 import EditVisitsPage from './pages/EditVisitsPage';
 import ProfilePage from './pages/ProfilePage';
 import UsersPage from './pages/UsersPage';
@@ -33,6 +34,9 @@ function App() {
         </Route>
         <Route path="/editvisit/:id" exact>
           <EditVisitsPage />
+        </Route>
+        <Route path="/buildings" exact>
+          <BuildingsPage />
         </Route>
       </Layout>}
       
