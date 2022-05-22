@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import VisitorInput from "../../components/form/VisitorInput";
-import VehicleInput from "../../components/form/VehicleInput";
+import VisitorVehicleInput from "../../components/form/VisitorVehicleInput";
 import ResidentInput from "../../components/form/ResidentInput";
 import moment from "moment";
 
@@ -82,7 +82,7 @@ export default function EditVisitsPage() {
                   Vehiculo
                 </label>
                 <div className="mt-1">
-                  <VehicleInput
+                  <VisitorVehicleInput
                     vehicle={vehicle}
                     visitor={visitor}
                     initial={visit.vehicle}

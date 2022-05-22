@@ -124,7 +124,7 @@ export default function UnitsPage() {
                       <td className="text-center whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {unit.visitors}
                       </td>
-                      <td className="text-center relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
+                      <td className="text-right relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
                         <Link to={"/editunit/" + unit.id}>
                         <span className="text-indigo-600 hover:text-indigo-900">
                           Editar<span className="sr-only">, {unit.id}</span>

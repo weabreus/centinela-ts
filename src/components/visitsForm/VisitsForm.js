@@ -2,7 +2,7 @@ import React, { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import VisitorInput from "../form/VisitorInput";
-import VehicleInput from "../form/VehicleInput";
+import VisitorVehicleInput from "../form/VisitorVehicleInput";
 import ResidentInput from "../form/ResidentInput";
 
 export default function VisitsForm({ open, setOpen }) {
@@ -107,7 +107,7 @@ export default function VisitsForm({ open, setOpen }) {
                             </label>
                           </div>
                           <div className="sm:col-span-2">
-                            <VehicleInput vehicle={vehicle} visitor={visitor} />
+                            <VisitorVehicleInput vehicle={vehicle} visitor={visitor} />
                           </div>
                         </div>
 
