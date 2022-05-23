@@ -17,6 +17,9 @@ import EditUnitsPage from './pages/units/EditUnitsPage';
 import ComplexesPage from './pages/complexes/ComplexesPage';
 import CreateComplexPage from './pages/complexes/CreateComplexPage';
 import EditComplexPage from './pages/complexes/EditComplexPage';
+import VehiclesPage from './pages/vehicles/VehiclesPage';
+import CreateVehiclePage from './pages/vehicles/CreateVehiclePage';
+import EditVehiclePage from './pages/vehicles/EditVehiclePage';
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -69,6 +72,15 @@ function App() {
         </Route>
         <Route path="/editcomplex/:id" exact>
           <EditComplexPage />
+        </Route>
+        <Route path="/vehicles" exact>
+          <VehiclesPage />
+        </Route>
+        <Route path="/createvehicle" exact>
+          <CreateVehiclePage />
+        </Route>
+        <Route path="/editvehicle/:id" exact>
+          <EditVehiclePage />
         </Route>
       </Layout>}
       

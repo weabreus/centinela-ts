@@ -1,5 +1,5 @@
 import React from 'react';
-import { HomeIcon, ViewListIcon, OfficeBuildingIcon, ViewGridIcon } from "@heroicons/react/outline";
+import { HomeIcon, ViewListIcon, OfficeBuildingIcon, ViewGridIcon, TruckIcon } from "@heroicons/react/outline";
 import { Link, useLocation } from "react-router-dom";
 
 function classNames(...classes) {
@@ -15,6 +15,8 @@ function Navigation() {
     { key: "Complejos", href: "/complexes", icon: ViewGridIcon, current: (location.pathname === "/complexes" ? true : false) },
     { key: "Edificios", href: "/buildings", icon: OfficeBuildingIcon, current: (location.pathname === "/buildings" ? true : false) },
     { key: "Unidades", href: "/units", icon: HomeIcon, current: (location.pathname === "/units" ? true : false) },
+    { key: "Vehiculos", href: "/vehicles", icon: TruckIcon, current: (location.pathname === "/vehicles" ? true : false) },
+    
   ];
 
   
