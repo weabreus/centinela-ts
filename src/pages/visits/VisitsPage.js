@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/solid";
 import db from "../../firestore/FirestoreConfig";
-import {
+import {  
   collection,
   getDocs,
   query,

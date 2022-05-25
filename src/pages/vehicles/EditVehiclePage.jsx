@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useState } from "react";
 import { useRef } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -21,11 +20,7 @@ export default function CreateVehiclePage() {
     unit: [{ value: "unitid1", label: "Unit Name 1" }],
   };
 
-  const [type, setType] = useState("visitor");
-
-  useEffect(() => {
-    setType(vehicle.type);
-  });
+  const [type, setType] = useState(vehicle.type);
 
   const make = useRef();
   const model = useRef();
@@ -34,7 +29,9 @@ export default function CreateVehiclePage() {
   const year = useRef();
   const visitor = useRef();
   const unit = useRef();
+  const typeRef = useRef();
 
+ 
   function submitHandler(event) {
     event.preventDefault();
     let vehicleData = {};
@@ -192,7 +189,8 @@ export default function CreateVehiclePage() {
                   </label>
                   <div className="mt-1">
                     <select
-                      value={vehicle.type}
+                      ref={typeRef}
+                      value={type}
                       onChange={(event) => setType(event.target.value)}
                       name="type"
                       id="type"

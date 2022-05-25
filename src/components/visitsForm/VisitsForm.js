@@ -4,6 +4,9 @@ import { XIcon } from "@heroicons/react/outline";
 import VisitorInput from "../form/VisitorInput";
 import VisitorVehicleInput from "../form/VisitorVehicleInput";
 import ResidentInput from "../form/ResidentInput";
+import { storeVisit } from "../../firestore/firestoreHelpers";
+import db from "../../firestore/FirestoreConfig";
+import { collection, addDoc } from "firebase/firestore";
 
 export default function VisitsForm({ open, setOpen }) {
   const visitor = useRef();
@@ -25,9 +28,7 @@ export default function VisitsForm({ open, setOpen }) {
       notes: notes.current.value,
     };
 
-    //   Store visit data in firestore (Luis)
 
-    console.log(visitData);
     setOpen(false);
   }
 
@@ -107,7 +108,10 @@ export default function VisitsForm({ open, setOpen }) {
                             </label>
                           </div>
                           <div className="sm:col-span-2">
-                            <VisitorVehicleInput vehicle={vehicle} visitor={visitor} />
+                            <VisitorVehicleInput
+                              vehicle={vehicle}
+                              visitor={visitor}
+                            />
                           </div>
                         </div>
 
@@ -123,7 +127,7 @@ export default function VisitsForm({ open, setOpen }) {
                             </label>
                           </div>
                           <div className="sm:col-span-2">
-                            <ResidentInput resident={resident}/>
+                            <ResidentInput resident={resident} />
                           </div>
                         </div>
 
