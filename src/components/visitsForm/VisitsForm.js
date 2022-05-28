@@ -3,31 +3,43 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import VisitorInput from "../form/VisitorInput";
 import VisitorVehicleInput from "../form/VisitorVehicleInput";
-import ResidentInput from "../form/ResidentInput";
-import { storeVisit } from "../../firestore/firestoreHelpers";
-import db from "../../firestore/FirestoreConfig";
-import { collection, addDoc } from "firebase/firestore";
+import UnitInput from "../form/UnitInput";
+import {
+  getVisitorVehicles,
+  storeVisit,
+} from "../../firestore/firestoreHelpers";
+import { useState } from "react";
+import moment from "moment";
 
 export default function VisitsForm({ open, setOpen }) {
   const visitor = useRef();
   const vehicle = useRef();
-  const resident = useRef();
+  const unit = useRef();
   const entry = useRef();
   const exit = useRef();
+  const quantity = useRef();
   const notes = useRef();
+
+  const [vehicles, setVehicles] = useState([]);
+
+  function visitorChangeHandle(visitor) {
+    getVisitorVehicles(visitor, setVehicles);
+  }
 
   function submitHandler(event) {
     event.preventDefault();
 
     const visitData = {
+      entryTimestamp: moment(entry.current.value).format(),
+      exitTimestamp: moment(exit.current.value).format(),
       visitor: visitor.current.getValue()[0].value,
+      unit: unit.current.getValue()[0].value,
       vehicle: vehicle.current.getValue()[0].value,
-      resident: resident.current.getValue()[0].value,
-      entry: entry.current.value,
-      exit: exit.current.value,
       notes: notes.current.value,
+      visitors: quantity.current.value,
     };
 
+    storeVisit(visitData);
 
     setOpen(false);
   }
@@ -92,7 +104,10 @@ export default function VisitsForm({ open, setOpen }) {
                             </label>
                           </div>
                           <div className="sm:col-span-2">
-                            <VisitorInput visitor={visitor} />
+                            <VisitorInput
+                              visitor={visitor}
+                              visitorChangeHandle={visitorChangeHandle}
+                            />
                           </div>
                         </div>
 
@@ -111,6 +126,7 @@ export default function VisitsForm({ open, setOpen }) {
                             <VisitorVehicleInput
                               vehicle={vehicle}
                               visitor={visitor}
+                              options={vehicles}
                             />
                           </div>
                         </div>
@@ -123,11 +139,34 @@ export default function VisitsForm({ open, setOpen }) {
                               className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
                             >
                               {" "}
-                              Residente{" "}
+                              Unidad{" "}
                             </label>
                           </div>
                           <div className="sm:col-span-2">
-                            <ResidentInput resident={resident} />
+                            <UnitInput unit={unit} />
+                          </div>
+                        </div>
+
+                        {/* Visitors quantity timestamp */}
+                        <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
+                          <div>
+                            <label
+                              htmlFor="quantity"
+                              className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
+                            >
+                              {" "}
+                              Acompañantes{" "}
+                            </label>
+                          </div>
+                          <div className="sm:col-span-2">
+                            <input
+                              min="0"
+                              type="number"
+                              name="quantity"
+                              id="quantity"
+                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              ref={quantity}
+                            />
                           </div>
                         </div>
 
@@ -144,6 +183,7 @@ export default function VisitsForm({ open, setOpen }) {
                           </div>
                           <div className="sm:col-span-2">
                             <input
+                              pattern="[0-9]{4}[0-9]{2}[0-9]{2}T[0-9]{2}[0-9]{2}"
                               type="datetime-local"
                               name="entry"
                               id="entry"

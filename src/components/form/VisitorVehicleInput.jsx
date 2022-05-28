@@ -5,17 +5,12 @@ import Select from "react-select";
 // PARA CREAR ENDPOINT DE VEHICULOS PERTENECIENTES AL VISITANTE SELECCIONADO
 
 
-const options = [
-  { value: "Vehicleid1", label: "Vehicle Name 1" },
-  { value: "Vehicleid2", label: "Vehicle Name 2" },
-  { value: "Vehicleid3", label: "Vehicle Name 3" },
-];
 
 
 
-export default function VehicleInput({vehicle, visitor, initial}) {
-  // const selectedVisitor = visitor.current.getValue()[0].value;
-  // La variable anterior contendria el valor del usuario seleccionado en el select de visitantes.
+
+export default function VehicleInput({vehicle, options, initial}) {
+  
 
   return (
     <div>

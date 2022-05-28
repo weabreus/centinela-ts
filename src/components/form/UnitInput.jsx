@@ -1,17 +1,16 @@
 import React from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 
 import Select from "react-select";
-
-// PARA CREAR ENDPOINT DE UNIDADES @Lucho2027
-const options = [
-  { value: "unitid1", label: "Unit Name 1" },
-  { value: "unitid2", label: "Unit Name 2" },
-  { value: "unitid3", label: "Unit Name 3" },
-];
-
-
+import { getUnits } from "../../firestore/firestoreHelpers";
 
 export default function UnitInput({unit, initial}) {
+
+  const [options, setOptions] = useState([]);
+
+  useEffect(() => {getUnits(setOptions);}, [])
+
   return (
     <div>
       <Select

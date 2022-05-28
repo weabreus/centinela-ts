@@ -2,33 +2,44 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/solid";
 import db from "../../firestore/FirestoreConfig";
-import {  
+import {
   collection,
   getDocs,
   query,
   where,
   documentId,
+  onSnapshot,
+  collectionGroup,
+  orderBy,
 } from "firebase/firestore";
 import moment from "moment";
-
 
 function VisitsPage() {
   const [visits, setVisits] = useState([]);
   const [visitors, setVisitors] = useState([]);
-  const [residents, setResidents] = useState([]);
-  const visitsCollectionRef = collection(db, "visits");
+  const [units, setUnits] = useState([]);
+  const [vehicles, setVehicles] = useState([]);
+
+  function vehicleDescription(vehiclesList, currentVehicle) {
+    const vehicle = vehiclesList.filter((vehicle) => {
+      return vehicle.id === currentVehicle;
+    });
+
+    return `${vehicle[0]?.make} ${vehicle[0]?.model} ${vehicle[0]?.year}`;
+  }
+
+  const visitsCollectionRef = query(collection(db, "visits"), orderBy("entryTimestamp", "desc"));
 
   useEffect(() => {
     const getVisits = async () => {
       const data = await getDocs(visitsCollectionRef);
       const tempVisits = data.docs.map((doc) => {
-        return {...doc.data(), docId: doc.id};
+        return { ...doc.data(), docId: doc.id };
       });
 
       const visitorsIds = data.docs.map((doc) => doc.data().visitor);
       const usersCollectionRef = query(
-        collection(db, "users"),
-        where(documentId(), "in", visitorsIds)
+        collection(db, "visitors"),
       );
       const visitorData = await getDocs(usersCollectionRef);
 
@@ -36,21 +47,44 @@ function VisitsPage() {
         return { ...doc.data(), id: doc.id };
       });
 
-      const residentIds = data.docs.map((doc) => doc.data().resident);
-      const residentCollectionRef = query(
-        collection(db, "users"),
-        where(documentId(), "in", residentIds)
+      
+
+      const unitIds = data.docs.map((doc) => doc.data().unit);
+      console.log(unitIds);
+      const unitCollectionRef = query(
+        collectionGroup(db, "units")
       );
-      const residentData = await getDocs(residentCollectionRef);
-      const tempResidents = residentData.docs.map((doc) => {
+      const unitData = await getDocs(unitCollectionRef);
+      const tempUnits = unitData.docs.map((doc) => {
         return { ...doc.data(), id: doc.id };
       });
-      console.log(tempVisits);
+
+      const vehiclesIds = data.docs.map((doc) => doc.data().vehicle);
+      const vehicleCollectionRef = query(
+        collection(db, "vehicles")
+      );
+      const vehicleData = await getDocs(vehicleCollectionRef);
+      const tempVehicles = vehicleData.docs.map((doc) => {
+        return { ...doc.data(), id: doc.id };
+      });
+
       setVisits(tempVisits);
       setVisitors(tempVisitors);
-      setResidents(tempResidents)
+      setUnits(tempUnits);
+      setVehicles(tempVehicles);
     };
     getVisits();
+    console.log(visitors);
+  }, []);
+
+  useEffect(() => {
+    const unsub = onSnapshot(collection(db, "visits"), (snap) => {
+      const snapVisits = [];
+      snap.forEach((doc) => {
+        snapVisits.push({ ...doc.data(), docId: doc.id });
+      });
+      setVisits(snapVisits);
+    });
   }, []);
 
   return (
@@ -94,79 +128,105 @@ function VisitsPage() {
           <table className="table-fixed min-w-full">
             <thead>
               <tr>
-                <th scope="col" className="w-2/12 px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xxs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="text-center w-3/12 px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   <span className="lg:pl-2">Visitante</span>
                 </th>
-                <th scope="col" className="w-1/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="text-center w-2/12 px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  <span className="lg:pl-2">Fecha</span>
+                </th>
+                <th
+                  scope="col"
+                  className="text-center w-1/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   H. Entrada
                 </th>
-                <th  scope="col" className="w-1/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="text-center w-1/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   H. Salida
                 </th>
-                <th scope="col" className="w-2/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="text-center w-1/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Dest.
                 </th>
-                <th scope="col" className="w-2/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="text-center w-2/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Veh.
                 </th>
-                <th scope="col" className="w-2/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
-                  Id
-                </th>
-                <th scope="col" className="w-1/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="text-center w-1/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Visitantes
                 </th>
-                <th scope="col" className="w-1/12 pr-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xxs font-medium text-gray-500 uppercase tracking-wider" />
+                <th
+                  scope="col"
+                  className="text-center w-1/12 pr-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
+                />
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
               {visits.map((visit) => (
-                
                 <tr key={visit.docId}>
-                  <td className="px-6 py-3 max-w-0 whitespace-nowrap text-sm font-medium text-gray-900">
-                    <div className="flex items-center space-x-3 lg:pl-2">
+                  <td className="text-center px-6 py-3 max-w-0 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {/* <div className="flex items-center space-x-3 lg:pl-2">
                       <div
                         className="flex-shrink-0 w-2.5 h-2.5 rounded-full"
                         aria-hidden="true"
-                      />
-                      <a href="#" className="truncate hover:text-gray-600">
+                      /> */}
+                      {/* <a href="#" className="truncate hover:text-gray-600"> */}
                         <span>
                           {
                             visitors.filter(
                               (visitor) => visitor.id === visit.visitor
-                            )[0].name
+                            )[0]?.name
                           }
                         </span>
-                      </a>
-                    </div>
+                      {/* </a> */}
+                    {/* </div> */}
                   </td>
-                  <td className="hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500 text-right">
-                    {moment.unix(visit.entryTimestamp.seconds).format("LT")}
+                  <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
+                    {moment(visit.entryTimestamp).format("L")}
                   </td>
-                  <td className="hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500 text-right">
-                    {moment.unix(visit.exitTimestamp.seconds).format("LT")}
+                  <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
+                    {moment(visit.entryTimestamp).format("LT")}
                   </td>
-                  <td className="hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500 text-right">
-                    {residents.filter((resident) => resident.id === visit.resident)[0].name}
+                  <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
+                    {moment(visit.exitTimestamp).format("LT")}
                   </td>
-                  <td className="hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500 text-right">
-                    {visit.vehicle}
+                  <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
+                    {
+                      units.filter(
+                        (unit) => unit.id === visit.unit
+                      )[0]?.number
+                    }
                   </td>
-                  <td className="hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500 text-right">
-                    {visit.id}
+                  <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
+                    {vehicleDescription(vehicles, visit.vehicle)}
                   </td>
-                  <td className="hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500 text-right">
+                  <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
                     {visit.visitors}
                   </td>
-                  <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
+                  <td className="text-center px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
                     <Link to={"/editvisit/" + visit.docId}>
-                    <a
-                      href="#"
-                      className="text-indigo-600 hover:text-indigo-900"
-                    >
-                      Editar
-                    </a>
+                      <a
+                        href="#"
+                        className="text-indigo-600 hover:text-indigo-900"
+                      >
+                        Editar
+                      </a>
                     </Link>
-                    
                   </td>
                 </tr>
               ))}

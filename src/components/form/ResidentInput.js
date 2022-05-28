@@ -1,6 +1,9 @@
 import React from "react";
+import { useState } from "react";
+import { useEffect } from "react";
 
 import Select from "react-select";
+import { getResidents } from "../../firestore/firestoreHelpers";
 
 // PARA CREAR ENDPOINT DE RESIDENTES
 const options = [
@@ -12,6 +15,11 @@ const options = [
 
 
 export default function ResidentInput({resident, initial}) {
+  const [options, setOptions] = useState([])
+
+  useEffect(() => {
+    getResidents(setOptions);
+  });
   return (
     <div>
       <Select
