@@ -6,8 +6,6 @@ import {
   collection,
   getDocs,
   query,
-  where,
-  documentId,
   onSnapshot,
   collectionGroup,
   orderBy,
@@ -78,7 +76,7 @@ function VisitsPage() {
   }, []);
 
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, "visits"), (snap) => {
+    const unsub = onSnapshot(query(collection(db, "visits"), orderBy("entryTimestamp", "desc")), (snap) => {
       const snapVisits = [];
       snap.forEach((doc) => {
         snapVisits.push({ ...doc.data(), docId: doc.id });

@@ -1,4 +1,6 @@
 import React from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 
 import Select from "react-select";
 
@@ -11,11 +13,17 @@ import Select from "react-select";
 
 export default function VehicleInput({vehicle, options, initial}) {
   
+  const [initialVehicle, setVehicle] = useState(initial);
+
+  useEffect(() => {
+    setVehicle(initial);
+  }, [initial]);
 
   return (
     <div>
       <Select
-        defaultValue={initial}
+        key={JSON.stringify(initialVehicle)}
+        defaultValue={initialVehicle}
         options={options}
         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
         ref={vehicle}

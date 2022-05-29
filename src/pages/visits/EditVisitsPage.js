@@ -1,47 +1,128 @@
 import { useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import VisitorInput from "../../components/form/VisitorInput";
 import VisitorVehicleInput from "../../components/form/VisitorVehicleInput";
-import ResidentInput from "../../components/form/ResidentInput";
 import moment from "moment";
+import { useEffect } from "react";
+import {
+  getDocument,
+  getVisitorVehicles,
+  setDocument,
+} from "../../firestore/firestoreHelpers";
+import { useState } from "react";
+import UnitInput from "../../components/form/UnitInput";
+import {
+  collectionGroup,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+} from "firebase/firestore";
+import db from "../../firestore/FirestoreConfig";
+import { useHistory } from "react-router-dom";
 
 export default function EditVisitsPage() {
+  let history = useHistory();
   let { id } = useParams();
+  const [visit, setVisit] = useState([]);
+  const [visitor, setVisitor] = useState([]);
+  const [vehicle, setVehicle] = useState([]);
+  const [unit, setUnit] = useState({});
 
-  // Traer de firestore @Lucho2027
-  let visit = {
-    docId: id,
-    entryTimestamp: 1652068800,
-    exitTimestamp: 1652068800,
-    id: "licencia",
-    resident: "bslESBlpwkOGTowUEJWHBbB9Fiw1",
-    vehicle: "idVehiculo",
-    visitor: "Ow6q4J9KH9Z5VLQMRmp9GWbZecn1",
-    visitors: 1,
-    notes: "notes",
-  };
-  const visitor = useRef();
-  const vehicle = useRef();
-  const resident = useRef();
-  const entry = useRef();
-  const exit = useRef();
-  const notes = useRef();
+  const [vehicles, setVehicles] = useState([]);
+
+  const visitorRef = useRef();
+  const vehicleRef = useRef();
+  const unitRef = useRef();
+  const entryRef = useRef();
+  const exitRef = useRef();
+  const notesRef = useRef();
+  const quantityRef = useRef();
+
+  function visitorChangeHandle(visitor) {
+    getVisitorVehicles(visitor, setVehicles);
+  }
+
+  useEffect(() => {
+    const getInputs = async () => {
+      // get visit
+      const visitDocRef = doc(db, "visits", id);
+      const visitDocSnap = await getDoc(visitDocRef);
+
+      if (visitDocSnap.exists()) {
+        const visitDoc = [{ docId: visitDocSnap.id, ...visitDocSnap.data() }];
+        setVisit(visitDoc);
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
+
+      // get visitor
+      const visitorDocRef = doc(db, "visitors", visitDocSnap.data().visitor);
+      const visitorDocSnap = await getDoc(visitorDocRef);
+
+      if (visitorDocSnap.exists()) {
+        const visitorDoc = [
+          { value: visitorDocSnap.id, label: visitorDocSnap.data().name },
+        ];
+        setVisitor(visitorDoc);
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
+
+      // get vehicle
+      const vehicleDocRef = doc(db, "vehicles", visitDocSnap.data().vehicle);
+      const vehicleDocSnap = await getDoc(vehicleDocRef);
+
+      if (vehicleDocSnap.exists()) {
+        const vehicleDoc = {
+          docId: vehicleDocSnap.id,
+          ...vehicleDocSnap.data(),
+        };
+        setVehicle([
+          {
+            value: vehicleDoc.docId,
+            label: `(${vehicleDoc.plate}) ${vehicleDoc.make} ${vehicleDoc.model} ${vehicleDoc.year}`,
+          },
+        ]);
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
+
+      // get unit
+      const unitsColRef = query(collectionGroup(db, "units"));
+      const querySnapshot = await getDocs(unitsColRef);
+      const unitsList = querySnapshot.docs.map((doc) => {
+        return { value: doc.id, label: doc.data().number };
+      });
+
+      const unitDoc = unitsList.filter(
+        (unit) => unit.value === visitDocSnap.data().unit
+      );
+
+      setUnit(unitDoc);
+    };
+    getInputs();
+  }, []);
 
   function submitHandler(event) {
     event.preventDefault();
 
     const visitData = {
-      visitor: visitor.current.getValue()[0].value,
-      vehicle: vehicle.current.getValue()[0].value,
-      resident: resident.current.getValue()[0].value,
-      entry: entry.current.value,
-      exit: exit.current.value,
-      notes: notes.current.value,
+      visitor: visitorRef.current.getValue()[0].value,
+      vehicle: vehicleRef.current.getValue()[0].value,
+      unit: unitRef.current.getValue()[0].value,
+      entryTimestamp: entryRef.current.value,
+      exitTimestamp: exitRef.current.value,
+      notes: notesRef.current.value,
+      visitors: quantityRef.current.value,
     };
 
-    //   Update visit data in firestore @Lucho2027
-
-    console.log(visitData);
+    setDocument("visits", visit[0]?.docId, visitData);
+    history.push("/visits")
+    
   }
 
   return (
@@ -67,7 +148,11 @@ export default function EditVisitsPage() {
                   Visitante
                 </label>
                 <div className="mt-1">
-                  <VisitorInput visitor={visitor} initial={visit.visitor} />
+                  <VisitorInput
+                    visitor={visitorRef}
+                    initial={visitor}
+                    visitorChangeHandle={visitorChangeHandle}
+                  />
                 </div>
               </div>
 
@@ -80,22 +165,42 @@ export default function EditVisitsPage() {
                 </label>
                 <div className="mt-1">
                   <VisitorVehicleInput
-                    vehicle={vehicle}
-                    visitor={visitor}
-                    initial={visit.vehicle}
+                    vehicle={vehicleRef}
+                    initial={vehicle}
+                    options={vehicles}
                   />
                 </div>
               </div>
 
               <div className="sm:col-span-4">
                 <label
-                  htmlFor="resident"
+                  htmlFor="unit"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Residente
+                  Unidad
                 </label>
                 <div className="mt-1">
-                  <ResidentInput resident={resident} initial={visit.resident} />
+                  <UnitInput unit={unitRef} initial={unit} />
+                </div>
+              </div>
+
+              <div className="sm:col-span-4">
+                <label
+                  htmlFor="quantity"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Acompañantes
+                </label>
+                <div className="mt-1">
+                  <input
+                    defaultValue={visit[0]?.visitors}
+                    min="0"
+                    type="number"
+                    name="quantity"
+                    id="quantity"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    ref={quantityRef}
+                  />
                 </div>
               </div>
             </div>
@@ -120,14 +225,14 @@ export default function EditVisitsPage() {
                 </label>
                 <div className="mt-1">
                   <input
-                    ref={entry}
+                    ref={entryRef}
                     type="datetime-local"
                     name="entry"
                     id="entry"
                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    value={moment
-                      .unix(visit.entryTimestamp)
-                      .format("YYYY-MM-DDTHH:mm")}
+                    defaultValue={moment(visit.entryTimestamp).format(
+                      "YYYY-MM-DDTHH:mm"
+                    )}
                   />
                 </div>
               </div>
@@ -141,14 +246,14 @@ export default function EditVisitsPage() {
                 </label>
                 <div className="mt-1">
                   <input
-                    ref={exit}
+                    ref={exitRef}
                     type="datetime-local"
                     name="exit"
                     id="exit"
                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    value={moment
-                      .unix(visit.exitTimestamp)
-                      .format("YYYY-MM-DDTHH:mm")}
+                    defaultValue={moment(visit.exitTimestamp).format(
+                      "YYYY-MM-DDTHH:mm"
+                    )}
                   />
                 </div>
               </div>
@@ -162,12 +267,12 @@ export default function EditVisitsPage() {
                 </label>
                 <div className="mt-1">
                   <textarea
-                    ref={notes}
+                    ref={notesRef}
                     id="notes"
                     name="notes"
                     rows={3}
                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md"
-                    defaultValue={visit.notes}
+                    defaultValue={visit[0]?.notes}
                   />
                 </div>
               </div>
