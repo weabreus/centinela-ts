@@ -11,9 +11,8 @@ import {
   documentId,
   collectionGroup,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
-import moment from "moment";
-import { async } from "@firebase/util";
 
 export async function storeVisit(data) {
   const docRef = await addDoc(collection(db, "visits"), data);
@@ -100,13 +99,12 @@ export async function getUnits(setOptions) {
 }
 
 export async function getDocument(col, uid) {
-
   const docRef = doc(db, col, uid);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
-    const doc = { docId: docSnap.id, ...docSnap.data()};
-  
+    const doc = { docId: docSnap.id, ...docSnap.data() };
+
     return doc;
   } else {
     // doc.data() will be undefined in this case
@@ -115,7 +113,17 @@ export async function getDocument(col, uid) {
 }
 
 export async function setDocument(col, uid, data) {
-
- await setDoc(doc(db, col, uid), data);
+  await setDoc(doc(db, col, uid), data);
 }
 
+export async function addDocument(col, data) {
+  const docRef = await addDoc(collection(db, col), data);
+
+  console.log("Document written with ID: ", docRef.id);
+}
+
+export async function updateDocument(col, uid, data) {
+  await updateDoc(doc(db, col, uid), data);
+
+  console.log("Document updated with ID: ", uid);
+}

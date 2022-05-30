@@ -1,16 +1,14 @@
 import React from 'react';
-import { FilterIcon, SearchIcon } from "@heroicons/react/solid";
+import { useHistory } from "react-router-dom";
+import { PlusIcon, SearchIcon } from "@heroicons/react/solid";
 
 function DirectorySearch(props) {
+  const history = useHistory();
   const { userCount, searchHandler, searchInputRef } = props;
 
   return (
     <div className="px-6 pt-6 pb-4">
-      <h2 className="text-lg font-medium text-gray-900">Directorio</h2>
-      <p className="mt-1 text-sm text-gray-600">
-        Entre los {userCount} usuarios del directorio.
-      </p>
-      <form className="mt-6 flex space-x-4" onSubmit={searchHandler}>
+      <form className="mt-2 flex space-x-4" onSubmit={searchHandler}>
         <div className="flex-1 min-w-0">
           <label htmlFor="search" className="sr-only">
             Buscar
@@ -33,13 +31,17 @@ function DirectorySearch(props) {
           </div>
         </div>
         <button
+          onClick={() => history.push("/createresident")}
           type="submit"
           className="inline-flex justify-center px-3.5 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
-          <FilterIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-          <span className="sr-only">Buscar</span>
+          <PlusIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+          <span className="sr-only">Agregar</span>
         </button>
       </form>
+      <p className="mt-4 text-sm text-gray-600">
+        Busque entre los {userCount} residentes del directorio.
+      </p>
     </div>
   );
 }

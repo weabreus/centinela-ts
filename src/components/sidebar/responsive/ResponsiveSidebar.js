@@ -1,23 +1,62 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
-  ClockIcon,
   HomeIcon,
+  OfficeBuildingIcon,
+  TruckIcon,
+  ViewGridIcon,
   ViewListIcon,
   XIcon,
 } from "@heroicons/react/outline";
-
-const navigation = [
-  { name: "Home", href: "#", icon: HomeIcon, current: true },
-  { name: "My tasks", href: "#", icon: ViewListIcon, current: false },
-  { name: "Recent", href: "#", icon: ClockIcon, current: false },
-];
+import { Link, useLocation } from "react-router-dom";
+import Logo from "../Logo";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 function ResponsiveSidebar(props) {
+  const location = useLocation();
+
+  const navigation = [
+    {
+      key: "Visitas",
+      href: "/visits",
+      icon: HomeIcon,
+      current: location.pathname === "/visits" ? true : false,
+    },
+    {
+      key: "Directorio",
+      href: "/directory",
+      icon: ViewListIcon,
+      current: location.pathname === "/directory" ? true : false,
+    },
+    {
+      key: "Complejos",
+      href: "/complexes",
+      icon: ViewGridIcon,
+      current: location.pathname === "/complexes" ? true : false,
+    },
+    {
+      key: "Edificios",
+      href: "/buildings",
+      icon: OfficeBuildingIcon,
+      current: location.pathname === "/buildings" ? true : false,
+    },
+    {
+      key: "Unidades",
+      href: "/units",
+      icon: HomeIcon,
+      current: location.pathname === "/units" ? true : false,
+    },
+    {
+      key: "Vehiculos",
+      href: "/vehicles",
+      icon: TruckIcon,
+      current: location.pathname === "/vehicles" ? true : false,
+    },
+  ];
+
   return (
     <Transition.Root show={props.sidebarOpen} as={Fragment}>
       <Dialog
@@ -68,39 +107,34 @@ function ResponsiveSidebar(props) {
                   </button>
                 </div>
               </Transition.Child>
-              <div className="flex-shrink-0 flex items-center px-4">
-                <img
-                  className="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/workflow-logo-purple-500-mark-gray-700-text.svg"
-                  alt="Workflow"
-                />
-              </div>
+              <Logo />
               <div className="mt-5 flex-1 h-0 overflow-y-auto">
                 <nav className="px-2">
                   <div className="space-y-1">
                     {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current
-                            ? "bg-gray-100 text-gray-900"
-                            : "text-gray-600 hover:text-gray-900 hover:bg-gray-50",
-                          "group flex items-center px-2 py-2 text-base leading-5 font-medium rounded-md"
-                        )}
-                        aria-current={item.current ? "page" : undefined}
-                      >
-                        <item.icon
+                      <Link to={item.href}>
+                        <span
+                          key={item.key}
                           className={classNames(
                             item.current
-                              ? "text-gray-500"
-                              : "text-gray-400 group-hover:text-gray-500",
-                            "mr-3 flex-shrink-0 h-6 w-6"
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-600 hover:text-gray-900 hover:bg-gray-50",
+                            "group flex items-center px-2 py-2 text-base leading-5 font-medium rounded-md"
                           )}
-                          aria-hidden="true"
-                        />
-                        {item.name}
-                      </a>
+                          aria-current={item.current ? "page" : undefined}
+                        >
+                          <item.icon
+                            className={classNames(
+                              item.current
+                                ? "text-gray-500"
+                                : "text-gray-400 group-hover:text-gray-500",
+                              "mr-3 flex-shrink-0 h-6 w-6"
+                            )}
+                            aria-hidden="true"
+                          />
+                          {item.key}
+                        </span>
+                      </Link>
                     ))}
                   </div>
                 </nav>

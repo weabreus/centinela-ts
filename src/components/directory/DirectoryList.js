@@ -23,7 +23,7 @@ function DirectoryList(props) {
                     <div className="flex-shrink-0">
                       <img
                         className="h-10 w-10 rounded-full"
-                        src={person.photo}
+                        src={person.photo ? person.photo : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                         alt=""
                       />
                     </div>

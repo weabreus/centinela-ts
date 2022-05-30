@@ -27,27 +27,23 @@ function UsersPage() {
   const [userCount, setUserCount] = useState(0);
   const [selectedUser, setSelectedUser] = useState({});
   const [selectedFields, setSelectedFields] = useState({});
-  const usersCollectionRef = collection(db, "users");
+
   const searchInputRef = useRef("");
 
   const selectUserHandler = (key) => {
     const getUser = async () => {
-      const data = await getDoc(doc(db, "users", key));
+      const data = await getDoc(doc(db, "residents", key));
 
       if (data.exists()) {
-        let newSelectedUser = data.data();
+        let newSelectedUser = {id: data.id, ...data.data()};
 
         setSelectedUser(newSelectedUser);
 
         setSelectedFields({
-          Telefono: newSelectedUser.phone,
           Email: newSelectedUser.email,
-          Titulo: newSelectedUser.title,
-          Organizacion: newSelectedUser.organization,
-          Direccion: newSelectedUser.address,
-          Municipio: newSelectedUser.municipality,
-          Pais: newSelectedUser.country,
-          Area: newSelectedUser.areacode,
+          Casa: newSelectedUser.contact.home,
+          Mobil: newSelectedUser.contact.mobile,
+          Trabajo: newSelectedUser.contact.work,
         });
       }
     };
@@ -61,7 +57,7 @@ function UsersPage() {
       let count = 0;
       const data = await getDocs(
         query(
-          collection(db, "users"),
+          collection(db, "residents"),
           where("name", ">=", searchInputRef.current.value),
           where("name", "<=", searchInputRef.current.value + "\uf8ff")
         )
@@ -92,6 +88,7 @@ function UsersPage() {
       let count = 0;
       let newSelectedUser = {};
 
+      const usersCollectionRef = collection(db, "residents");
       const data = await getDocs(usersCollectionRef);
       data.docs.map((doc) => {
         if (
@@ -110,7 +107,7 @@ function UsersPage() {
           });
           count++;
         }
-      });
+      }, []);
 
       newSelectedUser = newDirectory[Object.keys(newDirectory)[0]][0];
 
@@ -118,14 +115,10 @@ function UsersPage() {
       setUserCount(count);
       setSelectedUser(newSelectedUser);
       setSelectedFields({
-        Telefono: newSelectedUser.phone,
         Email: newSelectedUser.email,
-        Titulo: newSelectedUser.title,
-        Organizacion: newSelectedUser.organization,
-        Direccion: newSelectedUser.address,
-        Municipio: newSelectedUser.municipality,
-        Pais: newSelectedUser.country,
-        Area: newSelectedUser.areacode,
+        Casa: newSelectedUser.contact.home,
+        Mobil: newSelectedUser.contact.mobile,
+        Trabajo: newSelectedUser.contact.work,
       });
     };
     getUsers();
@@ -133,14 +126,6 @@ function UsersPage() {
 
   return (
     <>
-      {/*
-            This example requires updating your template:
-    
-            ```
-            <html class="h-full bg-white">
-            <body class="h-full overflow-hidden">
-            ```
-          */}
       <div className="h-full flex">
         <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
           <div className="flex-1 relative z-0 flex overflow-hidden">
@@ -156,7 +141,10 @@ function UsersPage() {
                 <ProfileTabs />
 
                 {/* Profile Fields */}
-                <ProfileFields selectedFields={selectedFields} />
+                <ProfileFields
+                  selectedUser={selectedUser}
+                  selectedFields={selectedFields}
+                />
               </article>
             </main>
             <aside className="hidden xl:order-first xl:flex xl:flex-col flex-shrink-0 w-96 border-r border-gray-200">

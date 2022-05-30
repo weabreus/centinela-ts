@@ -1,16 +1,12 @@
-import { doc, getDoc } from "firebase/firestore";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 
 import Select from "react-select";
-import db from "../../firestore/FirestoreConfig";
-import {
-  getDocument,
-  getInputDocument,
-  getVisitors,
-  getVisitorsInitial,
-} from "../../firestore/firestoreHelpers";
+
+import { getVisitors } from "../../firestore/firestoreHelpers";
+
+ 
 
 export default function VisitorInput({
   visitor,
@@ -27,8 +23,6 @@ export default function VisitorInput({
   useEffect(() => {
     setVisitor(initial);
   }, [initial]);
-
-  console.log(initialVisitor);
 
   return (
     <div>

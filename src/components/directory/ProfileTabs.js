@@ -4,7 +4,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const tabs = [{ name: "Profile", href: "#", current: true }];
+const tabs = [{ name: "Información", href: "#", current: true }];
 
 function ProfileTabs() {
   return (

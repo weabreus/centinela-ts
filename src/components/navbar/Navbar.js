@@ -14,6 +14,7 @@ function Navbar() {
         <h1 className="text-lg font-medium leading-6 text-gray-900 sm:truncate">
          {location.pathname === "/profile" ? "Perfil" : ""}
          {location.pathname === "/visits" ? "Visitas" : ""}
+         {location.pathname === "/directory" ? "Directorio" : ""}
         </h1>
       </div>
       <div className="mt-4 flex sm:mt-0 sm:ml-4">
