@@ -1,9 +1,19 @@
+import { useEffect } from "react";
 import { useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { addDocument } from "../../firestore/firestoreHelpers";
 
-export default function CreateComplexPage() {
+export default function CreateComplexPage({setTitle}) {
+  const history = useHistory();
   const name = useRef();
 
+  useEffect(() => {
+    setTitle({
+      name: "Formulario para la creación de complejos",
+      description: "Ingrese la información requerida para la creación del complejo.",
+    });
+  }, []);
+  
   function submitHandler(event) {
     event.preventDefault();
 
@@ -11,9 +21,10 @@ export default function CreateComplexPage() {
       name: name.current.value,
     };
 
-    //   Update complex data in firestore @Lucho2027
+    addDocument("complexes", complexData)
 
-    console.log(complexData);
+    history.push("/complexes");
+
   }
   return (
     <>
@@ -24,14 +35,6 @@ export default function CreateComplexPage() {
         >
           <div className="space-y-8 divide-y divide-gray-200">
             <div>
-              <div>
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  Crear Complejo
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Llene los campos requeridos para crear un complejo.
-                </p>
-              </div>
 
               <div className="mt-6 grid grid-cols-6 gap-y-6 gap-x-4 sm:grid-cols-6">
                 <div className="col-span-3 sm:col-span-3">

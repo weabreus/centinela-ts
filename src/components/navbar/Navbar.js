@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useLocation } from "react-router-dom";
 import VisitsForm from "../visitsForm/VisitsForm";
 
-function Navbar() {
+function Navbar({title}) {
   const [open, setOpen] = useState(false);
 
   const location = useLocation();
@@ -12,9 +12,12 @@ function Navbar() {
     <div className="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
       <div className="flex-1 min-w-0">
         <h1 className="text-lg font-medium leading-6 text-gray-900 sm:truncate">
-         {location.pathname === "/profile" ? "Perfil" : ""}
-         {location.pathname === "/visits" ? "Visitas" : ""}
-         {location.pathname === "/directory" ? "Directorio" : ""}
+        <div className="sm:flex-auto">
+          <h1 className="text-xl font-semibold text-gray-900">{title.name}</h1>
+          <p className="mt-2 text-sm text-gray-700">
+            {title.description}
+          </p>
+        </div>
         </h1>
       </div>
       <div className="mt-4 flex sm:mt-0 sm:ml-4">

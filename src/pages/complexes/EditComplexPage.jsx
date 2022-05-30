@@ -1,14 +1,29 @@
+import { useEffect } from "react";
+import { useState } from "react";
 import { useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
+import { getDocument, updateDocument } from "../../firestore/firestoreHelpers";
 
-export default function EditComplexPage() {
+export default function EditComplexPage({setTitle}) {
+  const history = useHistory();
   const { id } = useParams();
   const name = useRef();
 
-  const complex = {
-    id: id,
-    name: "Belair",
-  };
+  const [complex, setComplex] = useState({});
+
+  useEffect(() => {
+    setTitle({
+      name: "Formulario para la edición del complejo",
+      description: "Ingrese la información requerida para la edición del complejo.",
+    });
+
+    const getData = async () => {
+      getDocument("complexes", id).then((doc) => {
+        setComplex({id: doc.docId, name: doc.name});
+      })
+    }
+    getData();
+  }, []);
 
   function submitHandler(event) {
     event.preventDefault();
@@ -17,9 +32,10 @@ export default function EditComplexPage() {
       name: name.current.value,
     };
 
-    //   Update complex data in firestore @Lucho2027
+    updateDocument("complexes", id, complexData);
 
-    console.log(complexData);
+    history.push("/complexes");
+
   }
   return (
     <>
@@ -30,15 +46,6 @@ export default function EditComplexPage() {
         >
           <div className="space-y-8 divide-y divide-gray-200">
             <div>
-              <div>
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  Crear Complejo
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Llene los campos requeridos para crear un complejo.
-                </p>
-              </div>
-
               <div className="mt-6 grid grid-cols-6 gap-y-6 gap-x-4 sm:grid-cols-6">
                 <div className="col-span-3 sm:col-span-3">
                   <label
@@ -49,7 +56,7 @@ export default function EditComplexPage() {
                   </label>
                   <div className="mt-1">
                     <input
-                      value={complex.name}
+                      defaultValue={complex.name}
                       ref={name}
                       required
                       type="text"

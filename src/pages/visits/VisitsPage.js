@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import moment from "moment";
 
-function VisitsPage() {
+function VisitsPage({setTitle}) {
   const [visits, setVisits] = useState([]);
   const [visitors, setVisitors] = useState([]);
   const [units, setUnits] = useState([]);
@@ -29,6 +29,7 @@ function VisitsPage() {
   const visitsCollectionRef = query(collection(db, "visits"), orderBy("entryTimestamp", "desc"));
 
   useEffect(() => {
+    setTitle({name: "Visitas", description: "Lista de visitas recientes al complejo."})
     const getVisits = async () => {
       const data = await getDocs(visitsCollectionRef);
       const tempVisits = data.docs.map((doc) => {
@@ -48,7 +49,6 @@ function VisitsPage() {
       
 
       const unitIds = data.docs.map((doc) => doc.data().unit);
-      console.log(unitIds);
       const unitCollectionRef = query(
         collectionGroup(db, "units")
       );
@@ -72,7 +72,6 @@ function VisitsPage() {
       setVehicles(tempVehicles);
     };
     getVisits();
-    console.log(visitors);
   }, []);
 
   useEffect(() => {

@@ -1,52 +1,46 @@
+import { useEffect } from "react";
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import TablePagination from "../../components/pagination/TablePagination";
-
-// Para traer esta data de firebase @Lucho2027
-const data = [
-  {
-    id: "qyGp2fBgvOtwthSlF6tt",
-    name: "Complejo 1",
-  },
-  {
-    id: "qyGp2fBgvOtwthSlF6ta",
-    name: "Complejo 2",
-  },
-  {
-    id: "qyGp2fBgvOtwthSlF6td",
-    name: "Complejo 3",
-  },
-
-];
+import { getComplexes } from "../../firestore/firestoreHelpers";
 
 let PageSize = 10;
 
-export default function BuildingsPage() {
+export default function BuildingsPage({ setTitle }) {
+
   const [currentPage, setCurrentPage] = useState(1);
+  const [complexes, setComplexes] = useState([]);
 
   const currentTableData = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * PageSize;
     const lastPageIndex = firstPageIndex + PageSize;
-    return data.slice(firstPageIndex, lastPageIndex);
-  }, [currentPage]);
+    return complexes.slice(firstPageIndex, lastPageIndex);
+  }, [complexes, currentPage]);
+
+  useEffect(() => {
+    setTitle({
+      name: "Complejos",
+      description: "Lista de todos los complejos.",
+    });
+    const getData = async () => {
+      getComplexes(setComplexes);
+    }
+    getData();
+  }, []);
 
   return (
     <div className="p-6 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h1 className="text-xl font-semibold text-gray-900">Complejos</h1>
-          <p className="mt-2 text-sm text-gray-700">
-            Lista de todos los complejos registrados.
-          </p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
           <Link to={"/createcomplex"}>
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-          >
-            Agregar Complejo
-          </button>
+            <button
+              type="button"
+              className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+            >
+              Agregar Complejo
+            </button>
           </Link>
         </div>
       </div>
@@ -79,9 +73,10 @@ export default function BuildingsPage() {
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                         <Link to={"/editcomplex/" + complex.id}>
-                        <span className="text-indigo-600 hover:text-indigo-900">
-                          Editar<span className="sr-only">, {complex.id}</span>
-                        </span>
+                          <span className="text-indigo-600 hover:text-indigo-900">
+                            Editar
+                            <span className="sr-only">, {complex.id}</span>
+                          </span>
                         </Link>
                       </td>
                     </tr>
@@ -91,7 +86,7 @@ export default function BuildingsPage() {
               <TablePagination
                 currentTableDataSize={currentTableData.length}
                 currentPage={currentPage}
-                totalCount={data.length}
+                totalCount={complexes.length}
                 pageSize={PageSize}
                 onPageChange={(page) => setCurrentPage(page)}
               />

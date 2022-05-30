@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   PlusIcon,
   MinusSmIcon as MinusSmIconSolid,
@@ -7,7 +7,7 @@ import { useRef } from "react";
 import { getDocument, updateDocument } from "../../firestore/firestoreHelpers";
 import { useHistory, useParams } from "react-router-dom";
 
-export default function CreateResidentPage() {
+export default function CreateResidentPage({setTitle}) {
   const history = useHistory();
   const { id } = useParams();
 
@@ -68,6 +68,10 @@ export default function CreateResidentPage() {
     history.push("/directory");
   };
 
+  useEffect(() => {
+    setTitle({name: "Formulario para la edición de residentes", description: "Modifique los datos requeridos para la edición del residente."})
+  }, []);
+
   return (
     <>
       <form
@@ -76,15 +80,6 @@ export default function CreateResidentPage() {
       >
         <div className="space-y-8 divide-y divide-gray-200">
           <div>
-            <div>
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
-                Creación del perfil del residente
-              </h3>
-              <p className="mt-1 text-sm text-gray-500">
-                Ingrese la información relevante sobre el residente.
-              </p>
-            </div>
-
             <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
               <div className="sm:col-span-6">
                 <label

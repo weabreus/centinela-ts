@@ -13,7 +13,7 @@ function Layout(props) {
         <div className="lg:pl-64 flex flex-col">
           <ResponsiveSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
           <main className="flex-1">
-          <Navbar />
+          <Navbar title={props.title}/>
           {props.children}
           {/* Website content */}
           </main>

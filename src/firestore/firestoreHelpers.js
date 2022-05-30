@@ -13,6 +13,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { async } from "@firebase/util";
 
 export async function storeVisit(data) {
   const docRef = await addDoc(collection(db, "visits"), data);
@@ -126,4 +127,16 @@ export async function updateDocument(col, uid, data) {
   await updateDoc(doc(db, col, uid), data);
 
   console.log("Document updated with ID: ", uid);
+}
+
+export async function getComplexes(setOptions) {
+  const collectionRef = await getDocs(collection(db, "complexes"));
+
+  const options = [];
+
+  collectionRef.forEach((doc) => {
+    options.push({ id: doc.id, name: doc.data().name });
+  });
+  
+  setOptions(options);
 }
