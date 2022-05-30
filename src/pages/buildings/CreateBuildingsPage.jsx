@@ -1,9 +1,24 @@
+import { useEffect } from "react";
 import { useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import ComplexInput from "../../components/form/ComplexInput";
+import { addBuilding } from "../../firestore/firestoreHelpers";
 
-export default function CreateBuildingsPage() {
+
+export default function CreateBuildingsPage({ setTitle }) {
+  const history = useHistory();
+
+  const complex = useRef();
   const name = useRef();
   const address = useRef();
+
+  useEffect(() => {
+    setTitle({
+      name: "Formulario de creación de edificios",
+      description:
+        "Ingrese la información requerida para la creación del edificio.",
+    });
+  }, []);
 
   function submitHandler(event) {
     event.preventDefault();
@@ -13,9 +28,9 @@ export default function CreateBuildingsPage() {
       address: address.current.value,
     };
 
-    //   Update building data in firestore @Lucho2027
-
-    console.log(buildingData);
+    addBuilding("complexes", complex.current.getValue()[0].value, "buildings", buildingData);
+    
+    history.push("/buildings");
   }
   return (
     <>
@@ -26,16 +41,19 @@ export default function CreateBuildingsPage() {
         >
           <div className="space-y-8 divide-y divide-gray-200">
             <div>
-              <div>
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  Crear Edificio
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Llene los campos requeridos para crear el edificio.
-                </p>
-              </div>
-
               <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                <div className="sm:col-span-4">
+                  <label
+                    htmlFor="complex"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Complejo
+                  </label>
+                  <div className="mt-1">
+                    <ComplexInput complex={complex}/>
+                  </div>
+                </div>
+                
                 <div className="sm:col-span-4">
                   <label
                     htmlFor="name"

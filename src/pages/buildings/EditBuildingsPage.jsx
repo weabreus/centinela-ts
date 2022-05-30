@@ -1,18 +1,32 @@
-import { useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useRef, useEffect } from "react";
+import { Link, useParams, useHistory } from "react-router-dom";
+import ComplexInput from "../../components/form/ComplexInput";
+import { addBuilding, getBuilding, updateBuilding } from "../../firestore/firestoreHelpers";
 
-export default function EditBuildingsPage() {
+export default function EditBuildingsPage({ setTitle }) {
   let { id } = useParams();
+  const [building, setBuilding] = useState([]);
+  const [complex, setComplex] = useState([]);
 
-  // Bring building data from firestore @Lucho2027
-  const building = {
-    id: id,
-    name: "Edificio 1",
-    address: "Direccion Edificio 1",
-  };
+  const history = useHistory();
 
+  const complexRef = useRef();
   const name = useRef();
   const address = useRef();
+
+  useEffect(() => {
+    setTitle({
+      name: "Formulario de edición de edificios",
+      description:
+        "Ingrese la información requerida para la edición del edificio.",
+    });
+
+    const getData = async () => {
+      getBuilding("buildings", id, setBuilding, setComplex)
+    }
+    getData();
+  }, []);
 
   function submitHandler(event) {
     event.preventDefault();
@@ -22,12 +36,12 @@ export default function EditBuildingsPage() {
       address: address.current.value,
     };
 
-    //   Update building data in firestore @Lucho2027
+    updateBuilding("complexes", complexRef.current.getValue()[0].value, "buildings", building.id, buildingData);
+    
 
-    console.log(buildingData);
+    history.push("/buildings");
   }
 
-  console.log(id);
   return (
     <>
       <div className="py-6 px-12">
@@ -49,6 +63,18 @@ export default function EditBuildingsPage() {
               <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                 <div className="sm:col-span-4">
                   <label
+                    htmlFor="complex"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Complejo
+                  </label>
+                  <div className="mt-1">
+                    <ComplexInput complex={complexRef} initial={complex} disabled={true}/>
+                  </div>
+                </div>
+
+                <div className="sm:col-span-4">
+                  <label
                     htmlFor="name"
                     className="block text-sm font-medium text-gray-700"
                   >
@@ -56,7 +82,7 @@ export default function EditBuildingsPage() {
                   </label>
                   <div className="mt-1">
                     <input
-                      value={building.name}
+                      defaultValue={building.name}
                       ref={name}
                       required
                       type="text"
@@ -76,7 +102,7 @@ export default function EditBuildingsPage() {
                   </label>
                   <div className="mt-1">
                     <input
-                      value={building.address}
+                      defaultValue={building.address}
                       ref={address}
                       required
                       type="text"

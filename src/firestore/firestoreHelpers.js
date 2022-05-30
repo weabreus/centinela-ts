@@ -13,7 +13,6 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { async } from "@firebase/util";
 
 export async function storeVisit(data) {
   const docRef = await addDoc(collection(db, "visits"), data);
@@ -137,6 +136,70 @@ export async function getComplexes(setOptions) {
   collectionRef.forEach((doc) => {
     options.push({ id: doc.id, name: doc.data().name });
   });
-  
+
   setOptions(options);
+}
+
+export async function getComplexesInput(setOptions) {
+  const collectionRef = await getDocs(collection(db, "complexes"));
+
+  const options = [];
+
+  collectionRef.forEach((doc) => {
+    options.push({ value: doc.id, label: doc.data().name });
+  });
+
+  setOptions(options);
+}
+
+export async function getBuildings(setOptions) {
+  const buildings = query(collectionGroup(db, "buildings"));
+
+  const querySnapshot = await getDocs(buildings);
+
+  const options = [];
+  querySnapshot.forEach((doc) => {
+    options.push({
+      id: doc.id,
+      name: doc.data().name,
+      address: doc.data().address
+    });
+  });
+
+  setOptions(options);
+}
+
+export async function getBuilding(col, uid, setBuilding, setComplex) {
+  const buildings = query(
+    collectionGroup(db, col),
+  );
+  const querySnapshot = await getDocs(buildings);
+
+  const building = await querySnapshot.docs.filter((doc) => doc.id === uid);
+  
+  setBuilding({id: building[0].id, name: building[0].data().name, address: building[0].data().address});
+
+  const complex = await getDoc(doc(db, "complexes", building[0].ref.parent.parent.id));
+
+  setComplex([{value: complex.id, label: complex.data().name}]);
+
+}
+
+export async function addBuilding(col, cuid, subcol, data) {
+  //col = complexes
+  //cuid = id of complex
+  //subcol = subcollection "buildings"
+
+  const docRef = await addDoc(collection(db, col, cuid, subcol), data);
+
+  console.log("Document written with ID: ", docRef.id);
+}
+
+export async function updateBuilding(col, cuid, subcol, buid, data) {
+  //col = complexes
+  //cuid = id of complex
+  //subcol = subcollection "buildings"
+  //buid = id of buildig to be updated
+
+  await updateDoc(doc(db, col, cuid, subcol, buid), data);
 }
