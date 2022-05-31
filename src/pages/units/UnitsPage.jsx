@@ -1,54 +1,45 @@
+import { collectionGroup, onSnapshot, orderBy, query } from "firebase/firestore";
+import { useEffect } from "react";
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import TablePagination from "../../components/pagination/TablePagination";
-
-// Para traer esta data de firebase @Lucho2027
-const data = [
-  {
-    id: "qyGp2fBgvOtwthSlF6tt",
-    building: "Edificio B",
-    number: "B01",
-    residents: "5",
-    vehicles: "2",
-    visitors: "6",
-  },
-  {
-    id: "qyGp2fBgvOtwthSlF6ta",
-    building: "Edificio B",
-    number: "B02",
-    residents: "5",
-    vehicles: "2",
-    visitors: "6",
-  },
-  {
-    id: "qyGp2fBgvOtwthSlF6ts",
-    building: "Edificio B",
-    number: "B03",
-    residents: "5",
-    vehicles: "2",
-    visitors: "6",
-  },
-];
+import db from "../../firestore/FirestoreConfig";
+import { getUnitsList } from "../../firestore/firestoreHelpers";
 
 let PageSize = 10;
 
-export default function UnitsPage() {
+export default function UnitsPage({setTitle}) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [data, setData] = useState([]);
 
   const currentTableData = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * PageSize;
     const lastPageIndex = firstPageIndex + PageSize;
     return data.slice(firstPageIndex, lastPageIndex);
-  }, [currentPage]);
+  }, [data, currentPage]);
+
+  useEffect(() => {
+    setTitle({
+      name: "Unidades",
+      description: "Lista de todas las unidades registradas en el complejo.",
+    });
+    const getData = async () => {
+     getUnitsList(setData);
+    }
+    getData();
+  }, []);
+
+  useEffect(() => {
+    onSnapshot(query(collectionGroup(db, "units"), orderBy("number", "desc")), () => {
+      getUnitsList(setData);
+    });
+    console.log("yeet");
+  }, []);
 
   return (
     <div className="p-6 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h1 className="text-xl font-semibold text-gray-900">Unidades</h1>
-          <p className="mt-2 text-sm text-gray-700">
-            Lista de todas las unidades registradas en el complejo.
-          </p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
           <Link to={"/createunit"}>
@@ -125,9 +116,9 @@ export default function UnitsPage() {
                         {unit.visitors}
                       </td>
                       <td className="text-right relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
-                        <Link to={"/editunit/" + unit.id}>
+                        <Link to={"/editunit/" + unit.path}>
                         <span className="text-indigo-600 hover:text-indigo-900">
-                          Editar<span className="sr-only">, {unit.id}</span>
+                          Editar<span className="sr-only">, {unit.path}</span>
                         </span>
                         </Link>
                       </td>

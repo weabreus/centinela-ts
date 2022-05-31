@@ -1,37 +1,38 @@
+import { useEffect } from "react";
+import { useState } from "react";
 import { useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 import BuildingInput from "../../components/form/BuildingInput";
 import ResidentMultipleInput from "../../components/form/ResidentMultipleInput";
 import ResidentVehicleMultipleInput from "../../components/form/ResidentVehicleMultipleInput";
 import UnitPetsMultipleInput from "../../components/form/UnitPetsMultipleInput";
 import UnitVisitorsMultipleInput from "../../components/form/UnitVisitorsMultipleInput";
+import { getUnit, updateUnit } from "../../firestore/firestoreHelpers";
 
-export default function CreateUnitsPage() {
-  const { id } = useParams();
+export default function CreateUnitsPage({setTitle}) {
+  const history = useHistory();
 
+  const { pathComplex, pathBuilding, id } = useParams();
+  const [unit, setUnit] = useState({});
+  const path = `complexes/${pathComplex}/buildings/${pathBuilding}/units/${id}`;
   // Traer unidad de firestore @Lucho2027
 
-  const unit = {
-    id: id,
-    building: [{value: "buildingid1", label: "Building Name 1"}],
-    number: "B01",
-    pets: [
-      { value: "petid1", label: "Pet Name 1" },
-      { value: "petid2", label: "Pet Name 2" },
-    ],
-    residents: [
-      { value: "residentid1", label: "Resident Name 1" },
-      { value: "residentid2", label: "Resident Name 2" },
-    ],
-    vehicles: [
-      { value: "vehicleid1", label: "Vehicle Name 1" },
-      { value: "vehicleid2", label: "Vehicle Name 2" },
-    ],
-    visitors: [
-      { value: "visitorid1", label: "Visitor Name 1" },
-      { value: "visitorid2", label: "Visitor Name 2" },
-    ],
-  };
+  useEffect(() => {
+    setTitle({
+      name: "Formulario de edición de unidades",
+      description:
+        "Ingrese la información requerida para la edición de la unidad.",
+    });
+
+    const getData = async () => {
+      getUnit(path, setUnit)
+    }
+    getData()
+  }, []);
+
+  useEffect(() => {
+    console.log(unit);
+  }, [unit])
 
   const number = useRef();
   const building = useRef();
@@ -45,16 +46,16 @@ export default function CreateUnitsPage() {
 
     const unitData = {
       number: number.current.value,
-      building: building.current.getValue()[0].value,
+      building: building.current.getValue(),
       residents: residents.current.getValue(),
       vehicles: vehicles.current.getValue(),
-      visitors: visitors.current.getValue(),
+      authorizedVisitors: visitors.current.getValue(),
       pets: pets.current.getValue(),
     };
 
-    //   Update building data in firestore @Lucho2027
+    updateUnit(path, unitData);
 
-    console.log(unitData);
+    history.push("/units");
   }
   return (
     <>
@@ -65,15 +66,6 @@ export default function CreateUnitsPage() {
         >
           <div className="space-y-8 divide-y divide-gray-200">
             <div>
-              <div>
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  Editar Unidad
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Llene los campos requeridos para editar la unidad.
-                </p>
-              </div>
-
               <div className="mt-6 grid grid-cols-6 gap-y-6 gap-x-4 sm:grid-cols-6">
                 <div className="col-span-3 sm:col-span-3">
                   <label
@@ -142,7 +134,7 @@ export default function CreateUnitsPage() {
                     Visitantes Autorizados
                   </label>
                   <div className="mt-1">
-                    <UnitVisitorsMultipleInput visitors={visitors} initial={unit.visitors} />
+                    <UnitVisitorsMultipleInput visitors={visitors} initial={unit.authorizedVisitors} />
                   </div>
                 </div>
 

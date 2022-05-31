@@ -1,12 +1,17 @@
+import { useEffect } from "react";
 import { useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import BuildingInput from "../../components/form/BuildingInput";
-import ResidentMultipleInput from "../../components/form/ResidentMultipleInput"
-import ResidentVehicleMultipleInput from "../../components/form/ResidentVehicleMultipleInput"
+import ResidentMultipleInput from "../../components/form/ResidentMultipleInput";
+import ResidentVehicleMultipleInput from "../../components/form/ResidentVehicleMultipleInput";
 import UnitPetsMultipleInput from "../../components/form/UnitPetsMultipleInput";
-import UnitVisitorsMultipleInput from "../../components/form/UnitVisitorsMultipleInput"
+import UnitVisitorsMultipleInput from "../../components/form/UnitVisitorsMultipleInput";
+import { addUnit } from "../../firestore/firestoreHelpers";
 
-export default function CreateUnitsPage() {
+export default function CreateUnitsPage({setTitle}) {
+
+  const history = useHistory();
+
   const number = useRef();
   const building = useRef();
   const residents = useRef();
@@ -14,22 +19,31 @@ export default function CreateUnitsPage() {
   const visitors = useRef();
   const pets = useRef();
 
+  useEffect(() => {
+    setTitle({
+      name: "Formulario de creción de unidades",
+      description:
+        "Ingrese la información requerida para la creación de la unidad.",
+    });
+  }, []);
+
   function submitHandler(event) {
     event.preventDefault();
 
     const unitData = {
       number: number.current.value,
-      building: building.current.getValue()[0].value,
+      building: building.current.getValue(),
       residents: residents.current.getValue(),
       vehicles: vehicles.current.getValue(),
-      visitors: visitors.current.getValue(),
-      pets: pets.current.getValue()
+      authorizedVisitors: visitors.current.getValue(),
+      pets: pets.current.getValue(),
     };
 
-    //   Update building data in firestore @Lucho2027
-
-    console.log(unitData);
+    addUnit(unitData);
+    
+    history.push("/units");
   }
+
   return (
     <>
       <div className="py-6 px-12">
@@ -39,15 +53,6 @@ export default function CreateUnitsPage() {
         >
           <div className="space-y-8 divide-y divide-gray-200">
             <div>
-              <div>
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  Crear Unidad
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Llene los campos requeridos para crear la unidad.
-                </p>
-              </div>
-
               <div className="mt-6 grid grid-cols-6 gap-y-6 gap-x-4 sm:grid-cols-6">
                 <div className="col-span-3 sm:col-span-3">
                   <label
@@ -57,7 +62,7 @@ export default function CreateUnitsPage() {
                     Edificio
                   </label>
                   <div className="mt-1">
-                    <BuildingInput building={building}/>
+                    <BuildingInput building={building} />
                   </div>
                 </div>
 
@@ -88,7 +93,7 @@ export default function CreateUnitsPage() {
                     Residentes
                   </label>
                   <div className="mt-1">
-                    <ResidentMultipleInput residents={residents}/>
+                    <ResidentMultipleInput residents={residents} />
                   </div>
                 </div>
 
@@ -100,7 +105,7 @@ export default function CreateUnitsPage() {
                     Vehiculos
                   </label>
                   <div className="mt-1">
-                    <ResidentVehicleMultipleInput vehicles={vehicles}/> 
+                    <ResidentVehicleMultipleInput vehicles={vehicles} />
                   </div>
                 </div>
 
@@ -112,7 +117,7 @@ export default function CreateUnitsPage() {
                     Visitantes Autorizados
                   </label>
                   <div className="mt-1">
-                    <UnitVisitorsMultipleInput visitors={visitors}/>
+                    <UnitVisitorsMultipleInput visitors={visitors} />
                   </div>
                 </div>
 
@@ -124,10 +129,9 @@ export default function CreateUnitsPage() {
                     Mascotas
                   </label>
                   <div className="mt-1">
-                    <UnitPetsMultipleInput pets={pets}/>
+                    <UnitPetsMultipleInput pets={pets} />
                   </div>
                 </div>
-
               </div>
             </div>
           </div>

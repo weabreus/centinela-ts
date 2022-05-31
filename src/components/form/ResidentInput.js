@@ -19,7 +19,7 @@ export default function ResidentInput({resident, initial}) {
 
   useEffect(() => {
     getResidents(setOptions);
-  });
+  }, []);
   return (
     <div>
       <Select

@@ -98,6 +98,17 @@ export async function getUnits(setOptions) {
   setOptions(options);
 }
 
+export async function getUnit(path, setOptions) {
+  console.log(path);
+  const unitSnap = await getDoc(doc(db, path));
+
+  if (unitSnap.exists()) {
+    setOptions(unitSnap.data());
+  } else {
+    console.log("Document doesn't exists!")
+  }
+}
+
 export async function getDocument(col, uid) {
   const docRef = doc(db, col, uid);
   const docSnap = await getDoc(docRef);
@@ -162,27 +173,42 @@ export async function getBuildings(setOptions) {
     options.push({
       id: doc.id,
       name: doc.data().name,
-      address: doc.data().address
+      address: doc.data().address,
     });
   });
 
   setOptions(options);
 }
 
+export async function getBuildingInput(setOptions) {
+  const buildings = query(collectionGroup(db, "buildings"));
+  const querySnapshot = await getDocs(buildings);
+
+  const options = [];
+  querySnapshot.forEach((doc) => {
+    options.push({value: doc.id, label: doc.data().name})
+  });
+
+  setOptions(options);
+}
+
 export async function getBuilding(col, uid, setBuilding, setComplex) {
-  const buildings = query(
-    collectionGroup(db, col),
-  );
+  const buildings = query(collectionGroup(db, col));
   const querySnapshot = await getDocs(buildings);
 
   const building = await querySnapshot.docs.filter((doc) => doc.id === uid);
-  
-  setBuilding({id: building[0].id, name: building[0].data().name, address: building[0].data().address});
 
-  const complex = await getDoc(doc(db, "complexes", building[0].ref.parent.parent.id));
+  setBuilding({
+    id: building[0].id,
+    name: building[0].data().name,
+    address: building[0].data().address,
+  });
 
-  setComplex([{value: complex.id, label: complex.data().name}]);
+  const complex = await getDoc(
+    doc(db, "complexes", building[0].ref.parent.parent.id)
+  );
 
+  setComplex([{ value: complex.id, label: complex.data().name }]);
 }
 
 export async function addBuilding(col, cuid, subcol, data) {
@@ -203,3 +229,77 @@ export async function updateBuilding(col, cuid, subcol, buid, data) {
 
   await updateDoc(doc(db, col, cuid, subcol, buid), data);
 }
+
+export async function getUnitsList(setOptions) {
+  const units = query(collectionGroup(db, "units"));
+  const querySnapshot = await getDocs(units);
+
+  const buildings = {};
+  const buildingsQuery = query(collectionGroup(db, "buildings"));
+  const buildingsSnap = await getDocs(buildingsQuery);
+  buildingsSnap.forEach((doc) => {
+    buildings[doc.id] = doc.data().name;
+  });
+
+  const options = [];
+  querySnapshot.forEach((doc) => {
+    options.push({
+      id: doc.id,
+      building: buildings[doc.ref.parent.parent.id],
+      number: doc.data().number,
+      residents: doc.data().residents?.length ? doc.data().residents.length : 0,
+      vehicles: doc.data().vehicles?.length ? doc.data().vehicles.length : 0,
+      visitors: doc.data().authorizedVisitors?.length ? doc.data().authorizedVisitors.length : 0,
+      path: doc.ref.path
+    });
+  });
+  console.log(options);
+  setOptions(options);
+}
+
+export async function getResidentVehicles(setOptions) {
+  const vehicles = query(collection(db, "vehicles"), where("type", "==", "resident"));
+  const querySnapshot = await getDocs(vehicles);
+
+  const options = [];
+  querySnapshot.forEach((doc) => {
+    options.push({value: doc.id, label: `(${doc.data().plate}) ${doc.data().make} ${doc.data().model} ${doc.data().year}`});
+  });
+
+  setOptions(options);
+}
+
+export async function getResidentPets(setOptions) {
+  const pets = query(collection(db, "pets"));
+  const querySnapshot = await getDocs(pets);
+
+  const options = [];
+  querySnapshot.forEach((doc) => {
+    options.push({value: doc.id, label: doc.data().name});
+  });
+
+  setOptions(options);
+}
+
+export async function addUnit(data) {
+  //col = complexes
+  //cuid = id of complex
+  //subcol = subcollection "buildings"
+  const buildings = query(collectionGroup(db, "buildings"));
+  const querySnapshot = await getDocs(buildings);
+
+  const building = await querySnapshot.docs.filter((doc) => doc.id === data.building[0].value);
+
+  const path = `${building[0].ref.path}/units`
+  console.log(path);
+  const docRef = await addDoc(collection(db, path), data);
+
+  console.log("Document written with ID: ", docRef.id);
+}
+
+export async function updateUnit(path, data) {
+  await updateDoc(doc(db, path), data);
+
+  console.log("Document updated with ID: ", path);
+}
+

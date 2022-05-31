@@ -38,7 +38,7 @@ function App() {
 
       {authCtx.isLoggedIn && (
         <Layout title={title}>
-          <Route path="/visits" exact>
+          <Route path="/" exact>
             <VisitsPage setTitle={setTitle}/>
           </Route>
           <Route path="/profile" exact>
@@ -65,7 +65,7 @@ function App() {
           <Route path="/createunit" exact>
             <CreateUnitsPage setTitle={setTitle}/>
           </Route>
-          <Route path="/editunit/:id" exact>
+          <Route path="/editunit/complexes/:pathComplex/buildings/:pathBuilding/units/:id" exact>
             <EditUnitsPage setTitle={setTitle}/>
           </Route>
           <Route path="/complexes" exact>

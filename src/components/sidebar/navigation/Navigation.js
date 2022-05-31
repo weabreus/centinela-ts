@@ -10,7 +10,7 @@ function Navigation() {
   const location = useLocation();
 
   const navigation = [
-    { key: "Visitas", href: "/visits", icon: HomeIcon, current: (location.pathname === "/visits" ? true : false) },
+    { key: "Visitas", href: "/", icon: HomeIcon, current: (location.pathname === "/" ? true : false) },
     { key: "Directorio", href: "/directory", icon: ViewListIcon, current: (location.pathname === "/directory" ? true : false) },
     { key: "Complejos", href: "/complexes", icon: ViewGridIcon, current: (location.pathname === "/complexes" ? true : false) },
     { key: "Edificios", href: "/buildings", icon: OfficeBuildingIcon, current: (location.pathname === "/buildings" ? true : false) },
