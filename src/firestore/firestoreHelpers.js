@@ -12,7 +12,10 @@ import {
   collectionGroup,
   setDoc,
   updateDoc,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
+import { async } from "@firebase/util";
 
 export async function storeVisit(data) {
   const docRef = await addDoc(collection(db, "visits"), data);
@@ -38,7 +41,7 @@ export async function getVisitors(setOptions) {
   const options = [];
 
   collectionRef.forEach((doc) => {
-    options.push({ value: doc.id, label: doc.data().name });
+    options.push({ value: doc.id, label: doc.data().name, path: doc.ref.path });
   });
 
   setOptions(options);
@@ -65,24 +68,8 @@ export async function getVisitorVehicles(visitor, setOptions) {
   const docSnap = await getDoc(docRef);
 
   const vehicles = docSnap.data().vehicles;
-  const q = query(
-    collection(db, "vehicles"),
-    where(documentId(), "in", vehicles)
-  );
 
-  const options = [];
-
-  const vehicleSnap = await getDocs(q);
-  vehicleSnap.forEach((doc) => {
-    options.push({
-      value: doc.id,
-      label: `(${doc.data().plate}) ${doc.data().make} ${doc.data().model} ${
-        doc.data().year
-      }`,
-    });
-  });
-
-  setOptions(options);
+  setOptions(vehicles);
 }
 
 export async function getUnits(setOptions) {
@@ -92,7 +79,11 @@ export async function getUnits(setOptions) {
 
   const options = [];
   querySnapshot.forEach((doc) => {
-    options.push({ value: doc.id, label: doc.data().number });
+    options.push({
+      value: doc.id,
+      label: doc.data().number,
+      path: doc.ref.path,
+    });
   });
 
   setOptions(options);
@@ -105,7 +96,7 @@ export async function getUnit(path, setOptions) {
   if (unitSnap.exists()) {
     setOptions(unitSnap.data());
   } else {
-    console.log("Document doesn't exists!")
+    console.log("Document doesn't exists!");
   }
 }
 
@@ -186,7 +177,7 @@ export async function getBuildingInput(setOptions) {
 
   const options = [];
   querySnapshot.forEach((doc) => {
-    options.push({value: doc.id, label: doc.data().name})
+    options.push({ value: doc.id, label: doc.data().name });
   });
 
   setOptions(options);
@@ -249,8 +240,10 @@ export async function getUnitsList(setOptions) {
       number: doc.data().number,
       residents: doc.data().residents?.length ? doc.data().residents.length : 0,
       vehicles: doc.data().vehicles?.length ? doc.data().vehicles.length : 0,
-      visitors: doc.data().authorizedVisitors?.length ? doc.data().authorizedVisitors.length : 0,
-      path: doc.ref.path
+      visitors: doc.data().authorizedVisitors?.length
+        ? doc.data().authorizedVisitors.length
+        : 0,
+      path: doc.ref.path,
     });
   });
   console.log(options);
@@ -258,12 +251,20 @@ export async function getUnitsList(setOptions) {
 }
 
 export async function getResidentVehicles(setOptions) {
-  const vehicles = query(collection(db, "vehicles"), where("type", "==", "resident"));
+  const vehicles = query(
+    collection(db, "vehicles"),
+    where("type", "==", "resident")
+  );
   const querySnapshot = await getDocs(vehicles);
 
   const options = [];
   querySnapshot.forEach((doc) => {
-    options.push({value: doc.id, label: `(${doc.data().plate}) ${doc.data().make} ${doc.data().model} ${doc.data().year}`});
+    options.push({
+      value: doc.id,
+      label: `(${doc.data().plate}) ${doc.data().make} ${doc.data().model} ${
+        doc.data().year
+      }`,
+    });
   });
 
   setOptions(options);
@@ -275,7 +276,7 @@ export async function getResidentPets(setOptions) {
 
   const options = [];
   querySnapshot.forEach((doc) => {
-    options.push({value: doc.id, label: doc.data().name});
+    options.push({ value: doc.id, label: doc.data().name });
   });
 
   setOptions(options);
@@ -288,9 +289,11 @@ export async function addUnit(data) {
   const buildings = query(collectionGroup(db, "buildings"));
   const querySnapshot = await getDocs(buildings);
 
-  const building = await querySnapshot.docs.filter((doc) => doc.id === data.building[0].value);
+  const building = await querySnapshot.docs.filter(
+    (doc) => doc.id === data.building[0].value
+  );
 
-  const path = `${building[0].ref.path}/units`
+  const path = `${building[0].ref.path}/units`;
   console.log(path);
   const docRef = await addDoc(collection(db, path), data);
 
@@ -303,3 +306,118 @@ export async function updateUnit(path, data) {
   console.log("Document updated with ID: ", path);
 }
 
+export async function getVehicles(setOptions) {
+  const vehicles = query(collection(db, "vehicles"));
+
+  const querySnapshot = await getDocs(vehicles);
+
+  const options = [];
+  querySnapshot.forEach((doc) => {
+    options.push({ id: doc.id, ...doc.data() });
+  });
+
+  setOptions(options);
+}
+
+export async function addVehicle(data) {
+  const vehicleRef = await addDoc(collection(db, "vehicles"), data);
+
+  console.log("Created document with ID: ", vehicleRef.id);
+
+  if (data.type === "resident") {
+    const unit = await getDoc(doc(db, data.unit[0].path));
+
+    await setDoc(doc(db, data.unit[0].path), {
+      vehicles: [
+        ...unit.data().vehicles,
+        {
+          value: vehicleRef.id,
+          label: `(${data.plate}) ${data.make} ${data.model} ${data.year}`,
+          path: vehicleRef.path,
+        },
+      ],
+    });
+
+    console.log("Updated document with path: ", data.unit[0].path);
+  } else {
+    const visitor = await getDoc(doc(db, data.visitor[0].path));
+
+    await setDoc(doc(db, data.visitor[0].path), {
+      vehicles: [
+        ...visitor.data().vehicles,
+        {
+          value: vehicleRef.id,
+          label: `(${data.plate}) ${data.make} ${data.model} ${data.year}`,
+          path: vehicleRef.path,
+        },
+      ],
+    });
+
+    console.log("Updated document with path: ", data.visitor[0].path);
+  }
+}
+
+export async function updateVehicle(uid, data) {
+
+  await getDoc(doc(db, "vehicles", uid)).then(async (vehicle) => {
+    if (vehicle.data().type === "resident") {
+      //Avoid duplicates in units vehicles array.
+      await getDoc(doc(db, vehicle.data().unit[0].path)).then(async (unit) => {
+        console.log(unit.data());
+        unit.data().vehicles.forEach(async (veh) => {
+          console.log(veh);
+          if (veh.path === ("vehicles/" + uid)) {
+            await updateDoc(doc(db, vehicle.data().unit[0].path), {
+              vehicles: arrayRemove(veh),
+            });
+          }
+        });
+      });
+    } else {
+      // Avoid duplicates in vehicles array.
+      await getDoc(doc(db, vehicle.data().visitor[0].path)).then(async (visitor) => {
+        visitor.data().vehicles.forEach(async (veh) => {
+          console.log("vehicles/" + uid);
+          if (veh.path === ("vehicles/" + uid)) {
+            await updateDoc(doc(db, vehicle.data().visitor[0].path), {
+              vehicles: arrayRemove(veh),
+            });
+          }
+        });
+      });
+    }
+  });
+  await setDoc(doc(db, "vehicles", uid), data);
+
+  console.log("Updated document with ID: ", uid);
+
+  if (data.type === "resident") {
+    await updateDoc(
+      doc(db, data.unit[0].path),
+      {
+        vehicles: arrayUnion({
+          value: uid,
+          label: `(${data.plate}) ${data.make} ${data.model} ${data.year}`,
+          path: "vehicles/" + uid,
+        }),
+      },
+      { merge: true }
+    );
+
+    console.log("Updated document with path: ", data.unit[0].path);
+  } else {
+    await updateDoc(
+      doc(db, data.visitor[0].path),
+      {
+        vehicles: arrayUnion({
+          value: uid,
+          label: `(${data.plate}) ${data.make} ${data.model} ${data.year}`,
+          path: "vehicles/" + uid,
+        }),
+      },
+      { merge: true }
+    );
+
+    console.log("Updated document with path: ", data.visitor[0].path);
+  }
+}

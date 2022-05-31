@@ -1,24 +1,28 @@
+import { useEffect } from "react";
 import { useState } from "react";
 import { useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import UnitInput from "../../components/form/UnitInput";
 import VisitorInput from "../../components/form/VisitorInput";
+import { getDocument, updateVehicle } from "../../firestore/firestoreHelpers";
 
-export default function CreateVehiclePage() {
+export default function CreateVehiclePage({ setTitle }) {
   const { id } = useParams();
 
-  //Get vehicle from firestore @Lucho2027
+  const [vehicle, setVehicle] = useState({});
 
-  const vehicle = {
-    id: id,
-    type: "resident",
-    make: "Toyota",
-    model: "Corolla",
-    color: "Negro",
-    plate: "JFP950",
-    year: "2020",
-    unit: [{ value: "unitid1", label: "Unit Name 1" }],
-  };
+  useEffect(() => {
+    setTitle({
+      name: "Formulario de edición de vehiculo",
+      description:
+        "Actualice todos los datos requeridos para la edición del vehiculo.",
+    });
+
+    const getData = async () => {
+      setVehicle(await getDocument("vehicles", id));
+    };
+    getData();
+  }, []);
 
   const [type, setType] = useState(vehicle.type);
 
@@ -29,9 +33,12 @@ export default function CreateVehiclePage() {
   const year = useRef();
   const visitor = useRef();
   const unit = useRef();
-  const typeRef = useRef();
+  const typeRef = useRef("");
 
- 
+  useEffect(() => {
+    setType(typeRef.current.value);
+  }, [typeRef]);
+
   function submitHandler(event) {
     event.preventDefault();
     let vehicleData = {};
@@ -58,8 +65,8 @@ export default function CreateVehiclePage() {
     }
 
     //   Update vehicle data in firestore @Lucho2027
-
-    console.log(vehicleData);
+    updateVehicle(id, vehicleData);
+    // console.log(vehicleData);
   }
   return (
     <>
@@ -89,7 +96,7 @@ export default function CreateVehiclePage() {
                   </label>
                   <div className="mt-1">
                     <input
-                      value={vehicle.make}
+                      defaultValue={vehicle.make}
                       ref={make}
                       required
                       type="text"
@@ -109,7 +116,7 @@ export default function CreateVehiclePage() {
                   </label>
                   <div className="mt-1">
                     <input
-                      value={vehicle.model}
+                      defaultValue={vehicle.model}
                       ref={model}
                       required
                       type="text"
@@ -129,7 +136,7 @@ export default function CreateVehiclePage() {
                   </label>
                   <div className="mt-1">
                     <input
-                      value={vehicle.color}
+                      defaultValue={vehicle.color}
                       ref={color}
                       required
                       type="text"
@@ -149,7 +156,7 @@ export default function CreateVehiclePage() {
                   </label>
                   <div className="mt-1">
                     <input
-                      value={vehicle.plate}
+                      defaultValue={vehicle.plate}
                       ref={plate}
                       required
                       type="text"
@@ -169,7 +176,7 @@ export default function CreateVehiclePage() {
                   </label>
                   <div className="mt-1">
                     <input
-                      value={vehicle.year}
+                      defaultValue={vehicle.year}
                       ref={year}
                       required
                       type="text"
@@ -190,7 +197,7 @@ export default function CreateVehiclePage() {
                   <div className="mt-1">
                     <select
                       ref={typeRef}
-                      value={type}
+                      defaultValue={type}
                       onChange={(event) => setType(event.target.value)}
                       name="type"
                       id="type"

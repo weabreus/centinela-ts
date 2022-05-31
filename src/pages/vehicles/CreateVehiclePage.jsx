@@ -1,11 +1,15 @@
+import { useEffect } from "react";
 import { useState } from "react";
 import { useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import UnitInput from "../../components/form/UnitInput";
 import VisitorInput from "../../components/form/VisitorInput";
+import { addVehicle } from "../../firestore/firestoreHelpers";
 
-export default function CreateVehiclePage() {
-  const [type, setType] = useState('visitor');
+export default function CreateVehiclePage({ setTitle }) {
+  const history = useHistory();
+
+  const [type, setType] = useState("visitor");
   const make = useRef();
   const model = useRef();
   const color = useRef();
@@ -13,8 +17,6 @@ export default function CreateVehiclePage() {
   const year = useRef();
   const visitor = useRef();
   const unit = useRef();
-
-
 
   function submitHandler(event) {
     event.preventDefault();
@@ -41,10 +43,19 @@ export default function CreateVehiclePage() {
       };
     }
 
-    //   Update vehicle data in firestore @Lucho2027
+    addVehicle(vehicleData);
 
-    console.log(vehicleData);
+    history.push("/vehicles");
   }
+
+  useEffect(() => {
+    setTitle({
+      name: "Formulario de creación de vehiculo",
+      description:
+        "Ingrese todos los datos requeridos para la creación del vehiculo.",
+    });
+  }, []);
+
   return (
     <>
       <div className="py-6 px-12">
@@ -54,15 +65,6 @@ export default function CreateVehiclePage() {
         >
           <div className="space-y-8 divide-y divide-gray-200">
             <div>
-              <div>
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  Crear vehiculo
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Llene los campos requeridos para crear el vehiculo.
-                </p>
-              </div>
-
               <div className="mt-6 grid grid-cols-6 gap-y-6 gap-x-4 sm:grid-cols-6">
                 <div className="col-span-3 sm:col-span-3">
                   <label

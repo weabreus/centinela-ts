@@ -1,57 +1,46 @@
+import { useEffect } from "react";
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import TablePagination from "../../components/pagination/TablePagination";
-
-// Para traer esta data de firebase @Lucho2027
-const data = [
-  {
-    id: "qyGp2fBgvOtwthSlF6tt",
-    make: "Toyota",
-    model: "Corolla",
-    color: "Negro",
-    plate: "JPF956",
-    year: "2020",
-    type: "Visitante"
-  },
-  {
-    id: "qyGp2fBgvOtwthSlF6ta",
-    make: "Mercedez",
-    model: "CLA500",
-    color: "Negro",
-    plate: "JPF956",
-    year: "2022",
-    type: "Residente"
-  },
-];
+import { getVehicles } from "../../firestore/firestoreHelpers";
 
 let PageSize = 10;
 
-export default function VehiclesPage() {
+export default function VehiclesPage({ setTitle }) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [data, setData] = useState([]);
 
   const currentTableData = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * PageSize;
     const lastPageIndex = firstPageIndex + PageSize;
     return data.slice(firstPageIndex, lastPageIndex);
-  }, [currentPage]);
+  }, [data, currentPage]);
+
+  useEffect(() => {
+    setTitle({
+      name: "Vehiculos",
+      description: "Lista de todas los vehiculos registrados en el complejo.",
+    });
+
+    const getData = async () => {
+      getVehicles(setData);
+    }
+    getData();
+  }, []);
 
   return (
     <div className="p-6 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h1 className="text-xl font-semibold text-gray-900">Vehiculos</h1>
-          <p className="mt-2 text-sm text-gray-700">
-            Lista de todas las vehiculos registradas en el complejo.
-          </p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
           <Link to={"/createvehicle"}>
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-          >
-            Agregar Vehiculo
-          </button>
+            <button
+              type="button"
+              className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+            >
+              Agregar Vehiculo
+            </button>
           </Link>
         </div>
       </div>
@@ -129,9 +118,10 @@ export default function VehiclesPage() {
                       </td>
                       <td className="text-right relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
                         <Link to={"/editvehicle/" + vehicle.id}>
-                        <span className="text-indigo-600 hover:text-indigo-900">
-                          Editar<span className="sr-only">, {vehicle.id}</span>
-                        </span>
+                          <span className="text-indigo-600 hover:text-indigo-900">
+                            Editar
+                            <span className="sr-only">, {vehicle.id}</span>
+                          </span>
                         </Link>
                       </td>
                     </tr>
