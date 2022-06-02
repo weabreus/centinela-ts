@@ -65,7 +65,7 @@ function Sidebar(props) {
           {/* User account dropdown */}
           <UserDropdown />
           {/* Sidebar Search */}
-          <SearchBar />
+          {/* <SearchBar /> */}
           {/* Navigation */}
           <Navigation />
         </div>
