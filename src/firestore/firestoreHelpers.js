@@ -8,16 +8,19 @@ import {
   getDoc,
   query,
   where,
-  documentId,
   collectionGroup,
   setDoc,
   updateDoc,
   arrayUnion,
   arrayRemove,
 } from "firebase/firestore";
-import { async } from "@firebase/util";
 
 export async function storeVisit(data) {
+
+  if (!data.exitTimestamp) {
+    delete data.exitTimestamp;
+  }
+  
   const docRef = await addDoc(collection(db, "visits"), data);
 
   console.log("Document written with ID: ", docRef.id);
@@ -64,29 +67,12 @@ export async function getVisitorsInitial(setOptions, visitorUid, setInitial) {
 }
 
 export async function getVisitorVehicles(visitor, setOptions) {
-  const docRef = doc(db, "visitors", visitor.value);
+  const docRef = doc(db, "visitors", visitor);
   const docSnap = await getDoc(docRef);
 
   const vehicles = docSnap.data().vehicles;
-
+  console.log(vehicles);
   setOptions(vehicles);
-}
-
-export async function getUnits(setOptions) {
-  const units = query(collectionGroup(db, "units"));
-
-  const querySnapshot = await getDocs(units);
-
-  const options = [];
-  querySnapshot.forEach((doc) => {
-    options.push({
-      value: doc.id,
-      label: doc.data().number,
-      path: doc.ref.path,
-    });
-  });
-
-  setOptions(options);
 }
 
 export async function getUnit(path, setOptions) {
@@ -105,7 +91,7 @@ export async function getDocument(col, uid) {
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
-    const doc = { docId: docSnap.id, ...docSnap.data() };
+    const doc = { id: docSnap.id, ...docSnap.data() };
 
     return doc;
   } else {
@@ -358,7 +344,6 @@ export async function addVehicle(data) {
 }
 
 export async function updateVehicle(uid, data) {
-
   await getDoc(doc(db, "vehicles", uid)).then(async (vehicle) => {
     if (vehicle.data().type === "resident") {
       //Avoid duplicates in units vehicles array.
@@ -366,7 +351,7 @@ export async function updateVehicle(uid, data) {
         console.log(unit.data());
         unit.data().vehicles.forEach(async (veh) => {
           console.log(veh);
-          if (veh.path === ("vehicles/" + uid)) {
+          if (veh.path === "vehicles/" + uid) {
             await updateDoc(doc(db, vehicle.data().unit[0].path), {
               vehicles: arrayRemove(veh),
             });
@@ -375,16 +360,18 @@ export async function updateVehicle(uid, data) {
       });
     } else {
       // Avoid duplicates in vehicles array.
-      await getDoc(doc(db, vehicle.data().visitor[0].path)).then(async (visitor) => {
-        visitor.data().vehicles.forEach(async (veh) => {
-          console.log("vehicles/" + uid);
-          if (veh.path === ("vehicles/" + uid)) {
-            await updateDoc(doc(db, vehicle.data().visitor[0].path), {
-              vehicles: arrayRemove(veh),
-            });
-          }
-        });
-      });
+      await getDoc(doc(db, vehicle.data().visitor[0].path)).then(
+        async (visitor) => {
+          visitor.data().vehicles.forEach(async (veh) => {
+            console.log("vehicles/" + uid);
+            if (veh.path === "vehicles/" + uid) {
+              await updateDoc(doc(db, vehicle.data().visitor[0].path), {
+                vehicles: arrayRemove(veh),
+              });
+            }
+          });
+        }
+      );
     }
   });
   await setDoc(doc(db, "vehicles", uid), data);
@@ -421,3 +408,40 @@ export async function updateVehicle(uid, data) {
     console.log("Updated document with path: ", data.visitor[0].path);
   }
 }
+
+export async function getAllVisitorVehicles(setOptions) {
+  const vehiclesRef = query(
+    collection(db, "vehicles"),
+    where("type", "==", "visitor")
+  );
+  const querySnapshot = await getDocs(vehiclesRef);
+
+  const options = [];
+  querySnapshot.forEach((doc) => {
+    options.push({
+      value: doc.id,
+      label: `(${doc.data().plate}) ${doc.data().make} ${doc.data().model} ${doc.data().year}`,
+      path: "vehicles/" + doc.id,
+    });
+  });
+
+  setOptions(options);
+}
+
+export async function getLoggedUser(col, uid) {
+  const docRef = doc(db, col, uid);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    const doc = { 
+      docId: docSnap.id,
+      photo: docSnap.data().photo,
+      };
+
+    return doc;
+  } else {
+    // doc.data() will be undefined in this case
+    console.log("No such document!");
+  }
+}
+
