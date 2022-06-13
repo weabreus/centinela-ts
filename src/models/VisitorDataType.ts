@@ -6,7 +6,7 @@ interface VisitorDataType {
   photo?: string;
   identification: string;
   name: string;
-  vehicles: Options<InputType[]>;
+  vehicles?: Options<InputType[]>;
 }
 
 export default VisitorDataType;

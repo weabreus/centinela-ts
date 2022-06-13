@@ -124,7 +124,7 @@ export async function getVisitorsInput(setOptions) {
   const options = [];
 
   collectionRef.forEach((doc) => {
-    options.push({ value: doc.id, label: doc.data().name, path: doc.ref.path });
+    options.push({ value: doc.id, label: doc.data().name, path: doc.ref.path, identification: doc.data().identification });
   });
 
   setOptions(options);
