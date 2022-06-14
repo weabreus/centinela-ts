@@ -1,13 +1,13 @@
 import { Timestamp } from "firebase/firestore";
 import { Options } from "react-select";
-import UnitDataType from "./UnitDataType";
+import UnitInputType from "./UnitInputType";
 
 interface VisitDataType {
   id?: string;
   entryTimestamp: Timestamp;
   visitorName: string;
   visitorID: string;
-  unit: Options<UnitDataType[]>;
+  unit: Options<UnitInputType>;
   vehicleModel: string;
   vehiclePlate: string;
   notes: string;
