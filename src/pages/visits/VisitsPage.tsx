@@ -12,10 +12,7 @@ import {
 } from "firebase/firestore";
 import moment from "moment";
 import PageTitle from "../../models/PageTitle";
-import VehicleShortType from "../../models/VehicleShortType";
-import Input from "../../models/Input";
 import UnitShortType from "../../models/UnitShortType";
-import VisitorShortType from "../../models/VisitorShortType";
 import VisitDataType from "../../models/VisitDataType";
 
 const VisitsPage: React.FC<{
@@ -23,20 +20,7 @@ const VisitsPage: React.FC<{
   setVisits: React.Dispatch<React.SetStateAction<VisitDataType[]>>;
   setTitle: React.Dispatch<React.SetStateAction<PageTitle>>;
 }> = ({ visits, setVisits, setTitle }) => {
-  const [visitors, setVisitors] = useState<VisitorShortType[]>([]);
   const [units, setUnits] = useState<UnitShortType[]>([]);
-  const [vehicles, setVehicles] = useState<VehicleShortType[]>([]);
-
-  function vehicleDescription(
-    vehiclesList: VehicleShortType[],
-    currentVehicle: Input[]
-  ) {
-    const vehicle = vehiclesList.filter((vehicle) => {
-      return vehicle.id === currentVehicle[0].value;
-    });
-
-    return `${vehicle[0]?.make} ${vehicle[0]?.model} ${vehicle[0]?.year}`;
-  }
 
   useEffect(() => {
     setTitle({
@@ -52,21 +36,15 @@ const VisitsPage: React.FC<{
       const tempVisits: VisitDataType[] = data.docs.map((doc) => {
         return {
           id: doc.id,
-          visitor: doc.data().visitor,
-          vehicle: doc.data().vehicle,
+          visitorName: doc.data().visitorName,
+          visitorID: doc.data().visitorID,
+          vehicleModel: doc.data().vehicleModel,
+          vehiclePlate: doc.data().vehiclePlate,
           unit: doc.data().unit,
           visitors: doc.data().visitors,
           entryTimestamp: doc.data().entryTimestamp,
-          exitTimestamp: doc.data().exitTimestamp,
           notes: doc.data().notes,
         };
-      });
-
-      const usersCollectionRef = query(collection(db, "visitors"));
-      const visitorData = await getDocs(usersCollectionRef);
-
-      const tempVisitors = visitorData.docs.map((doc) => {
-        return { name: doc.data().name, id: doc.id };
       });
 
       const unitCollectionRef = query(collectionGroup(db, "units"));
@@ -75,21 +53,8 @@ const VisitsPage: React.FC<{
         return { number: doc.data().number, id: doc.id };
       });
 
-      const vehicleCollectionRef = query(collection(db, "vehicles"));
-      const vehicleData = await getDocs(vehicleCollectionRef);
-      const tempVehicles: VehicleShortType[] = vehicleData.docs.map((doc) => {
-        return {
-          make: doc.data().make,
-          year: doc.data().year,
-          model: doc.data().model,
-          id: doc.id,
-        };
-      });
-
       setVisits(tempVisits);
-      setVisitors(tempVisitors);
       setUnits(tempUnits);
-      setVehicles(tempVehicles);
     };
     getVisits();
   }, [setTitle, setVisits]);
@@ -102,12 +67,13 @@ const VisitsPage: React.FC<{
         snap.forEach((doc) => {
           snapVisits.push({
             id: doc.id,
-            visitor: doc.data().visitor,
-            vehicle: doc.data().vehicle,
+            visitorName: doc.data().visitorName,
+            visitorID: doc.data().visitorID,
+            vehicleModel: doc.data().vehicleModel,
+            vehiclePlate: doc.data().vehiclePlate,
             unit: doc.data().unit,
             visitors: doc.data().visitors,
             entryTimestamp: doc.data().entryTimestamp,
-            exitTimestamp: doc.data().exitTimestamp,
             notes: doc.data().notes,
           });
         });
@@ -135,7 +101,7 @@ const VisitsPage: React.FC<{
                     aria-hidden="true"
                   />
                   <span className="font-medium truncate text-sm leading-6">
-                    {visit.visitor[0].value}
+                    {visit.visitorName}
                   </span>
                 </span>
                 <ChevronRightIcon
@@ -158,11 +124,17 @@ const VisitsPage: React.FC<{
                   scope="col"
                   className="text-center w-3/12 px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  <span className="lg:pl-2">Visitante</span>
+                  <span className="lg:pl-2">Nombre</span>
                 </th>
                 <th
                   scope="col"
-                  className="text-center w-2/12 px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
+                  className="text-center w-1/12 px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  <span className="lg:pl-2">ID</span>
+                </th>
+                <th
+                  scope="col"
+                  className="text-center w-3/12 px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
                 >
                   <span className="lg:pl-2">Fecha</span>
                 </th>
@@ -171,12 +143,6 @@ const VisitsPage: React.FC<{
                   className="text-center w-1/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
                 >
                   H. Entrada
-                </th>
-                <th
-                  scope="col"
-                  className="text-center w-1/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  H. Salida
                 </th>
                 <th
                   scope="col"
@@ -206,27 +172,16 @@ const VisitsPage: React.FC<{
               {visits.map((visit) => (
                 <tr key={visit.id}>
                   <td className="text-center px-6 py-3 max-w-0 whitespace-nowrap text-sm font-medium text-gray-900">
-                    <span>
-                      {
-                        visitors.filter(
-                          (visitor) => visitor.id === visit.visitor[0].value
-                        )[0]?.name
-                      }
-                    </span>
-                    {/* </a> */}
-                    {/* </div> */}
+                    <span>{visit.visitorName}</span>
+                  </td>
+                  <td className="text-center px-6 py-3 max-w-0 whitespace-nowrap text-sm font-medium text-gray-500">
+                    <span>{visit.visitorID}</span>
                   </td>
                   <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
                     {moment.unix(visit.entryTimestamp.seconds).format("L")}
                   </td>
                   <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
                     {moment.unix(visit.entryTimestamp.seconds).format("LT")}
-                  </td>
-
-                  <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
-                    {visit.exitTimestamp
-                      ? moment.unix(visit.exitTimestamp.seconds).format("LT")
-                      : ""}
                   </td>
                   <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
                     {
@@ -236,7 +191,7 @@ const VisitsPage: React.FC<{
                     }
                   </td>
                   <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
-                    {vehicleDescription(vehicles, visit.vehicle)}
+                    {`(${visit.vehiclePlate}) ${visit.vehicleModel}`}
                   </td>
                   <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
                     {visit.visitors}

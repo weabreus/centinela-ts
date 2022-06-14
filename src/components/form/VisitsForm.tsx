@@ -10,7 +10,7 @@ import {
 import AuthVisitorsList from "./AuthVisitorsList";
 import UnitDataType from "../../models/UnitDataType";
 import SelectUnitInput from "./SelectUnitInput";
-import { ActionMeta, SingleValue } from "react-select";
+import { ActionMeta, Options, SingleValue } from "react-select";
 import UnitInputType from "../../models/UnitInputType";
 import Directory from "../../models/DirectoryType";
 import VisitorDataType from "../../models/VisitorDataType";
@@ -24,8 +24,6 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
   const vehicleModel = useRef<HTMLInputElement>(null);
   const vehiclePlate = useRef<HTMLInputElement>(null);
   const unit = useRef<Select<UnitDataType[]>>(null);
-  const entry = useRef<HTMLInputElement>(null);
-  const exit = useRef<HTMLInputElement>(null);
   const quantity = useRef<HTMLInputElement>(null);
   const notes = useRef<HTMLTextAreaElement>(null);
 
@@ -67,19 +65,15 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
 
     const visitData: {
       entryTimestamp: Date;
-      exitTimestamp: Date | undefined;
       visitorName: string;
       visitorID: string;
-      unit: any;
+      unit: Options<UnitDataType[]>;
       vehicleModel: string;
       vehiclePlate: string;
       notes: string;
       visitors: string;
     } = {
-      entryTimestamp: new Date(entry.current!.value),
-      exitTimestamp: Date.parse(exit.current!.value)
-        ? new Date(exit.current!.value)
-        : undefined,
+      entryTimestamp: new Date(),
       visitorName: visitorName.current!.value,
       visitorID: visitorID.current!.value,
       unit: unit.current!.getValue(),
@@ -154,7 +148,10 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                             <button
                               type="button"
                               className="text-gray-400 hover:text-gray-500"
-                              onClick={() => setOpen(false)}
+                              onClick={() => {
+                                setOpenAuthList(false)
+                                setOpen(false)
+                              }}
                             >
                               <span className="sr-only">Cerrar panel</span>
                               <XIcon className="h-6 w-6" aria-hidden="true" />
@@ -296,51 +293,6 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                               id="quantity"
                               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                               ref={quantity}
-                            />
-                          </div>
-                        </div>
-
-                        {/* Entry timestamp */}
-                        <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
-                          <div>
-                            <label
-                              htmlFor="entry"
-                              className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
-                            >
-                              {" "}
-                              Entrada{" "}
-                            </label>
-                          </div>
-                          <div className="sm:col-span-2">
-                            <input
-                              pattern="[0-9]{4}[0-9]{2}[0-9]{2}T[0-9]{2}[0-9]{2}"
-                              type="datetime-local"
-                              name="entry"
-                              id="entry"
-                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                              ref={entry}
-                            />
-                          </div>
-                        </div>
-
-                        {/* Exit timestamp */}
-                        <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
-                          <div>
-                            <label
-                              htmlFor="exit"
-                              className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
-                            >
-                              {" "}
-                              Salida{" "}
-                            </label>
-                          </div>
-                          <div className="sm:col-span-2">
-                            <input
-                              type="datetime-local"
-                              name="exit"
-                              id="exit"
-                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                              ref={exit}
                             />
                           </div>
                         </div>

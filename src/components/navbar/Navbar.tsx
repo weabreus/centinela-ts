@@ -44,13 +44,14 @@ const Navbar: React.FC<{
       options.push(
         {
           id: doc.id,
-          visitor: doc.data().visitor,
-          vehicle: doc.data().vehicle,
+          visitorName: doc.data().visitorName,
+          visitorID: doc.data().visitorID,
+          vehicleModel: doc.data().vehicleModel,
+          vehiclePlate: doc.data().vehiclePlate,
           unit: doc.data().unit,
           visitors: doc.data().visitors,
           entryTimestamp: doc.data().entryTimestamp,
-          exitTimestamp: doc.data().exitTimestamp,
-          notes: doc.data().notes
+          notes: doc.data().notes,
         }
       );
     });
