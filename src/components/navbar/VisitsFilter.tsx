@@ -1,6 +1,6 @@
 import { Disclosure, Transition } from "@headlessui/react";
 import { FilterIcon } from "@heroicons/react/solid";
-import React, { Fragment } from "react";
+import React, { Fragment, useRef } from "react";
 import NavbarDateRange from "../form/NavbarDateRange";
 
 const VisitsFilter: React.FC<{
@@ -18,6 +18,8 @@ const VisitsFilter: React.FC<{
   vehicleRef,
   filterVisitsHandler,
 }) => {
+  const closeButton = useRef<any>();
+
   return (
     <Disclosure
       as="section"
@@ -27,11 +29,23 @@ const VisitsFilter: React.FC<{
       <h2 id="filter-heading" className="sr-only">
         Filters
       </h2>
-      <div className="col-start-1 row-start-1 py-4">
+      <div
+        onBlur={(e: any) => {
+          if (!e.currentTarget.contains(e.relatedTarget)) {
+            // Not triggered when swapping focus between children
+            console.log("focus left self");
+            closeButton.current.click();
+          }
+        }}
+        className="col-start-1 row-start-1 py-4"
+      >
         <div className="flex justify-items-end max-w-7xl">
           <div className="relative inline-block">
             <div className="flex">
-              <Disclosure.Button className="inline-flex justify-center px-3.5 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800">
+              <Disclosure.Button
+                ref={closeButton}
+                className="inline-flex justify-center px-3.5 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800"
+              >
                 <FilterIcon
                   className="h-5 w-5 text-gray-400"
                   aria-hidden="true"
@@ -48,7 +62,7 @@ const VisitsFilter: React.FC<{
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-              <Disclosure.Panel className="origin-top-right absolute right-0 mt-2 w-[600px] rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Disclosure.Panel as="div" className="origin-top-right absolute right-0 mt-2 w-[600px] rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <div className="mx-auto grid grid-cols-1 gap-x-4 px-4 text-sm sm:px-6 md:gap-x-6 lg:px-8 pt-4 pb-8">
                   {/* Date range filter */}
                   <div className="w-full p-2 flex items-center justify-between text-gray-400 hover:text-gray-500">
