@@ -7,6 +7,7 @@ const AuthContext = React.createContext<AuthContextType>({
   token: "",
   isLoggedIn: false,
   id: "",
+  role: "",
   login: () => {},
   logout: () => {},
 });
@@ -29,11 +30,13 @@ const retrieveStoredToken: () => {
   token: string | null;
   duration: number | null;
   id: string | null;
+  role: string | null;
 } | null = () => {
   const storedToken: string | null = localStorage.getItem("token");
   const storedExpirationDate: string | null =
     localStorage.getItem("expirationTime");
   const storedId: string | null = localStorage.getItem("id");
+  const storedRole: string | null = localStorage.getItem("role");
 
   const remainingTime: number = calculateRemainingTime(storedExpirationDate);
 
@@ -41,6 +44,7 @@ const retrieveStoredToken: () => {
     localStorage.removeItem("token");
     localStorage.removeItem("expirationTime");
     localStorage.removeItem("id");
+    localStorage.removeItem("role");
     return null;
   }
 
@@ -48,6 +52,7 @@ const retrieveStoredToken: () => {
     token: storedToken,
     duration: remainingTime,
     id: storedId,
+    role: storedRole,
   };
 };
 
@@ -58,17 +63,21 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     token: string | null;
     duration: any;
     id: string | null;
+    role: string | null
   } | null = retrieveStoredToken();
 
   let initialToken: string | null;
   let initialId: string | null;
+  let initialRole: string | null
   if (tokenData) {
     initialToken = tokenData.token;
     initialId = tokenData.id;
+    initialRole = tokenData.role;
   }
 
   const [token, setToken] = useState<string | null>(initialToken!);
   const [id, setId] = useState<string | null>(initialId!);
+  const [role, setRole] = useState<string | null>(initialRole!);
 
   const userIsLoggedIn: boolean = !!token;
 
@@ -78,6 +87,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem("token");
     localStorage.removeItem("expirationTime");
     localStorage.removeItem("id");
+    localStorage.removeItem("role");
 
     if (logoutTimer) {
       clearTimeout(logoutTimer);
@@ -87,13 +97,16 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
   const loginHandler: (
     token: string,
     expirationTime: string,
-    id: string
-  ) => void = (token, expirationTime, id) => {
+    id: string,
+    role: string
+  ) => void = (token, expirationTime, id, role) => {
     setToken(token);
     setId(id);
+    setRole(role)
     localStorage.setItem("token", token);
     localStorage.setItem("expirationTime", expirationTime);
     localStorage.setItem("id", id);
+    localStorage.setItem("role", role);
 
     const remainingTime = calculateRemainingTime(expirationTime);
 
@@ -111,12 +124,14 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     token: string;
     isLoggedIn: boolean;
     id: string;
-    login: (token: string, expirationTime: string, id: string) => void;
+    role: string
+    login: (token: string, expirationTime: string, id: string, role: string) => void;
     logout: () => void;
   } = {
     token: token!,
     isLoggedIn: userIsLoggedIn,
     id: id!,
+    role: role!,
     login: loginHandler,
     logout: logoutHandler,
   };
