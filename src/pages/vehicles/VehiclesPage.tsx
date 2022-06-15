@@ -86,12 +86,6 @@ const VehiclesPage: React.FC<{
                     </th>
                     <th
                       scope="col"
-                      className=" w-1/6 px-3 py-3.5 text-center text-sm font-semibold text-gray-900"
-                    >
-                      Tipo
-                    </th>
-                    <th
-                      scope="col"
                       className=" w-1/6 relative py-3.5 pl-3 pr-4 sm:pr-6"
                     >
                       <span className="sr-only">Editar</span>
@@ -115,9 +109,6 @@ const VehiclesPage: React.FC<{
                       </td>
                       <td className="text-center whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {vehicle.year}
-                      </td>
-                      <td className="text-center whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {vehicle.type}
                       </td>
                       <td className="text-right relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
                         <Link to={"/editvehicle/" + vehicle.id}>

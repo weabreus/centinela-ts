@@ -7,7 +7,6 @@ interface VehiclesDataType {
   make: string;
   model: string;
   plate: string;
-  type: string;
   year: string;
   visitor?: Options<InputType[]>;
   unit?: Options<InputType[]>;
