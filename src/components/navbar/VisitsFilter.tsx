@@ -30,6 +30,7 @@ const VisitsFilter: React.FC<{
         Filters
       </h2>
       <div
+        
         onBlur={(e: any) => {
           if (!e.currentTarget.contains(e.relatedTarget)) {
             // Not triggered when swapping focus between children
@@ -37,6 +38,7 @@ const VisitsFilter: React.FC<{
             closeButton.current.click();
           }
         }}
+        tabIndex={0}
         className="col-start-1 row-start-1 py-4"
       >
         <div className="flex justify-items-end max-w-7xl">
