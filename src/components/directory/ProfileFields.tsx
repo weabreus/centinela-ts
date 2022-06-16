@@ -10,7 +10,7 @@ const ProfileFields: React.FC<{
   } | null;
 }> = ({ selectedUser, selectedFields }) => {
   return (
-    <div className="mt-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="overflow-y-scroll mt-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
      
           <div key={"residentemail"} className="sm:col-span-1">
