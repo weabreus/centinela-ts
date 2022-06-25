@@ -1,5 +1,5 @@
 import { ExclamationCircleIcon } from "@heroicons/react/solid";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { classNames } from "../../helpers";
 import FieldErrors from "../../models/FieldErrors";
 
@@ -10,10 +10,14 @@ const DefaultInput: React.FC<{
   inputType: string;
   errors: FieldErrors;
 }> = ({ inputName, labelText, inputRef, inputType, errors }) => {
-    const [inputErrorState, setInputErrorState] = useState<FieldErrors>(errors);
+  const [inputErrorState, setInputErrorState] = useState<FieldErrors>(errors);
+
+  useEffect(() => {
+    setInputErrorState(errors);
+  }, [errors]);
 
   return (
-    <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
+    <div id={JSON.stringify(inputName)} className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
       <div>
         <label
           htmlFor={inputName}

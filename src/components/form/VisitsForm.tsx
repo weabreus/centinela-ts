@@ -99,8 +99,6 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
           const fieldName = error.split(" ")[0];
           fieldErrors[fieldName] = { hasError: true, errorMessage: error };
         });
-
-        console.log(fieldErrors);
         setErrors(fieldErrors);
       })
       .then((data) => {
