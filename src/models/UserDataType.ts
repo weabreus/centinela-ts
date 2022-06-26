@@ -9,6 +9,7 @@ interface UserDataType {
   phone: string;
   title: string;
   role: string;
+  complex: string;
 }
 
 export default UserDataType;

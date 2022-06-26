@@ -21,7 +21,6 @@ const EditUnitsPage: React.FC<{
 
   const [unit, setUnit] = useState<UnitDataType | null>(null);
   const path = `complexes/${pathComplex}/buildings/${pathBuilding}/units/${id}`;
-  // Traer unidad de firestore @Lucho2027
 
   useEffect(() => {
     setTitle({
@@ -81,6 +80,7 @@ const EditUnitsPage: React.FC<{
                       inputRef={building}
                       initial={unit?.building}
                       getData={getBuildingInput}
+                      isDisabled={true}
                     />
                   </div>
                 </div>

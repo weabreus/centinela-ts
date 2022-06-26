@@ -35,6 +35,7 @@ export async function getSelectedResident(
 
 export async function getResidentSearchResults(
   searchInputRef,
+  complex,
   setDirectory,
   setResidentCount
 ) {
@@ -42,12 +43,13 @@ export async function getResidentSearchResults(
   const residentsSnap = await getDocs(
     query(
       collection(db, "residents"),
-      where("name", ">=", searchInputRef.current.value),
-      where("name", "<=", searchInputRef.current.value + "\uf8ff")
+      where("complex", "==", complex)
     )
   );
+  
+  const residents = residentsSnap.docs.filter((doc) => doc.data().name.includes(searchInputRef.current.value));
 
-  const newDirectory = residentsSnap.docs.reduce((acc, doc) => {
+  const newDirectory = residents.reduce((acc, doc) => {
     const firstLetter = doc.data().name.charAt(0).toUpperCase();
 
     if (!acc[firstLetter]) {
@@ -68,13 +70,14 @@ export async function getResidentDirectory(
   setDirectory,
   setResidentCount,
   setSelectedResident,
-  setSelectedFields
+  setSelectedFields,
+  complex
 ) {
   const newDirectory = {};
   let count = 0;
   let newSelectedResident = {};
 
-  const residentsSnap = await getDocs(collection(db, "residents"));
+  const residentsSnap = await getDocs(query(collection(db, "residents"), where("complex", "==", complex)));
 
   residentsSnap.docs.map((doc) => {
     if (!newDirectory.hasOwnProperty(doc.data().name.charAt(0).toUpperCase())) {
@@ -91,6 +94,7 @@ export async function getResidentDirectory(
       });
       count++;
     }
+    return doc;
   }, []);
 
   newSelectedResident = newDirectory[Object.keys(newDirectory)[0]][0];

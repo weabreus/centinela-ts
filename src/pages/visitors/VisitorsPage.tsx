@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 
 import Breadcrumb from "../../components/directory/Breadcrumb";
 import ProfileTabs from "../../components/directory/ProfileTabs";
@@ -13,10 +13,14 @@ import {
   getVisitorsSearch,
 } from "../../firestore/controllers/VisitorsController";
 import VisitorDataType from "../../models/VisitorDataType";
+import AuthContext from "../../store/auth-context";
 
 const VisitorsPage: React.FC<{
   setTitle: React.Dispatch<React.SetStateAction<PageTitle>>;
 }> = ({ setTitle }) => {
+
+  const authCtx = useContext(AuthContext);
+
   const [directory, setDirectory] = useState({});
   const [userCount, setVisitorCount] = useState<number>(0);
   const [selectedUser, setSelectedVisitor] = useState<VisitorDataType | null>(null);
@@ -35,7 +39,7 @@ const VisitorsPage: React.FC<{
     event.preventDefault();
 
     const getUsers = async () => {
-      await getVisitorsSearch(searchInputRef, setDirectory, setVisitorCount);
+      await getVisitorsSearch(searchInputRef, setDirectory, setVisitorCount, authCtx.complex);
     };
     getUsers();
   };
@@ -50,11 +54,12 @@ const VisitorsPage: React.FC<{
         setDirectory,
         setVisitorCount,
         setSelectedVisitor,
-        setSelectedFields
+        setSelectedFields,
+        authCtx.complex
       );
     };
     getUsers();
-  }, [setTitle]);
+  }, [setTitle, authCtx.complex]);
 
   return (
     <>

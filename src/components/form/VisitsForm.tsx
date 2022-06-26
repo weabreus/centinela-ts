@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from "react";
+import React, { Fragment, useContext, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { storeVisit } from "../../firestore/firestoreHelpers";
@@ -16,14 +16,16 @@ import Directory from "../../models/DirectoryType";
 import VisitorDataType from "../../models/VisitorDataType";
 import { schema } from "../../models/VisitDataType";
 import FieldErrors from "../../models/FieldErrors";
-import { classNames } from "../../helpers";
-import { ExclamationCircleIcon } from "@heroicons/react/solid";
 import DefaultInput from "./DefaultInput";
+import AuthContext from "../../store/auth-context";
 
 const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
   open,
   setOpen,
 }) => {
+
+  const authCtx = useContext(AuthContext);
+
   const [errors, setErrors] = useState<FieldErrors>({});
 
   const visitorName = useRef<HTMLInputElement>(null);
@@ -79,6 +81,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
       vehiclePlate: string;
       notes: string;
       visitors: string;
+      complex: string;
     } = {
       entryTimestamp: new Date(),
       visitorName: visitorName.current!.value,
@@ -88,6 +91,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
       vehiclePlate: vehiclePlate.current!.value,
       notes: notes.current!.value,
       visitors: quantity.current!.value,
+      complex: authCtx.complex
     };
 
     schema

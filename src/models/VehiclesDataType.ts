@@ -10,6 +10,8 @@ interface VehiclesDataType {
   year: string;
   visitor?: Options<InputType[]>;
   unit?: Options<InputType[]>;
+  complexInput?: Options<InputType[]>;
+  complex?: string;
 }
 
 export default VehiclesDataType;

@@ -11,8 +11,8 @@ import {
 } from "firebase/firestore";
 import db from "../FirestoreConfig";
 
-export async function getUnitsList(setOptions) {
-  const units = query(collectionGroup(db, "units"));
+export async function getUnitsList(setOptions, complex) {
+  const units = query(collectionGroup(db, "units"), where("complex", "==", complex));
   const querySnapshot = await getDocs(units);
 
   const buildings = {};
@@ -62,6 +62,9 @@ export async function addUnit(data) {
   );
 
   const path = `${building[0].ref.path}/units`;
+  const complex = building[0]?.data().complex;
+
+  data["complex"] = complex;
 
   const docRef = await addDoc(collection(db, path), data);
 
@@ -74,8 +77,8 @@ export async function updateUnit(path, data) {
   console.log("Document updated with ID: ", path);
 }
 
-export async function getBuildingInput(setOptions) {
-  const buildings = query(collectionGroup(db, "buildings"));
+export async function getBuildingInput(setOptions, complex) {
+  const buildings = query(collectionGroup(db, "buildings"), where("complex", "==", complex));
   const querySnapshot = await getDocs(buildings);
 
   const options = [];
@@ -86,8 +89,8 @@ export async function getBuildingInput(setOptions) {
   setOptions(options);
 }
 
-export async function getResidentsInput(setOptions) {
-  const collectionRef = await getDocs(collection(db, "residents"));
+export async function getResidentsInput(setOptions, complex) {
+  const collectionRef = await getDocs(query(collection(db, "residents"), where("complex", "==", complex)));
 
   const options = [];
 
@@ -98,10 +101,10 @@ export async function getResidentsInput(setOptions) {
   setOptions(options);
 }
 
-export async function getResidentVehiclesInput(setOptions) {
+export async function getResidentVehiclesInput(setOptions, complex) {
   const vehicles = query(
     collection(db, "vehicles"),
-    where("type", "==", "resident")
+    where("complex", "==", complex)
   );
   const querySnapshot = await getDocs(vehicles);
 
@@ -112,14 +115,15 @@ export async function getResidentVehiclesInput(setOptions) {
       label: `(${doc.data().plate}) ${doc.data().make} ${doc.data().model} ${
         doc.data().year
       }`,
+      path: doc.ref.path
     });
   });
 
   setOptions(options);
 }
 
-export async function getVisitorsInput(setOptions) {
-  const collectionRef = await getDocs(collection(db, "visitors"));
+export async function getVisitorsInput(setOptions, complex) {
+  const collectionRef = await getDocs(query(collection(db, "visitors"), where("complex", "==", complex)));
 
   const options = [];
 
@@ -130,8 +134,8 @@ export async function getVisitorsInput(setOptions) {
   setOptions(options);
 }
 
-export async function getResidentPetsInput(setOptions) {
-  const pets = query(collection(db, "pets"));
+export async function getResidentPetsInput(setOptions, complex) {
+  const pets = query(collection(db, "pets"), where("complex", "==", complex));
   const querySnapshot = await getDocs(pets);
 
   const options = [];

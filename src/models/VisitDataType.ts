@@ -24,6 +24,7 @@ export const schema = yup.object().shape({
   vehiclePlate: yup.string().required(),
   notes: yup.string(),
   visitors: yup.string(),
+  complex: yup.string()
 });
 
 interface VisitDataType {

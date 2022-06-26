@@ -4,7 +4,7 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import TablePagination from "../../components/pagination/TablePagination";
@@ -12,12 +12,15 @@ import { getUnitsList } from "../../firestore/controllers/UnitsController";
 import db from "../../firestore/FirestoreConfig";
 import PageTitle from "../../models/PageTitle";
 import UnitListDataType from "../../models/UnitListType";
+import AuthContext from "../../store/auth-context";
 
 let PageSize = 10;
 
 const UnitsPage: React.FC<{
   setTitle: React.Dispatch<React.SetStateAction<PageTitle>>;
 }> = ({ setTitle }) => {
+
+  const authCtx = useContext(AuthContext);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [data, setData] = useState<UnitListDataType[]>([]);
@@ -34,20 +37,20 @@ const UnitsPage: React.FC<{
       description: "Lista de todas las unidades registradas en el complejo.",
     });
     const getData = async () => {
-      getUnitsList(setData);
+      getUnitsList(setData, authCtx.complex);
     };
     getData();
-  }, [setTitle]);
+  }, [setTitle, authCtx.complex]);
 
   useEffect(() => {
     onSnapshot(
       query(collectionGroup(db, "units"), orderBy("number", "desc")),
       () => {
-        getUnitsList(setData);
+        getUnitsList(setData, authCtx.complex);
       }
     );
 
-  }, []);
+  }, [authCtx.complex]);
 
   return (
     <div className="p-6 sm:px-6 lg:px-8">

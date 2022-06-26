@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Select, { ActionMeta, Options, SingleValue } from "react-select";
 import UnitInputType from "../../models/UnitInputType";
+import { useContext } from "react";
+import AuthContext from "../../store/auth-context";
 
 const SelectUnitInput: React.FC<{
   inputRef: any;
@@ -8,15 +10,18 @@ const SelectUnitInput: React.FC<{
   options?: any;
   changeUnitHandler: (newValue: SingleValue<UnitInputType>, actionMeta: ActionMeta<UnitInputType>) => void;
   getData: (
-    setOptions: React.Dispatch<React.SetStateAction<Options<UnitInputType[]>>>
+    setOptions: React.Dispatch<React.SetStateAction<Options<UnitInputType[]>>>,
+    complex: string
   ) => void;
 }> = ({ inputRef, initial, changeUnitHandler, getData }) => {
   const [options, setOptions] = useState<any>([]);
   const [initialValue, setInitialValue] = useState(initial);
 
+  const authCtx = useContext(AuthContext);
+
   useEffect(() => {
-        getData(setOptions);
-  }, [getData]);
+        getData(setOptions, authCtx.complex);
+  }, [getData, authCtx.complex]);
 
   useEffect(() => {
     setInitialValue(initial);

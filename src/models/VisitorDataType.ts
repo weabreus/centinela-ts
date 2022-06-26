@@ -7,6 +7,8 @@ interface VisitorDataType {
   identification: string;
   name: string;
   vehicles?: Options<InputType[]>;
+  complexInput?: Options<InputType[]>;
+  complex?: string;
 }
 
 export default VisitorDataType;

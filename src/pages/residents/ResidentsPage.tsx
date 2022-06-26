@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import Breadcrumb from "../../components/directory/Breadcrumb";
 import ProfileTabs from "../../components/directory/ProfileTabs";
 import ProfileHeader from "../../components/directory/ProfileHeader";
@@ -12,16 +12,16 @@ import {
   getSelectedResident,
 } from "../../firestore/controllers/ResidentsController";
 import ResidentDataType from "../../models/ResidentDataType";
-
+import AuthContext from "../../store/auth-context";
 
 const UsersPage: React.FC<{
   setTitle: React.Dispatch<React.SetStateAction<PageTitle>>;
 }> = ({ setTitle }) => {
+  const authCtx = useContext(AuthContext);
   const [directory, setDirectory] = useState({});
   const [residentCount, setResidentCount] = useState<number>(0);
-  const [selectedResident, setSelectedResident] = useState<ResidentDataType | null>(
-    null
-  );
+  const [selectedResident, setSelectedResident] =
+    useState<ResidentDataType | null>(null);
   const [selectedFields, setSelectedFields] = useState(null);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -39,6 +39,7 @@ const UsersPage: React.FC<{
     const getUsers: () => void = async () => {
       await getResidentSearchResults(
         searchInputRef,
+        authCtx.complex,
         setDirectory,
         setResidentCount
       );
@@ -52,10 +53,16 @@ const UsersPage: React.FC<{
       description: "Lista de residentes registrados en el complejo.",
     });
     const getUsers = async () => {
-      await getResidentDirectory(setDirectory, setResidentCount, setSelectedResident, setSelectedFields)
+      await getResidentDirectory(
+        setDirectory,
+        setResidentCount,
+        setSelectedResident,
+        setSelectedFields,
+        authCtx.complex
+      );
     };
     getUsers();
-  }, [setTitle]);
+  }, [setTitle, authCtx.complex]);
 
   return (
     <>

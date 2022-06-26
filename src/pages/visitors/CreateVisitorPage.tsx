@@ -7,8 +7,9 @@ import PageTitle from "../../models/PageTitle";
 import InputType from "../../models/InputType";
 import Select from "react-select/dist/declarations/src/Select";
 import VisitorDataType from "../../models/VisitorDataType";
-import { addVisitor, getAllVisitorVehicles } from "../../firestore/controllers/VisitorsController";
-import SelectMultipleInput from "../../components/form/SelectMultipleInput";
+import { addVisitor } from "../../firestore/controllers/VisitorsController";
+import SelectSingleInput from "../../components/form/SelectSingleInput";
+import { getComplexesInput } from "../../firestore/controllers/BuildingsController";
 
 const CreateVisitorPage: React.FC<{
   setTitle: React.Dispatch<React.SetStateAction<PageTitle>>;
@@ -16,16 +17,16 @@ const CreateVisitorPage: React.FC<{
 
   const history = useHistory();
 
+  const complex = useRef<Select<InputType[]>>(null)
   const nameRef = useRef<HTMLInputElement | null>(null);
   const idRef = useRef<HTMLInputElement | null>(null);
-  const vehiclesRef = useRef<Select<InputType[]>>(null);
 
   const submitHandler: (event: React.SyntheticEvent) => void = (event) => {
     event.preventDefault();
     const visitorData: VisitorDataType = {
       name: nameRef.current!.value,
       identification: idRef.current!.value,
-      vehicles: vehiclesRef.current!.getValue(),
+      complexInput: complex.current?.getValue()
     };
 
     addVisitor(visitorData);
@@ -88,6 +89,20 @@ const CreateVisitorPage: React.FC<{
               </p>
             </div>
             <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+            <div className="sm:col-span-3">
+                  <label
+                    htmlFor="complex"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Complejo
+                  </label>
+                  <div className="mt-1">
+                    <SelectSingleInput
+                      inputRef={complex}
+                      getData={getComplexesInput}
+                    />
+                  </div>
+                </div>
               <div className="sm:col-span-3">
                 <label
                   htmlFor="name"
@@ -123,32 +138,6 @@ const CreateVisitorPage: React.FC<{
                     autoComplete="identification"
                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-8">
-            <div>
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
-                Vehiculos
-              </h3>
-              <p className="mt-1 text-sm text-gray-500">
-                Agregue los vehiculos pertenecientes a este visitante.
-              </p>
-            </div>
-            <div className="mt-6">
-              <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-7">
-                <div className="sm:col-span-3">
-                  <label
-                    htmlFor="vehicle"
-                    className="block text-sm font-medium text-gray-700 hidden"
-                  >
-                    Vehiculos
-                  </label>
-                  <div className="mt-1">
-                    <SelectMultipleInput inputRef={vehiclesRef} getData={getAllVisitorVehicles}/>
-                  </div>
                 </div>
               </div>
             </div>

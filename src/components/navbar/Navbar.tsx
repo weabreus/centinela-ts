@@ -6,11 +6,12 @@ import {
   QuerySnapshot,
   where,
 } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useRef } from "react";
 import db from "../../firestore/FirestoreConfig";
 import PageTitle from "../../models/PageTitle";
 import VisitDataType from "../../models/VisitDataType";
+import AuthContext from "../../store/auth-context";
 import VisitsForm from "../form/VisitsForm";
 import VisitsFilter from "./VisitsFilter";
 
@@ -18,6 +19,9 @@ const Navbar: React.FC<{
   setVisits: React.Dispatch<VisitDataType[]>;
   title: PageTitle;
 }> = ({ setVisits, title }) => {
+
+  const authCtx = useContext(AuthContext);
+
   const [open, setOpen] = useState<boolean>(false);
   const startRef = useRef<HTMLInputElement>(null);
   const endRef = useRef<HTMLInputElement>(null);
@@ -35,6 +39,7 @@ const Navbar: React.FC<{
 
     const visitsRef = query(
       collection(db, "visits"),
+      where("complex", "==", authCtx.complex),
       where("entryTimestamp", ">=", new Date(queryStartDate)),
       where("entryTimestamp", "<=", new Date(queryEndDate!)),
       orderBy("entryTimestamp", "desc")
