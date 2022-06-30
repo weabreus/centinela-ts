@@ -2,11 +2,8 @@ import React, { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { storeVisit } from "../../firestore/firestoreHelpers";
-import { useState } from "react";
 import Select from "react-select/dist/declarations/src/Select";
-import InputType from "../../models/InputType";
 import SelectSingleInput from "./SelectSingleInput";
-import VisitorVehicleInput from "./VisitorVehicleInput";
 import { getUnits } from "../../firestore/controllers/VisitsController";
 
 const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
@@ -15,14 +12,13 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
 }) => {
   const visitorName = useRef<HTMLInputElement>(null);
   const visitorID = useRef<HTMLInputElement>(null);
-  const vehicle = useRef<Select>(null);
+  const vehicleModel = useRef<HTMLInputElement>(null);
+  const vehiclePlate = useRef<HTMLInputElement>(null);
   const unit = useRef<Select>(null);
   const entry = useRef<HTMLInputElement>(null);
   const exit = useRef<HTMLInputElement>(null);
   const quantity = useRef<HTMLInputElement>(null);
   const notes = useRef<HTMLTextAreaElement>(null);
-
-  const [vehicles, setVehicles] = useState<InputType[]>([]);
 
   function submitHandler(event: React.SyntheticEvent) {
     event.preventDefault();
@@ -33,7 +29,8 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
       visitorName: string;
       visitorID: string;
       unit: any;
-      vehicle: any;
+      vehicleModel: string;
+      vehiclePlate: string;
       notes: string;
       visitors: string;
     } = {
@@ -44,7 +41,8 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
       visitorName: visitorName.current!.value,
       visitorID: visitorID.current!.value,
       unit: unit.current!.getValue(),
-      vehicle: vehicle.current!.getValue(),
+      vehicleModel: vehicleModel.current!.value,
+      vehiclePlate: vehiclePlate.current!.value,
       notes: notes.current!.value,
       visitors: quantity.current!.value,
     };
@@ -147,21 +145,49 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                             />
                           </div>
                         </div>
-                        {/* Vehicle selection */}
+
+                        {/* Vehicle model input */}
                         <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
                           <div>
                             <label
-                              htmlFor="vehicle"
+                              htmlFor="vehicle-model"
                               className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
                             >
                               {" "}
-                              Vehiculo{" "}
+                              Modelo del Vehiculo{" "}
                             </label>
                           </div>
                           <div className="sm:col-span-2">
-                            <VisitorVehicleInput
-                              vehicle={vehicle}
-                              options={vehicles}
+                            <input
+                              type="text"
+                              name="vehicle-model"
+                              id="vehicle-model"
+                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              ref={vehicleModel}
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        {/* Vehicle plate input */}
+                        <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
+                          <div>
+                            <label
+                              htmlFor="vehicle-plate"
+                              className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
+                            >
+                              {" "}
+                              Placa del Vehiculo{" "}
+                            </label>
+                          </div>
+                          <div className="sm:col-span-2">
+                            <input
+                              type="text"
+                              name="vehicle-plate"
+                              id="vehicle-plate"
+                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              ref={vehiclePlate}
+                              required
                             />
                           </div>
                         </div>
