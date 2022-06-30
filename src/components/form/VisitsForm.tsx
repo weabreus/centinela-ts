@@ -1,12 +1,8 @@
 import React, { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
-import {
-  getVisitorVehicles,
-  storeVisit,
-} from "../../firestore/firestoreHelpers";
+import { storeVisit } from "../../firestore/firestoreHelpers";
 import { useState } from "react";
-import VisitorSingleInput from "./VisitorSingleInput";
 import Select from "react-select/dist/declarations/src/Select";
 import InputType from "../../models/InputType";
 import SelectSingleInput from "./SelectSingleInput";
@@ -17,7 +13,8 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
   open,
   setOpen,
 }) => {
-  const visitor = useRef<Select>(null);
+  const visitorName = useRef<HTMLInputElement>(null);
+  const visitorID = useRef<HTMLInputElement>(null);
   const vehicle = useRef<Select>(null);
   const unit = useRef<Select>(null);
   const entry = useRef<HTMLInputElement>(null);
@@ -27,25 +24,25 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
 
   const [vehicles, setVehicles] = useState<InputType[]>([]);
 
-  const visitorChangeHandle: (event: { value: string, label: string}) => void = (event) => {
-    getVisitorVehicles(event.value, setVehicles);
-  };
-
   function submitHandler(event: React.SyntheticEvent) {
     event.preventDefault();
 
     const visitData: {
       entryTimestamp: Date;
       exitTimestamp: Date | undefined;
-      visitor: any;
+      visitorName: string;
+      visitorID: string;
       unit: any;
       vehicle: any;
       notes: string;
       visitors: string;
     } = {
       entryTimestamp: new Date(entry.current!.value),
-      exitTimestamp: Date.parse(exit.current!.value) ? new Date(exit.current!.value) : undefined,
-      visitor: visitor.current!.getValue(),
+      exitTimestamp: Date.parse(exit.current!.value)
+        ? new Date(exit.current!.value)
+        : undefined,
+      visitorName: visitorName.current!.value,
+      visitorID: visitorID.current!.value,
       unit: unit.current!.getValue(),
       vehicle: vehicle.current!.getValue(),
       notes: notes.current!.value,
@@ -105,25 +102,51 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
 
                       {/* Divider container */}
                       <div className="space-y-6 py-6 sm:space-y-0 sm:py-0">
-                        {/* Visitor selection */}
+                        {/* Visitor name input */}
                         <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
                           <div>
                             <label
-                              htmlFor="visitor"
+                              htmlFor="visitor-name"
                               className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
                             >
                               {" "}
-                              Visitante{" "}
+                              Nombre del visitante{" "}
                             </label>
                           </div>
                           <div className="sm:col-span-2">
-                            <VisitorSingleInput
-                              visitor={visitor}
-                              visitorChangeHandle={visitorChangeHandle}
+                            <input
+                              type="text"
+                              name="visitor-name"
+                              id="visitor-name"
+                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              ref={visitorName}
+                              required
                             />
                           </div>
                         </div>
 
+                        {/* Visitor ID input */}
+                        <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
+                          <div>
+                            <label
+                              htmlFor="visitor-id"
+                              className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
+                            >
+                              {" "}
+                              Identificación del visitante{" "}
+                            </label>
+                          </div>
+                          <div className="sm:col-span-2">
+                            <input
+                              type="text"
+                              name="visitor-id"
+                              id="visitor-id"
+                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              ref={visitorID}
+                              required
+                            />
+                          </div>
+                        </div>
                         {/* Vehicle selection */}
                         <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
                           <div>
@@ -139,8 +162,6 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                             <VisitorVehicleInput
                               vehicle={vehicle}
                               options={vehicles}
-
-
                             />
                           </div>
                         </div>
@@ -157,7 +178,10 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                             </label>
                           </div>
                           <div className="sm:col-span-2">
-                            <SelectSingleInput inputRef={unit} getData={getUnits}/>
+                            <SelectSingleInput
+                              inputRef={unit}
+                              getData={getUnits}
+                            />
                           </div>
                         </div>
 
