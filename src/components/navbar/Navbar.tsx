@@ -59,19 +59,19 @@ const Navbar: React.FC<{
 
     if (visitorRef.current?.value !== "") {
       options = options.filter((visit) =>
-        visit.visitorName.includes(visitorRef.current!.value)
+        visit.visitorName.toLowerCase().includes(visitorRef.current!.value.toLowerCase())
       );
     }
 
     if (unitRef.current?.value !== "") {
       options = options.filter((visit) =>
-        visit.unit[0].label.includes(unitRef.current!.value)
+        visit.unit[0].label.toLowerCase().includes(unitRef.current!.value.toLowerCase())
       );
     }
 
     if (vehicleRef.current?.value !== "") {
       options = options.filter((visit) =>
-        (visit.vehicleModel.includes(vehicleRef.current!.value) || visit.vehiclePlate.includes(vehicleRef.current!.value))
+        (visit.vehicleModel.toLowerCase().includes(vehicleRef.current!.value.toLowerCase()) || visit.vehiclePlate.toLowerCase().includes(vehicleRef.current!.value.toLowerCase()))
       );
     }
 
@@ -92,18 +92,7 @@ const Navbar: React.FC<{
           </h1>
         </div>
         {title.name === "Visitas" && (
-          // <div className="mt-4 flex sm:mt-0 sm:ml-4">
-          //   <NavbarDateRange
-          //     filterVisitsHandler={filterVisitsHandler}
-          //     inputRef={startRef}
-          //     label={"Fecha de inicio"}
-          //   />
-          //   <NavbarDateRange
-          //     filterVisitsHandler={filterVisitsHandler}
-          //     inputRef={endRef}
-          //     label={"Fecha de fin"}
-          //   />
-          // </div>
+ 
           <VisitsFilter
             startRef={startRef}
             endRef={endRef}

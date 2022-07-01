@@ -14,11 +14,18 @@ import { ActionMeta, Options, SingleValue } from "react-select";
 import UnitInputType from "../../models/UnitInputType";
 import Directory from "../../models/DirectoryType";
 import VisitorDataType from "../../models/VisitorDataType";
+import { schema } from "../../models/VisitDataType";
+import FieldErrors from "../../models/FieldErrors";
+import { classNames } from "../../helpers";
+import { ExclamationCircleIcon } from "@heroicons/react/solid";
+import DefaultInput from "./DefaultInput";
 
 const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
   open,
   setOpen,
 }) => {
+  const [errors, setErrors] = useState<FieldErrors>({});
+
   const visitorName = useRef<HTMLInputElement>(null);
   const visitorID = useRef<HTMLInputElement>(null);
   const vehicleModel = useRef<HTMLInputElement>(null);
@@ -83,10 +90,24 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
       visitors: quantity.current!.value,
     };
 
-    storeVisit(visitData);
+    schema
+      .validate(visitData, { abortEarly: false })
+      .catch((err) => {
+        let fieldErrors: FieldErrors = {};
 
-    setOpenAuthList(false);
-    setOpen(false);
+        err.errors.forEach((error: string) => {
+          const fieldName = error.split(" ")[0];
+          fieldErrors[fieldName] = { hasError: true, errorMessage: error };
+        });
+        setErrors(fieldErrors);
+      })
+      .then((data) => {
+        if (data) {
+          storeVisit(visitData);
+          setOpenAuthList(false);
+          setOpen(false);
+        }
+      });
   }
 
   return (
@@ -149,8 +170,8 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                               type="button"
                               className="text-gray-400 hover:text-gray-500"
                               onClick={() => {
-                                setOpenAuthList(false)
-                                setOpen(false)
+                                setOpenAuthList(false);
+                                setOpen(false);
                               }}
                             >
                               <span className="sr-only">Cerrar panel</span>
@@ -183,119 +204,49 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                         </div>
 
                         {/* Visitor name input */}
-                        <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
-                          <div>
-                            <label
-                              htmlFor="visitor-name"
-                              className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
-                            >
-                              {" "}
-                              Nombre del visitante{" "}
-                            </label>
-                          </div>
-                          <div className="sm:col-span-2">
-                            <input
-                              type="text"
-                              name="visitor-name"
-                              id="visitor-name"
-                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                              ref={visitorName}
-                              required
-                            />
-                          </div>
-                        </div>
+                        <DefaultInput
+                          inputName="visitorName"
+                          labelText="Nombre del visitante"
+                          inputRef={visitorName}
+                          inputType="text"
+                          errors={errors}
+                        />
 
                         {/* Visitor ID input */}
-                        <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
-                          <div>
-                            <label
-                              htmlFor="visitor-id"
-                              className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
-                            >
-                              {" "}
-                              Identificación del visitante{" "}
-                            </label>
-                          </div>
-                          <div className="sm:col-span-2">
-                            <input
-                              type="text"
-                              name="visitor-id"
-                              id="visitor-id"
-                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                              ref={visitorID}
-                              required
-                            />
-                          </div>
-                        </div>
+                        <DefaultInput
+                          inputName="visitorID"
+                          labelText="Identificación del visitante"
+                          inputRef={visitorID}
+                          inputType="text"
+                          errors={errors}
+                        />
 
                         {/* Vehicle model input */}
-                        <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
-                          <div>
-                            <label
-                              htmlFor="vehicle-model"
-                              className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
-                            >
-                              {" "}
-                              Modelo del Vehiculo{" "}
-                            </label>
-                          </div>
-                          <div className="sm:col-span-2">
-                            <input
-                              type="text"
-                              name="vehicle-model"
-                              id="vehicle-model"
-                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                              ref={vehicleModel}
-                              required
-                            />
-                          </div>
-                        </div>
+                        <DefaultInput
+                          inputName="vehicleModel"
+                          labelText="Vehiculo"
+                          inputRef={vehicleModel}
+                          inputType="text"
+                          errors={errors}
+                        />
 
                         {/* Vehicle plate input */}
-                        <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
-                          <div>
-                            <label
-                              htmlFor="vehicle-plate"
-                              className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
-                            >
-                              {" "}
-                              Placa del Vehiculo{" "}
-                            </label>
-                          </div>
-                          <div className="sm:col-span-2">
-                            <input
-                              type="text"
-                              name="vehicle-plate"
-                              id="vehicle-plate"
-                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                              ref={vehiclePlate}
-                              required
-                            />
-                          </div>
-                        </div>
+                        <DefaultInput
+                          inputName="vehiclePlate"
+                          labelText="Tablilla"
+                          inputRef={vehiclePlate}
+                          inputType="text"
+                          errors={errors}
+                        />
 
-                        {/* Visitors quantity timestamp */}
-                        <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
-                          <div>
-                            <label
-                              htmlFor="quantity"
-                              className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
-                            >
-                              {" "}
-                              Acompañantes{" "}
-                            </label>
-                          </div>
-                          <div className="sm:col-span-2">
-                            <input
-                              min="0"
-                              type="number"
-                              name="quantity"
-                              id="quantity"
-                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                              ref={quantity}
-                            />
-                          </div>
-                        </div>
+                        {/* Visitors quantity input */}
+                        <DefaultInput
+                          inputName="quantity"
+                          labelText="Acompañantes"
+                          inputRef={quantity}
+                          inputType="text"
+                          errors={errors}
+                        />
 
                         {/* Visit notes */}
                         <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">

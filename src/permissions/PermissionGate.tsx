@@ -20,7 +20,7 @@ const PermissionsGate: React.FC<{children: any, scopes: string[] }> = ({ childre
   const permissions = PERMISSIONS[role];
 
   const permissionGranted = hasPermission({ permissions, scopes });
-    console.log(permissionGranted);
+    
   if (!permissionGranted) return <></>;
 
   return <>{children}</>;
