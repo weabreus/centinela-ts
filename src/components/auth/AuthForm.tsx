@@ -4,6 +4,9 @@ import AuthContext from "../../store/auth-context";
 import { LockClosedIcon } from "@heroicons/react/solid";
 import AuthLogo from "./AuthLogo";
 import { useHistory } from "react-router-dom";
+import UserDataType from "../../models/UserDataType";
+import { doc, DocumentSnapshot, getDoc } from "firebase/firestore";
+import db from "../../firestore/FirestoreConfig";
 
 const AuthForm: React.FC = () => {
   const history = useHistory();
@@ -57,11 +60,15 @@ const AuthForm: React.FC = () => {
           });
         }
       })
-      .then((data) => {
+      .then(async (data) => {
         const expirationTime: Date = new Date(
           new Date().getTime() + +data.expiresIn * 1000
         );
-        authCtx.login(data.idToken, expirationTime.toISOString(), data.localId);
+
+        // @ts-ignore
+        const user: DocumentSnapshot<UserDataType>= await getDoc(doc(db, "users", data.localId));
+
+        authCtx.login(data.idToken, expirationTime.toISOString(), data.localId, user.data()!.role);
         history.push("/");
 
       })
