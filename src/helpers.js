@@ -11,28 +11,28 @@ export function range(start, end, step) {
       throw TypeError("Step cannot be zero.");
   }
 
-  if (typeofStart == "undefined" || typeofEnd == "undefined") {
+  if (typeofStart === "undefined" || typeofEnd === "undefined") {
       throw TypeError("Must pass start and end arguments.");
-  } else if (typeofStart != typeofEnd) {
+  } else if (typeofStart !== typeofEnd) {
       throw TypeError("Start and end arguments must be of same type.");
   }
 
-  typeof step == "undefined" && (step = 1);
+  typeof step === "undefined" && (step = 1);
 
   if (end < start) {
       step = -step;
   }
 
-  if (typeofStart == "number") {
+  if (typeofStart === "number") {
 
       while (step > 0 ? end >= start : end <= start) {
           range.push(start);
           start += step;
       }
 
-  } else if (typeofStart == "string") {
+  } else if (typeofStart === "string") {
 
-      if (start.length != 1 || end.length != 1) {
+      if (start.length !== 1 || end.length !== 1) {
           throw TypeError("Only strings with one character are supported.");
       }
 

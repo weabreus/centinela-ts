@@ -31,9 +31,12 @@ const VisitsPage: React.FC<{
       description: "Lista de visitas recientes al complejo.",
     });
     const getVisits = async () => {
+      const queryDate = new Date();
+      console.log(new Date(queryDate.setDate(queryDate.getDate() - 1)))
       const visitsCollectionRef = query(
         collection(db, "visits"),
         where("complex", "==", authCtx.complex),
+        where("entryTimestamp", ">=", new Date(queryDate.setDate(queryDate.getDate() - 1))),
         orderBy("entryTimestamp", "desc")
       );
       const data = await getDocs(visitsCollectionRef);
@@ -67,10 +70,13 @@ const VisitsPage: React.FC<{
   }, [setTitle, setVisits, authCtx.complex]);
 
   useEffect(() => {
+    const queryDate = new Date();
+
     onSnapshot(
       query(
         collection(db, "visits"),
         where("complex", "==", authCtx.complex),
+        where("entryTimestamp", ">=", new Date(queryDate.setDate(queryDate.getDate() - 1))),
         orderBy("entryTimestamp", "desc")
       ),
       (snap) => {

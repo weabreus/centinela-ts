@@ -31,7 +31,7 @@ const ComplexesPage: React.FC<{
       getComplexes(setComplexes);
     };
     getData();
-  }, []);
+  }, [setTitle]);
 
   return (
     <div className="p-6 sm:px-6 lg:px-8">
