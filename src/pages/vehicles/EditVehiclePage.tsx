@@ -2,7 +2,11 @@ import React, { useEffect, useState, useRef } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import Select from "react-select/dist/declarations/src/Select";
 import SelectSingleInput from "../../components/form/SelectSingleInput";
-import { getUnits, getVehicle, getVisitors, updateVehicle } from "../../firestore/controllers/VehiclesController";
+import {
+  getUnits,
+  getVehicle,
+  updateVehicle,
+} from "../../firestore/controllers/VehiclesController";
 import InputType from "../../models/InputType";
 import PageTitle from "../../models/PageTitle";
 import VehiclesDataType from "../../models/VehiclesDataType";
@@ -10,10 +14,9 @@ import VehiclesDataType from "../../models/VehiclesDataType";
 const EditVehiclePage: React.FC<{
   setTitle: React.Dispatch<React.SetStateAction<PageTitle>>;
 }> = ({ setTitle }) => {
-
   const history = useHistory();
 
-  const { id } = useParams<{id: string}>();
+  const { id } = useParams<{ id: string }>();
 
   const [vehicle, setVehicle] = useState<VehiclesDataType | null>(null);
 
@@ -28,55 +31,32 @@ const EditVehiclePage: React.FC<{
       getVehicle(id, setVehicle);
     };
     getData();
-    console.log("yeet");
   }, [id, setTitle]);
-
-  const [type, setType] = useState(vehicle?.type);
 
   const make = useRef<HTMLInputElement | null>(null);
   const model = useRef<HTMLInputElement | null>(null);
   const color = useRef<HTMLInputElement | null>(null);
   const plate = useRef<HTMLInputElement | null>(null);
   const year = useRef<HTMLInputElement | null>(null);
-  const visitor = useRef<Select<InputType[]> | null>(null);
   const unit = useRef<Select<InputType[]> | null>(null);
-  const typeRef = useRef<HTMLSelectElement | null>(null);
 
-  useEffect(() => {
-    setType(typeRef.current?.value);
-  }, [typeRef]);
-
-  const submitHandler: (event: React.SyntheticEvent) => void = (event) => {
+  const submitHandler: (event: React.SyntheticEvent) => void = async (event) => {
     event.preventDefault();
 
-    let vehicleData: VehiclesDataType;
-    if (type === "visitor") {
-      vehicleData = {
-        make: make.current!.value,
-        model: model.current!.value,
-        color: color.current!.value,
-        plate: plate.current!.value,
-        year: year.current!.value,
-        type: type,
-        visitor: visitor.current!.getValue(),
-      };
-    } else {
-      vehicleData = {
-        make: make.current!.value,
-        model: model.current!.value,
-        color: color.current!.value,
-        plate: plate.current!.value,
-        year: year.current!.value,
-        type: type!,
-        unit: unit.current!.getValue(),
-      };
-    }
+    let vehicleData: VehiclesDataType = {
+      make: make.current!.value,
+      model: model.current!.value,
+      color: color.current!.value,
+      plate: plate.current!.value,
+      year: year.current!.value,
+      unit: unit.current!.getValue(),
+    };
 
     //   Update vehicle data in firestore @Lucho2027
-    updateVehicle(id, vehicleData);
-    
+    await updateVehicle(id, vehicleData);
+
     history.push("/vehicles");
-  }
+  };
   return (
     <>
       <div className="py-6 px-12">
@@ -198,57 +178,19 @@ const EditVehiclePage: React.FC<{
 
                 <div className="col-span-3 sm:col-span-3">
                   <label
-                    htmlFor="type"
+                    htmlFor="unit"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Tipo
+                    Unidad
                   </label>
                   <div className="mt-1">
-                    <select
-                      ref={typeRef}
-                      defaultValue={type}
-                      onChange={(event) => setType(event.target.value)}
-                      name="type"
-                      id="type"
-                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-4 sm:pl-4 sm:text-sm border-gray-300 rounded-md"
-                    >
-                      <option value="visitor">Visitante</option>
-                      <option value="resident">Residente</option>
-                    </select>
+                    <SelectSingleInput
+                      inputRef={unit}
+                      initial={vehicle?.unit}
+                      getData={getUnits}
+                    />
                   </div>
                 </div>
-
-                {type === "visitor" && (
-                  <div className="col-span-3 sm:col-span-3">
-                    <label
-                      htmlFor="visitor"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Visitante
-                    </label>
-                    <div className="mt-1">
-                      <SelectSingleInput
-                        inputRef={visitor}
-                        initial={vehicle?.visitor}
-                        getData={getVisitors}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {type === "resident" && (
-                  <div className="col-span-3 sm:col-span-3">
-                    <label
-                      htmlFor="unit"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Unidad
-                    </label>
-                    <div className="mt-1">
-                      <SelectSingleInput inputRef={unit} initial={vehicle?.unit} getData={getUnits} />
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>
