@@ -11,8 +11,8 @@ import { useRef } from "react";
 import db from "../../firestore/FirestoreConfig";
 import PageTitle from "../../models/PageTitle";
 import VisitDataType from "../../models/VisitDataType";
-import NavbarDateRange from "../form/NavbarDateRange";
 import VisitsForm from "../form/VisitsForm";
+import VisitsFilter from "./VisitsFilter";
 
 const Navbar: React.FC<{
   setVisits: React.Dispatch<VisitDataType[]>;
@@ -21,6 +21,9 @@ const Navbar: React.FC<{
   const [open, setOpen] = useState<boolean>(false);
   const startRef = useRef<HTMLInputElement>(null);
   const endRef = useRef<HTMLInputElement>(null);
+  const unitRef = useRef<HTMLInputElement>(null);
+  const visitorRef = useRef<HTMLInputElement>(null);
+  const vehicleRef = useRef<HTMLInputElement>(null);
 
   const filterVisitsHandler: () => void = async () => {
     const queryStartDate: string =
@@ -38,23 +41,39 @@ const Navbar: React.FC<{
     );
     const visitsSnap: QuerySnapshot = await getDocs(visitsRef);
 
-    const options: VisitDataType[] = [];
+    let options: VisitDataType[] = [];
 
     visitsSnap.forEach((doc) => {
-      options.push(
-        {
-          id: doc.id,
-          visitorName: doc.data().visitorName,
-          visitorID: doc.data().visitorID,
-          vehicleModel: doc.data().vehicleModel,
-          vehiclePlate: doc.data().vehiclePlate,
-          unit: doc.data().unit,
-          visitors: doc.data().visitors,
-          entryTimestamp: doc.data().entryTimestamp,
-          notes: doc.data().notes,
-        }
-      );
+      options.push({
+        id: doc.id,
+        visitorName: doc.data().visitorName,
+        visitorID: doc.data().visitorID,
+        vehicleModel: doc.data().vehicleModel,
+        vehiclePlate: doc.data().vehiclePlate,
+        unit: doc.data().unit,
+        visitors: doc.data().visitors,
+        entryTimestamp: doc.data().entryTimestamp,
+        notes: doc.data().notes,
+      });
     });
+
+    if (visitorRef.current?.value !== "") {
+      options = options.filter((visit) =>
+        visit.visitorName.includes(visitorRef.current!.value)
+      );
+    }
+
+    if (unitRef.current?.value !== "") {
+      options = options.filter((visit) =>
+        visit.unit[0].label.includes(unitRef.current!.value)
+      );
+    }
+
+    if (vehicleRef.current?.value !== "") {
+      options = options.filter((visit) =>
+        (visit.vehicleModel.includes(vehicleRef.current!.value) || visit.vehiclePlate.includes(vehicleRef.current!.value))
+      );
+    }
 
     setVisits(options);
   };
@@ -73,23 +92,31 @@ const Navbar: React.FC<{
           </h1>
         </div>
         {title.name === "Visitas" && (
-          <div className="mt-4 flex sm:mt-0 sm:ml-4">
-            <NavbarDateRange
-              filterVisitsHandler={filterVisitsHandler}
-              inputRef={startRef}
-              label={"Fecha de inicio"}
-            />
-            <NavbarDateRange
-              filterVisitsHandler={filterVisitsHandler}
-              inputRef={endRef}
-              label={"Fecha de fin"}
-            />
-          </div>
+          // <div className="mt-4 flex sm:mt-0 sm:ml-4">
+          //   <NavbarDateRange
+          //     filterVisitsHandler={filterVisitsHandler}
+          //     inputRef={startRef}
+          //     label={"Fecha de inicio"}
+          //   />
+          //   <NavbarDateRange
+          //     filterVisitsHandler={filterVisitsHandler}
+          //     inputRef={endRef}
+          //     label={"Fecha de fin"}
+          //   />
+          // </div>
+          <VisitsFilter
+            startRef={startRef}
+            endRef={endRef}
+            unitRef={unitRef}
+            visitorRef={visitorRef}
+            vehicleRef={vehicleRef}
+            filterVisitsHandler={filterVisitsHandler}
+          />
         )}
         <div className="mt-4 flex sm:mt-0 sm:ml-4">
           <button
             type="button"
-            className="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-800 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-1 sm:ml-3"
+            className="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-800 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800 sm:order-1 sm:ml-3"
             onClick={() => setOpen(true)}
           >
             Crear Visita
