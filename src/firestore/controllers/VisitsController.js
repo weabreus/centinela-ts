@@ -5,6 +5,7 @@ import {
   getDocs,
   query,
   setDoc,
+  where,
 } from "firebase/firestore";
 import Visit from "../../models/Visit";
 import db from "../FirestoreConfig";
@@ -59,8 +60,8 @@ export async function getVisitor(col, uid, setVisitor) {
   }
 }
 
-export async function getUnits(setOptions) {
-  const units = query(collectionGroup(db, "units"));
+export async function getUnits(setOptions, complex) {
+  const units = query(collectionGroup(db, "units"), where("complex", "==", complex));
 
   const querySnapshot = await getDocs(units);
 

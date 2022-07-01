@@ -11,6 +11,10 @@ import {
   getResident,
   updateResident,
 } from "../../firestore/controllers/ResidentsController";
+import SelectSingleInput from "../../components/form/SelectSingleInput";
+import { getComplexesInput } from "../../firestore/controllers/BuildingsController";
+import Select from "react-select/dist/declarations/src/Select";
+import InputType from "../../models/InputType";
 
 const EditResidentPage: React.FC<{
   setTitle: React.Dispatch<React.SetStateAction<PageTitle>>;
@@ -28,6 +32,7 @@ const EditResidentPage: React.FC<{
   const workRef = useRef<HTMLInputElement | null>(null);
   const mobileRef = useRef<HTMLInputElement | null>(null);
   const homeRef = useRef<HTMLInputElement | null>(null);
+  const complex = useRef<Select<InputType[]>>(null);
 
   const handleFormChange: (index: number, event: React.ChangeEvent) => void = (
     index,
@@ -56,6 +61,8 @@ const EditResidentPage: React.FC<{
     const residentData: ResidentDataType = {
       name: nameRef.current!.value,
       email: emailRef.current!.value,
+      // @ts-ignore
+      complex: complex.current!.getValue()[0]?.value,
       contact: {
         work: workRef.current!.value,
         mobile: mobileRef.current!.value,
@@ -80,7 +87,7 @@ const EditResidentPage: React.FC<{
       await getResident(id, setResident, setEmergencyInputFields);
     };
     getResidentData();
-  }, []);
+  }, [id, setTitle]);
 
   return (
     <>
@@ -131,6 +138,21 @@ const EditResidentPage: React.FC<{
             <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
               <div className="sm:col-span-3">
                 <label
+                  htmlFor="complex"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Complejo
+                </label>
+                <div className="mt-1">
+                  <SelectSingleInput
+                    inputRef={complex}
+                    getData={getComplexesInput}
+                  />
+                </div>
+              </div>
+
+              <div className="sm:col-span-3">
+                <label
                   htmlFor="name"
                   className="block text-sm font-medium text-gray-700"
                 >
@@ -169,66 +191,68 @@ const EditResidentPage: React.FC<{
                 </div>
               </div>
 
-              <div className="sm:col-span-2">
-                <label
-                  htmlFor="home"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Telefono
-                </label>
-                <div className="mt-1">
-                  <input
-                    defaultValue={resident?.contact?.home}
-                    ref={homeRef}
-                    type="tel"
-                    name="home"
-                    id="home"
-                    pattern="(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}"
-                    placeholder="Ejemplo: (787) 555-5555"
-                    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                  />
+              <div className="col-span-6 grid gap-y-6 gap-x-4 grid-cols-6">
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor="home"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Telefono
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      defaultValue={resident?.contact?.home}
+                      ref={homeRef}
+                      type="tel"
+                      name="home"
+                      id="home"
+                      pattern="(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}"
+                      placeholder="Ejemplo: (787) 555-5555"
+                      className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="sm:col-span-2">
-                <label
-                  htmlFor="mobil"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Mobil
-                </label>
-                <div className="mt-1">
-                  <input
-                    defaultValue={resident?.contact?.mobile}
-                    ref={mobileRef}
-                    type="tel"
-                    name="mobil"
-                    id="mobil"
-                    pattern="(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}"
-                    placeholder="Ejemplo: (787) 555-5555"
-                    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                  />
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor="mobil"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Mobil
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      defaultValue={resident?.contact?.mobile}
+                      ref={mobileRef}
+                      type="tel"
+                      name="mobil"
+                      id="mobil"
+                      pattern="(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}"
+                      placeholder="Ejemplo: (787) 555-5555"
+                      className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="sm:col-span-2">
-                <label
-                  htmlFor="work"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Trabajo
-                </label>
-                <div className="mt-1">
-                  <input
-                    defaultValue={resident?.contact?.work}
-                    ref={workRef}
-                    type="tel"
-                    name="work"
-                    id="work"
-                    pattern="(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}"
-                    placeholder="Ejemplo: (787) 555-5555"
-                    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                  />
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor="work"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Trabajo
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      defaultValue={resident?.contact?.work}
+                      ref={workRef}
+                      type="tel"
+                      name="work"
+                      id="work"
+                      pattern="(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}"
+                      placeholder="Ejemplo: (787) 555-5555"
+                      className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

@@ -68,7 +68,7 @@ const AuthForm: React.FC = () => {
         // @ts-ignore
         const user: DocumentSnapshot<UserDataType>= await getDoc(doc(db, "users", data.localId));
 
-        authCtx.login(data.idToken, expirationTime.toISOString(), data.localId, user.data()!.role);
+        authCtx.login(data.idToken, expirationTime.toISOString(), data.localId, user.data()!.role, user.data()!.complex);
         history.push("/");
 
       })

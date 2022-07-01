@@ -1,15 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import TablePagination from "../../components/pagination/TablePagination";
 import { getBuildings } from "../../firestore/controllers/BuildingsController";
 import BuildingsShortType from "../../models/BuildingsShortType";
 import PageTitle from "../../models/PageTitle";
+import AuthContext from "../../store/auth-context";
 
 let PageSize = 10;
 
 const BuildingsPage: React.FC<{
   setTitle: React.Dispatch<React.SetStateAction<PageTitle>>}> = ({ setTitle }) => {
+
+  const authCtx = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [data, setData] = useState<BuildingsShortType[]>([]);
 
@@ -26,10 +29,10 @@ const BuildingsPage: React.FC<{
     });
 
     const getData = async () => {
-      getBuildings(setData);
+      getBuildings(setData, authCtx.complex);
     };
     getData();
-  }, [ setTitle ]);
+  }, [ setTitle, authCtx.complex ]);
 
   return (
     <div className="p-6 sm:px-6 lg:px-8">

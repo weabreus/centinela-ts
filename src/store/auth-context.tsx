@@ -8,6 +8,7 @@ const AuthContext = React.createContext<AuthContextType>({
   isLoggedIn: false,
   id: "",
   role: "",
+  complex: "",
   login: () => {},
   logout: () => {},
 });
@@ -31,12 +32,14 @@ const retrieveStoredToken: () => {
   duration: number | null;
   id: string | null;
   role: string | null;
+  complex: string | null;
 } | null = () => {
   const storedToken: string | null = localStorage.getItem("token");
   const storedExpirationDate: string | null =
     localStorage.getItem("expirationTime");
   const storedId: string | null = localStorage.getItem("id");
   const storedRole: string | null = localStorage.getItem("role");
+  const storedComplex: string | null = localStorage.getItem("complex");
 
   const remainingTime: number = calculateRemainingTime(storedExpirationDate);
 
@@ -45,6 +48,7 @@ const retrieveStoredToken: () => {
     localStorage.removeItem("expirationTime");
     localStorage.removeItem("id");
     localStorage.removeItem("role");
+    localStorage.removeItem("complex");
     return null;
   }
 
@@ -53,6 +57,7 @@ const retrieveStoredToken: () => {
     duration: remainingTime,
     id: storedId,
     role: storedRole,
+    complex: storedComplex,
   };
 };
 
@@ -63,21 +68,25 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     token: string | null;
     duration: any;
     id: string | null;
-    role: string | null
+    role: string | null;
+    complex: string | null;
   } | null = retrieveStoredToken();
 
   let initialToken: string | null;
   let initialId: string | null;
-  let initialRole: string | null
+  let initialRole: string | null;
+  let initialComplex: string | null;
   if (tokenData) {
     initialToken = tokenData.token;
     initialId = tokenData.id;
     initialRole = tokenData.role;
+    initialComplex = tokenData.complex;
   }
 
   const [token, setToken] = useState<string | null>(initialToken!);
   const [id, setId] = useState<string | null>(initialId!);
   const [role, setRole] = useState<string | null>(initialRole!);
+  const [complex, setComplex] = useState<string | null>(initialComplex!);
 
   const userIsLoggedIn: boolean = !!token;
 
@@ -88,6 +97,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem("expirationTime");
     localStorage.removeItem("id");
     localStorage.removeItem("role");
+    localStorage.removeItem("complex");
 
     if (logoutTimer) {
       clearTimeout(logoutTimer);
@@ -98,15 +108,18 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     token: string,
     expirationTime: string,
     id: string,
-    role: string
-  ) => void = (token, expirationTime, id, role) => {
+    role: string,
+    complex: string
+  ) => void = (token, expirationTime, id, role, complex) => {
     setToken(token);
     setId(id);
-    setRole(role)
+    setRole(role);
+    setComplex(complex);
     localStorage.setItem("token", token);
     localStorage.setItem("expirationTime", expirationTime);
     localStorage.setItem("id", id);
     localStorage.setItem("role", role);
+    localStorage.setItem("complex", complex);
 
     const remainingTime = calculateRemainingTime(expirationTime);
 
@@ -124,14 +137,16 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     token: string;
     isLoggedIn: boolean;
     id: string;
-    role: string
-    login: (token: string, expirationTime: string, id: string, role: string) => void;
+    role: string,
+    complex: string,
+    login: (token: string, expirationTime: string, id: string, role: string, complex: string) => void;
     logout: () => void;
   } = {
     token: token!,
     isLoggedIn: userIsLoggedIn,
     id: id!,
     role: role!,
+    complex: complex!,
     login: loginHandler,
     logout: logoutHandler,
   };

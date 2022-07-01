@@ -5,6 +5,7 @@ import Select from "react-select/dist/declarations/src/Select";
 import SelectSingleInput from "../../components/form/SelectSingleInput";
 import { addBuilding, getComplexesInput } from "../../firestore/controllers/BuildingsController";
 import BuildingsShortType from "../../models/BuildingsShortType";
+import InputType from "../../models/InputType";
 import PageTitle from "../../models/PageTitle";
 
 const CreateBuildingsPage: React.FC<{
@@ -13,7 +14,7 @@ const CreateBuildingsPage: React.FC<{
 
   const history = useHistory();
 
-  const complex = useRef<Select>(null);
+  const complex = useRef<Select<InputType[]>>(null);
   const name = useRef<HTMLInputElement | null>(null);
   const address = useRef<HTMLInputElement | null>(null);
 
@@ -31,6 +32,8 @@ const CreateBuildingsPage: React.FC<{
     const buildingData: BuildingsShortType = {
       name: name.current!.value,
       address: address.current!.value,
+      // @ts-ignore
+      complex: complex.current!.getValue()[0]?.value
     };
 
     addBuilding(

@@ -9,6 +9,7 @@ interface ResidentDataType {
   email: string;
   name: string;
   photo?: string;
+  complex: string;
 }
 
 export default ResidentDataType;

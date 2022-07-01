@@ -3,9 +3,10 @@ interface AuthContextType {
     isLoggedIn: boolean;
     id: string;
     role: string;
+    complex: string;
     login:
       | (() => void)
-      | ((token: string, expirationTime: string, id: string, role: string) => void);
+      | ((token: string, expirationTime: string, id: string, role: string, complex: string) => void);
     logout: () => void;
   }
   

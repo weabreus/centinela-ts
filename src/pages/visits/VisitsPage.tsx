@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
 import { ChevronRightIcon } from "@heroicons/react/solid";
 import db from "../../firestore/FirestoreConfig";
 import {
@@ -9,17 +8,21 @@ import {
   onSnapshot,
   collectionGroup,
   orderBy,
+  where,
 } from "firebase/firestore";
 import moment from "moment";
 import PageTitle from "../../models/PageTitle";
 import UnitShortType from "../../models/UnitShortType";
 import VisitDataType from "../../models/VisitDataType";
+import AuthContext from "../../store/auth-context";
 
 const VisitsPage: React.FC<{
   visits: VisitDataType[];
   setVisits: React.Dispatch<React.SetStateAction<VisitDataType[]>>;
   setTitle: React.Dispatch<React.SetStateAction<PageTitle>>;
 }> = ({ visits, setVisits, setTitle }) => {
+  const authCtx = useContext(AuthContext);
+
   const [units, setUnits] = useState<UnitShortType[]>([]);
 
   useEffect(() => {
@@ -30,6 +33,7 @@ const VisitsPage: React.FC<{
     const getVisits = async () => {
       const visitsCollectionRef = query(
         collection(db, "visits"),
+        where("complex", "==", authCtx.complex),
         orderBy("entryTimestamp", "desc")
       );
       const data = await getDocs(visitsCollectionRef);
@@ -47,7 +51,10 @@ const VisitsPage: React.FC<{
         };
       });
 
-      const unitCollectionRef = query(collectionGroup(db, "units"));
+      const unitCollectionRef = query(
+        collectionGroup(db, "units"),
+        where("complex", "==", authCtx.complex)
+      );
       const unitData = await getDocs(unitCollectionRef);
       const tempUnits: UnitShortType[] = unitData.docs.map((doc) => {
         return { number: doc.data().number, id: doc.id };
@@ -57,11 +64,15 @@ const VisitsPage: React.FC<{
       setUnits(tempUnits);
     };
     getVisits();
-  }, [setTitle, setVisits]);
+  }, [setTitle, setVisits, authCtx.complex]);
 
   useEffect(() => {
     onSnapshot(
-      query(collection(db, "visits"), orderBy("entryTimestamp", "desc")),
+      query(
+        collection(db, "visits"),
+        where("complex", "==", authCtx.complex),
+        orderBy("entryTimestamp", "desc")
+      ),
       (snap) => {
         const snapVisits: VisitDataType[] = [];
         snap.forEach((doc) => {
@@ -80,7 +91,7 @@ const VisitsPage: React.FC<{
         setVisits(snapVisits);
       }
     );
-  }, [setVisits]);
+  }, [setVisits, authCtx.complex]);
 
   return (
     <div>
@@ -196,13 +207,13 @@ const VisitsPage: React.FC<{
                   <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
                     {visit.visitors}
                   </td>
-                  <td className="text-center px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
+                  {/* <td className="text-center px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
                     <Link to={"/editvisit/" + visit.id}>
                       <span className="text-indigo-600 hover:text-indigo-900">
                         Editar
                       </span>
                     </Link>
-                  </td>
+                  </td> */}
                 </tr>
               ))}
             </tbody>

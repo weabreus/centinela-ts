@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import Select from "react-select/dist/declarations/src/Select";
 import SelectSingleInput from "../../components/form/SelectSingleInput";
+import { getComplexesInput } from "../../firestore/controllers/BuildingsController";
 import {
   getUnits,
   getVehicle,
@@ -33,6 +34,7 @@ const EditVehiclePage: React.FC<{
     getData();
   }, [id, setTitle]);
 
+  const complex = useRef<Select<InputType[]> | null>(null)
   const make = useRef<HTMLInputElement | null>(null);
   const model = useRef<HTMLInputElement | null>(null);
   const color = useRef<HTMLInputElement | null>(null);
@@ -44,6 +46,7 @@ const EditVehiclePage: React.FC<{
     event.preventDefault();
 
     let vehicleData: VehiclesDataType = {
+      complexInput: complex.current?.getValue(),
       make: make.current!.value,
       model: model.current!.value,
       color: color.current!.value,
@@ -76,6 +79,22 @@ const EditVehiclePage: React.FC<{
               </div>
 
               <div className="mt-6 grid grid-cols-6 gap-y-6 gap-x-4 sm:grid-cols-6">
+              <div className="sm:col-span-3">
+                  <label
+                    htmlFor="complex"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Complejo
+                  </label>
+                  <div className="mt-1">
+                    <SelectSingleInput
+                      inputRef={complex}
+                      getData={getComplexesInput}
+                      initial={vehicle?.complexInput}
+
+                    />
+                  </div>
+                </div>
                 <div className="col-span-3 sm:col-span-3">
                   <label
                     htmlFor="make"

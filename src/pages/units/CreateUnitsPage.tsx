@@ -15,6 +15,8 @@ const CreateUnitsPage: React.FC<{
   setTitle: React.Dispatch<React.SetStateAction<PageTitle>>;
 }> = ({ setTitle }) => {
 
+  
+
   const history = useHistory();
 
   const number = useRef<HTMLInputElement | null>(null);
@@ -51,7 +53,7 @@ const CreateUnitsPage: React.FC<{
 
   return (
     <>
-      <div className="py-6 px-12">
+      <div className="overflow-y-scroll min-h-[calc(100vh_-_89px)] py-6 px-12">
         <form
           className="space-y-8 divide-y divide-gray-200"
           onSubmit={submitHandler}

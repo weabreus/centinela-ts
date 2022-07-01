@@ -47,6 +47,9 @@ const EditBuildingsPage: React.FC<{
     const buildingData: BuildingsShortType = {
       name: name.current!.value,
       address: address.current!.value,
+      // @ts-ignore
+      complex: complexRef.current?.getValue()[0]!.value,
+
     };
 
     updateBuilding(

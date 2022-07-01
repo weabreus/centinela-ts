@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Link, useHistory } from "react-router-dom";
 import Select from "react-select/dist/declarations/src/Select";
 import SelectSingleInput from "../../components/form/SelectSingleInput";
+import { getComplexesInput } from "../../firestore/controllers/BuildingsController";
 import {
   addVehicle,
   getUnits,
@@ -15,6 +16,7 @@ const CreateVehiclePage: React.FC<{
 }> = ({ setTitle }) => {
   const history = useHistory();
 
+  const complex = useRef<Select<InputType[]> | null>(null)
   const make = useRef<HTMLInputElement | null>(null);
   const model = useRef<HTMLInputElement | null>(null);
   const color = useRef<HTMLInputElement | null>(null);
@@ -22,10 +24,13 @@ const CreateVehiclePage: React.FC<{
   const year = useRef<HTMLInputElement | null>(null);
   const unit = useRef<Select<InputType[]> | null>(null);
 
-  const submitHandler: (event: React.SyntheticEvent) => void = async (event) => {
+  const submitHandler: (event: React.SyntheticEvent) => void = async (
+    event
+  ) => {
     event.preventDefault();
 
     let vehicleData: VehiclesDataType = {
+      complexInput: complex.current?.getValue(),
       make: make.current!.value,
       model: model.current!.value,
       color: color.current!.value,
@@ -57,6 +62,20 @@ const CreateVehiclePage: React.FC<{
           <div className="space-y-8 divide-y divide-gray-200">
             <div>
               <div className="mt-6 grid grid-cols-6 gap-y-6 gap-x-4 sm:grid-cols-6">
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="complex"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Complejo
+                  </label>
+                  <div className="mt-1">
+                    <SelectSingleInput
+                      inputRef={complex}
+                      getData={getComplexesInput}
+                    />
+                  </div>
+                </div>
                 <div className="col-span-3 sm:col-span-3">
                   <label
                     htmlFor="make"

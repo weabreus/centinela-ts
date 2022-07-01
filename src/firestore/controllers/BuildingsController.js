@@ -7,6 +7,7 @@ import {
   getDocs,
   query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import db from "../FirestoreConfig";
 
@@ -39,8 +40,8 @@ export async function getBuildingFormData(uid, setBuilding, setComplex) {
   
     setComplex([{ value: complex.id, label: complex.data().name }]);
   }
-export async function getBuildings(setOptions) {
-  const buildings = query(collectionGroup(db, "buildings"));
+export async function getBuildings(setOptions, complex) {
+  const buildings = query(collectionGroup(db, "buildings"), where("complex", "==", complex));
 
   const querySnapshot = await getDocs(buildings);
 

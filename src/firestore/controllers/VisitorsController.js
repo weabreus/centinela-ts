@@ -57,17 +57,30 @@ export async function getUnits(setOptions) {
   setOptions(options);
 }
 
-export async function getVisitorsSearch(searchInputRef, setDirectory, setVisitorCount) {
+export async function getVisitorsSearch(
+  searchInputRef,
+  setDirectory,
+  setVisitorCount,
+  complex
+) {
   let count = 0;
   const data = await getDocs(
     query(
       collection(db, "visitors"),
-      where("name", ">=", searchInputRef.current?.value),
-      where("name", "<=", searchInputRef.current?.value + "\uf8ff")
+      where("complex", "==", complex)
+      // where("name", ">=", searchInputRef.current?.value),
+      // where("name", "<=", searchInputRef.current?.value + "\uf8ff")
     )
   );
 
-  const newDirectory = data.docs.reduce((acc, doc) => {
+  const visitors = data.docs.filter((doc) =>
+    doc
+      .data()
+      .name.toLowerCase()
+      .includes(searchInputRef.current?.value.toLowerCase())
+  );
+
+  const newDirectory = visitors.reduce((acc, doc) => {
     const firstLetter = doc.data().name.charAt(0).toUpperCase();
 
     if (!acc[firstLetter]) {
@@ -88,15 +101,19 @@ export async function getVisitorsDirectory(
   setDirectory,
   setVisitorCount,
   setSelectedVisitor,
-  setSelectedFields
+  setSelectedFields,
+  complex
 ) {
   const newDirectory = {};
   let count = 0;
   let newSelectedUser = {};
 
-  const usersCollectionRef = collection(db, "visitors");
+  const usersCollectionRef = query(
+    collection(db, "visitors"),
+    where("complex", "==", complex)
+  );
   const data = await getDocs(usersCollectionRef);
-  
+
   data.docs.map((doc) => {
     if (!newDirectory.hasOwnProperty(doc.data().name.charAt(0).toUpperCase())) {
       newDirectory[doc.data().name.charAt(0).toUpperCase()] = [];
@@ -128,6 +145,7 @@ export async function getVisitorsDirectory(
 }
 
 export async function addVisitor(data) {
+  data["complex"] = data.complexInput[0].value;
   const docRef = await addDoc(collection(db, "visitors"), data);
 
   console.log("Document written with ID: ", docRef.id);
@@ -144,7 +162,9 @@ export async function getAllVisitorVehicles(setOptions) {
   querySnapshot.forEach((doc) => {
     options.push({
       value: doc.id,
-      label: `(${doc.data().plate}) ${doc.data().make} ${doc.data().model} ${doc.data().year}`,
+      label: `(${doc.data().plate}) ${doc.data().make} ${doc.data().model} ${
+        doc.data().year
+      }`,
       path: "vehicles/" + doc.id,
     });
   });
