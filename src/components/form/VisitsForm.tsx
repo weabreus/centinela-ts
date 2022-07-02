@@ -18,6 +18,7 @@ import { schema } from "../../models/VisitDataType";
 import FieldErrors from "../../models/FieldErrors";
 import DefaultInput from "./DefaultInput";
 import AuthContext from "../../store/auth-context";
+import ResidentInputDataType from "../../models/ResidentInputDataType";
 
 const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
   open,
@@ -32,7 +33,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
   const visitorID = useRef<HTMLInputElement>(null);
   const vehicleModel = useRef<HTMLInputElement>(null);
   const vehiclePlate = useRef<HTMLInputElement>(null);
-  const unit = useRef<Select<UnitDataType[]>>(null);
+  const unit = useRef<Select<UnitInputType>>(null);
   const quantity = useRef<HTMLInputElement>(null);
   const notes = useRef<HTMLTextAreaElement>(null);
 
@@ -40,6 +41,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
   const [authorizedVisitors, setAuthorizedVisitors] = useState<
     Directory<VisitorDataType>
   >({});
+  const [unitResidents, setUnitResidents] = useState<ResidentInputDataType[]>([]);
 
   const changeUnitHandler = (
     newValue: SingleValue<UnitInputType>,
@@ -48,22 +50,33 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
     if (openAuthList) {
       if (newValue?.authorizedVisitors.length !== 0) {
         const directory: any = createAuthorizedVisitorDirectory(
-          newValue?.authorizedVisitors
+          newValue?.authorizedVisitors,
+          "visitor"
         );
 
+        const residents = newValue?.residents
+
         setAuthorizedVisitors(directory);
+        setUnitResidents(residents!)
         setOpenAuthList(true);
       } else {
+        const residents = newValue?.residents
+
         setAuthorizedVisitors({});
+        setUnitResidents(residents!)
         setOpenAuthList(false);
       }
     } else {
       if (newValue?.authorizedVisitors.length !== 0) {
         const directory: any = createAuthorizedVisitorDirectory(
-          newValue?.authorizedVisitors
+          newValue?.authorizedVisitors,
+          "visitor"
         );
 
+        const residents = newValue?.residents
+
         setAuthorizedVisitors(directory);
+        setUnitResidents(residents!)
         setOpenAuthList(true);
       }
     }
@@ -76,7 +89,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
       entryTimestamp: Date;
       visitorName: string;
       visitorID: string;
-      unit: Options<UnitDataType[]>;
+      unit: Options<UnitInputType>;
       vehicleModel: string;
       vehiclePlate: string;
       notes: string;
@@ -136,6 +149,8 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
         open={openAuthList}
         setOpen={setOpenAuthList}
         authorizedVisitors={authorizedVisitors}
+        unitResidents={unitResidents}
+        unit={unit}
         visitorName={visitorName}
         visitorID={visitorID}
       />
@@ -153,7 +168,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
-                <Dialog.Panel className="pointer-events-auto w-screen max-w-2xl">
+                <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
                   <form className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                     <div className="flex-1">
                       {/* Header */}

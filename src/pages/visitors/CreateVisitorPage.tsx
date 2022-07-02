@@ -11,22 +11,34 @@ import { addVisitor } from "../../firestore/controllers/VisitorsController";
 import SelectSingleInput from "../../components/form/SelectSingleInput";
 import { getComplexesInput } from "../../firestore/controllers/BuildingsController";
 
+const visitorsTypes = [
+  {
+    value: "visitor",
+    label: "Visitante",
+  },
+  {
+    value: "services",
+    label: "Servicios",
+  },
+];
+
 const CreateVisitorPage: React.FC<{
   setTitle: React.Dispatch<React.SetStateAction<PageTitle>>;
 }> = ({ setTitle }) => {
-
   const history = useHistory();
 
-  const complex = useRef<Select<InputType[]>>(null)
+  const complex = useRef<Select<InputType[]>>(null);
   const nameRef = useRef<HTMLInputElement | null>(null);
   const idRef = useRef<HTMLInputElement | null>(null);
+  const type = useRef<HTMLSelectElement | null>(null);
 
   const submitHandler: (event: React.SyntheticEvent) => void = (event) => {
     event.preventDefault();
     const visitorData: VisitorDataType = {
       name: nameRef.current!.value,
       identification: idRef.current!.value,
-      complexInput: complex.current?.getValue()
+      complexInput: complex.current?.getValue(),
+      type: type.current!.value
     };
 
     addVisitor(visitorData);
@@ -89,20 +101,21 @@ const CreateVisitorPage: React.FC<{
               </p>
             </div>
             <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-            <div className="sm:col-span-3">
-                  <label
-                    htmlFor="complex"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Complejo
-                  </label>
-                  <div className="mt-1">
-                    <SelectSingleInput
-                      inputRef={complex}
-                      getData={getComplexesInput}
-                    />
-                  </div>
+              <div className="sm:col-span-3">
+                <label
+                  htmlFor="complex"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Complejo
+                </label>
+                <div className="mt-1">
+                  <SelectSingleInput
+                    inputRef={complex}
+                    getData={getComplexesInput}
+                  />
                 </div>
+              </div>
+
               <div className="sm:col-span-3">
                 <label
                   htmlFor="name"
@@ -138,6 +151,21 @@ const CreateVisitorPage: React.FC<{
                     autoComplete="identification"
                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
+                </div>
+              </div>
+
+              <div className="sm:col-span-3">
+                <label
+                  htmlFor="type"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Tipo
+                </label>
+                <div className="mt-1">
+                  <select name="type" id="type" ref={type}>
+                    <option value="visitor">Visitante</option>
+                    <option value="services">Servicios</option>
+                  </select>
                 </div>
               </div>
             </div>

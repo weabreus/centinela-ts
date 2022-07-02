@@ -61,7 +61,10 @@ export async function getVisitor(col, uid, setVisitor) {
 }
 
 export async function getUnits(setOptions, complex) {
-  const units = query(collectionGroup(db, "units"), where("complex", "==", complex));
+  const units = query(
+    collectionGroup(db, "units"),
+    where("complex", "==", complex)
+  );
 
   const querySnapshot = await getDocs(units);
 
@@ -73,6 +76,7 @@ export async function getUnits(setOptions, complex) {
       label: doc.data().number,
       path: doc.ref.path,
       authorizedVisitors: doc.data().authorizedVisitors,
+      residents: doc.data().residents,
     });
   });
 
@@ -95,25 +99,29 @@ export async function setDocument(col, uid, data) {
   await setDoc(doc(db, col, uid), data);
 }
 
-export function createAuthorizedVisitorDirectory(visitors) {
+export function createAuthorizedVisitorDirectory(visitors, type) {
   const visitorDirectory = {};
-
+  
   visitors.map((visitor) => {
     if (
       !visitorDirectory.hasOwnProperty(visitor.label.charAt(0).toUpperCase())
     ) {
-      visitorDirectory[visitor.label.charAt(0).toUpperCase()] = [];
+      if (visitor.type === type) {
+        visitorDirectory[visitor.label.charAt(0).toUpperCase()] = [];
 
-      visitorDirectory[visitor.label.charAt(0).toUpperCase()].push({
-        name: visitor.label,
-        identification: visitor.identification,
-      });
+        visitorDirectory[visitor.label.charAt(0).toUpperCase()].push({
+          name: visitor.label,
+          identification: visitor.identification,
+        });
+      }
     } else {
-      visitorDirectory[visitor.label.charAt(0).toUpperCase()].push({
-        id: visitor.value,
-        name: visitor.label,
-        identification: visitor.identification,
-      });
+      if (visitor.type === type) {
+        visitorDirectory[visitor.label.charAt(0).toUpperCase()].push({
+          id: visitor.value,
+          name: visitor.label,
+          identification: visitor.identification,
+        });
+      }
     }
 
     return visitor;

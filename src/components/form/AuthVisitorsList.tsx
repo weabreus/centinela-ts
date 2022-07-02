@@ -5,14 +5,21 @@ import { XIcon } from "@heroicons/react/outline";
 import AuthVisitorsListResults from "./AuthVisitorsListResults";
 import Directory from "../../models/DirectoryType";
 import VisitorDataType from "../../models/VisitorDataType";
+import UnitInformation from "./UnitInformation";
+import ResidentInputDataType from "../../models/ResidentInputDataType";
+import Select from "react-select/dist/declarations/src/Select";
+import UnitDataType from "../../models/UnitDataType";
+import UnitInputType from "../../models/UnitInputType";
 
 const AuthVisitorsList: React.FC<{
   open: boolean;
   authorizedVisitors: Directory<VisitorDataType>;
+  unitResidents: ResidentInputDataType[];
   visitorName: React.RefObject<HTMLInputElement>;
+  unit: React.RefObject<Select<UnitInputType>>;
   visitorID: React.RefObject<HTMLInputElement>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ open, authorizedVisitors, visitorName, visitorID, setOpen }) => {
+}> = ({ open, authorizedVisitors, unitResidents, unit, visitorName, visitorID, setOpen }) => {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-9" onClose={() => null}>
@@ -25,19 +32,19 @@ const AuthVisitorsList: React.FC<{
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"
                 enterFrom="translate-x-full"
-                enterTo="-translate-x-[672px]"
+                enterTo="-translate-x-[448px]"
                 leave="transform transition ease-in-out duration-500 sm:duration-700"
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
-                <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
+                <Dialog.Panel className="pointer-events-auto w-screen max-w-xl">
                   <div className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
                     <div className="flex min-h-0 flex-1 flex-col overflow-y-scroll py-6">
                       <div className="px-4 sm:px-6">
                         <div className="flex items-start justify-between">
                           <Dialog.Title className="text-lg font-medium text-gray-900">
                             {" "}
-                            Visitantes Autorizados{" "}
+                            Información de la Unidad{" "}
                           </Dialog.Title>
                           <div className="ml-3 flex h-7 items-center">
                             <button
@@ -52,8 +59,13 @@ const AuthVisitorsList: React.FC<{
                         </div>
                       </div>
                       <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                        <UnitInformation 
+                        unitResidents={unitResidents}
+                        unit={unit}
+                        />
                         <AuthVisitorsListResults
                           authorizedVisitors={authorizedVisitors}
+                          unit={unit}
                           visitorName={visitorName}
                           visitorID={visitorID}
                         />

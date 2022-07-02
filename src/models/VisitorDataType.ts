@@ -9,6 +9,7 @@ interface VisitorDataType {
   vehicles?: Options<InputType[]>;
   complexInput?: Options<InputType[]>;
   complex?: string;
+  type?: string;
 }
 
 export default VisitorDataType;
