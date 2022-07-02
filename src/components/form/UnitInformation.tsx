@@ -11,25 +11,25 @@ const UnitInformation: React.FC<{
   unit: React.RefObject<Select<UnitInputType>>;
 }> = ({ unitResidents, unit }) => {
   return (
-    <div className="space-y-6 pb-16">
+    <div className="space-y-6 pb-6">
       <div>
-        <div className="mt-4 flex items-start justify-between">
+        <div className="mt-4 flex items-start justify-between w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           <div>
-            <h2 className="text-lg font-medium text-gray-900">
+            <h2 className="text-lg font-medium text-white">
               <span className="sr-only">Detalles para </span>
               <span className="font-bold">
                 {unit.current?.getValue().at(0)?.label}
               </span>
             </h2>
           </div>
-          <span className="ml-4 flex h-8 w-8 items-center justify-center rounded-full bg-white text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <span className="ml-4 flex h-8 w-8 items-center justify-center text-white focus:outline-none">
             <HomeIcon className="h-6 w-6" aria-hidden="true" />
             <span className="sr-only">Unidad</span>
           </span>
         </div>
       </div>
       <div>
-        <h3 className="font-medium text-gray-900">Información de Residentes</h3>
+        <h3 className="font-medium text-gray-900">Residentes</h3>
         <dl className="mt-2 divide-y divide-gray-200 border-t border-b border-gray-200">
           {unit.current
             ?.getValue()

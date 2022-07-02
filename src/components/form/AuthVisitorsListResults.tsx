@@ -57,7 +57,7 @@ const AuthVisitorsListResults: React.FC<{
                 onClick={() => visitorTypeChangeHandler(tab.type)}
                 className={classNames(
                   tab.current
-                    ? "border-indigo-500 text-indigo-600"
+                    ? "border-blue-500 text-blue-600"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
                   "whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm"
                 )}
@@ -78,7 +78,7 @@ const AuthVisitorsListResults: React.FC<{
             <ul className="relative z-0 divide-y divide-gray-200">
               {currentAuthVisitors[letter].map((person: VisitorDataType) => (
                 <li key={JSON.stringify(person.id)} className="bg-white">
-                  <div className="relative px-6 py-5 flex items-center space-x-3 hover:bg-gray-50 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-500">
+                  <div className="relative px-6 py-5 flex items-center space-x-3 hover:bg-gray-50 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500">
                     <div className="flex-shrink-0">
                       <img
                         className="h-10 w-10 rounded-full"
