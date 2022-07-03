@@ -46,7 +46,9 @@ const VisitsPage: React.FC<{
           id: doc.id,
           visitorName: doc.data().visitorName,
           visitorID: doc.data().visitorID,
+          vehicleMake: doc.data().vehicleMake,
           vehicleModel: doc.data().vehicleModel,
+          vehicleColor: doc.data().vehicleColor,
           vehiclePlate: doc.data().vehiclePlate,
           unit: doc.data().unit,
           visitors: doc.data().visitors,
@@ -88,7 +90,9 @@ const VisitsPage: React.FC<{
             id: doc.id,
             visitorName: doc.data().visitorName,
             visitorID: doc.data().visitorID,
+            vehicleMake: doc.data().vehicleMake,
             vehicleModel: doc.data().vehicleModel,
+            vehicleColor: doc.data().vehicleColor,
             vehiclePlate: doc.data().vehiclePlate,
             unit: doc.data().unit,
             visitors: doc.data().visitors,
@@ -211,7 +215,7 @@ const VisitsPage: React.FC<{
                     }
                   </td>
                   <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
-                    {`(${visit.vehiclePlate}) ${visit.vehicleModel}`}
+                    {`(${visit.vehiclePlate}) ${visit.vehicleMake} ${visit.vehicleModel} ${visit.vehicleColor}`}
                   </td>
                   <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
                     {visit.visitors}
