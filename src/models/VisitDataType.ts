@@ -2,6 +2,7 @@ import { Timestamp } from "firebase/firestore";
 import { Options } from "react-select";
 import UnitInputType from "./UnitInputType";
 import * as yup from "yup";
+import UserDataType from "./UserDataType";
 
 export const schema = yup.object().shape({
   id: yup.string(),
@@ -43,6 +44,7 @@ interface VisitDataType {
   notes: string;
   visitors: string;
   type:  string;
+  creator: UserDataType;
 }
 
 export default VisitDataType;

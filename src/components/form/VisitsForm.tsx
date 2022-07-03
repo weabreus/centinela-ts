@@ -18,6 +18,14 @@ import FieldErrors from "../../models/FieldErrors";
 import DefaultInput from "./DefaultInput";
 import AuthContext from "../../store/auth-context";
 import ResidentInputDataType from "../../models/ResidentInputDataType";
+import {
+  doc,
+  DocumentData,
+  DocumentReference,
+  getDoc,
+} from "firebase/firestore";
+import db from "../../firestore/FirestoreConfig";
+import UserDataType from "../../models/UserDataType";
 
 const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
   open,
@@ -85,8 +93,36 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
     }
   };
 
-  function submitHandler(event: React.SyntheticEvent) {
+  async function submitHandler(event: React.SyntheticEvent) {
     event.preventDefault();
+    const userRef: DocumentReference<DocumentData> = doc(
+      db,
+      "users",
+      authCtx.id
+    );
+
+    const userData = await getDoc(userRef).then((doc) => {
+      if (!doc.exists) {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      } else {
+        const user: UserDataType = {
+          address: doc.data()?.address,
+          areacode: doc.data()?.areacode,
+          country: doc.data()?.country,
+          email: doc.data()?.email,
+          municipality: doc.data()?.municipality,
+          name: doc.data()?.name,
+          organization: doc.data()?.organization,
+          phone: doc.data()?.phone,
+          title: doc.data()?.title,
+          role: doc.data()?.role,
+          complex: doc.data()?.complex,
+        };
+
+        return user;
+      }
+    });
 
     const visitData: {
       entryTimestamp: Date;
@@ -101,6 +137,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
       visitors: string;
       complex: string;
       type: string;
+      creator: UserDataType;
     } = {
       entryTimestamp: new Date(),
       visitorName: visitorName.current!.value,
@@ -113,7 +150,8 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
       notes: notes.current!.value,
       visitors: quantity.current!.value,
       complex: authCtx.complex,
-      type: type.current!.value
+      type: type.current!.value,
+      creator: userData!,
     };
 
     schema
