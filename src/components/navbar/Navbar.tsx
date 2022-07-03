@@ -59,6 +59,7 @@ const Navbar: React.FC<{
         visitors: doc.data().visitors,
         entryTimestamp: doc.data().entryTimestamp,
         notes: doc.data().notes,
+        type: doc.data().type
       });
     });
 

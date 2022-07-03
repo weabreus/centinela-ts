@@ -8,7 +8,6 @@ import VisitorDataType from "../../models/VisitorDataType";
 import UnitInformation from "./UnitInformation";
 import ResidentInputDataType from "../../models/ResidentInputDataType";
 import Select from "react-select/dist/declarations/src/Select";
-import UnitDataType from "../../models/UnitDataType";
 import UnitInputType from "../../models/UnitInputType";
 
 const AuthVisitorsList: React.FC<{
@@ -49,7 +48,7 @@ const AuthVisitorsList: React.FC<{
                           <div className="ml-3 flex h-7 items-center">
                             <button
                               type="button"
-                              className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                              className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                               onClick={() => setOpen(false)}
                             >
                               <span className="sr-only">Close panel</span>

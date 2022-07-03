@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Select from "react-select/dist/declarations/src/Select";
 import { createAuthorizedVisitorDirectory } from "../../firestore/controllers/VisitsController";
 import { classNames } from "../../helpers";
@@ -6,44 +6,44 @@ import Directory from "../../models/DirectoryType";
 import UnitInputType from "../../models/UnitInputType";
 import VisitorDataType from "../../models/VisitorDataType";
 
-
-
 const AuthVisitorsListResults: React.FC<{
   authorizedVisitors: Directory<VisitorDataType>;
   visitorName: React.RefObject<HTMLInputElement>;
   visitorID: React.RefObject<HTMLInputElement>;
   unit: React.RefObject<Select<UnitInputType>>;
 }> = ({ authorizedVisitors, visitorName, visitorID, unit }) => {
-
-  
-
   const visitorTypeChangeHandler = (type: string) => {
-
-    const directory: any = createAuthorizedVisitorDirectory(unit.current?.getValue().at(0)?.authorizedVisitors, type);
+    const directory: any = createAuthorizedVisitorDirectory(
+      unit.current?.getValue().at(0)?.authorizedVisitors,
+      type
+    );
 
     setCurrentAuthVisitors(directory);
     if (type === "visitor") {
-      setVisitorsTab(true)
-      setServicesTab(false)
+      setVisitorsTab(true);
+      setServicesTab(false);
     } else {
-      setVisitorsTab(false)
-      setServicesTab(true)
+      setVisitorsTab(false);
+      setServicesTab(true);
     }
   };
 
-  const [currentAuthVisitors, setCurrentAuthVisitors] = useState<Directory<VisitorDataType>>(authorizedVisitors);
+  const [currentAuthVisitors, setCurrentAuthVisitors] =
+    useState<Directory<VisitorDataType>>(authorizedVisitors);
   const [visitorsTab, setVisitorsTab] = useState<boolean>(true);
   const [servicesTab, setServicesTab] = useState<boolean>(false);
 
-  const tabs = [
-    { name: "Visitantes", type: "visitor", current: visitorsTab },
-    { name: "Servicios", type: "services", current: servicesTab },
-  ];
+  const tabs = useMemo(() => {
+    return [
+      { name: "Visitantes", type: "visitor", current: visitorsTab },
+      { name: "Servicios", type: "services", current: servicesTab },
+    ];
+  }, [visitorsTab, servicesTab]);
 
   useEffect(() => {
     tabs[0].current = visitorsTab;
     tabs[1].current = servicesTab;
-  }, [tabs, visitorsTab, servicesTab])
+  }, [tabs, visitorsTab, servicesTab]);
 
   return (
     <nav className="h-fit overflow-y-auto" aria-label="Directory">
@@ -77,7 +77,7 @@ const AuthVisitorsListResults: React.FC<{
             </div>
             <ul className="relative z-0 divide-y divide-gray-200">
               {currentAuthVisitors[letter].map((person: VisitorDataType) => (
-                <li key={JSON.stringify(person.id)} className="bg-white">
+                <li key={JSON.stringify(person.identification)} className="bg-white">
                   <div className="relative px-6 py-5 flex items-center space-x-3 hover:bg-gray-50 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500">
                     <div className="flex-shrink-0">
                       <img

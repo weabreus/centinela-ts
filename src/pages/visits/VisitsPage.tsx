@@ -15,6 +15,7 @@ import PageTitle from "../../models/PageTitle";
 import UnitShortType from "../../models/UnitShortType";
 import VisitDataType from "../../models/VisitDataType";
 import AuthContext from "../../store/auth-context";
+import { capitalizeFirstLetter } from "../../helpers";
 
 const VisitsPage: React.FC<{
   visits: VisitDataType[];
@@ -51,6 +52,7 @@ const VisitsPage: React.FC<{
           visitors: doc.data().visitors,
           entryTimestamp: doc.data().entryTimestamp,
           notes: doc.data().notes,
+          type: doc.data()?.type
         };
       });
 
@@ -92,6 +94,7 @@ const VisitsPage: React.FC<{
             visitors: doc.data().visitors,
             entryTimestamp: doc.data().entryTimestamp,
             notes: doc.data().notes,
+            type: doc.data().type
           });
         });
         setVisits(snapVisits);
@@ -141,13 +144,13 @@ const VisitsPage: React.FC<{
                   scope="col"
                   className="text-center w-3/12 px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  <span className="lg:pl-2">Nombre</span>
+                  <span className="lg:pl-2">Nombre / ID</span>
                 </th>
                 <th
                   scope="col"
                   className="text-center w-1/12 px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  <span className="lg:pl-2">ID</span>
+                  <span className="lg:pl-2">Tipo</span>
                 </th>
                 <th
                   scope="col"
@@ -189,10 +192,10 @@ const VisitsPage: React.FC<{
               {visits.map((visit) => (
                 <tr key={visit.id}>
                   <td className="text-center px-6 py-3 max-w-0 whitespace-nowrap text-sm font-medium text-gray-900">
-                    <span>{visit.visitorName}</span>
+                    <span>{visit.visitorName} ({visit?.visitorID})</span>
                   </td>
                   <td className="text-center px-6 py-3 max-w-0 whitespace-nowrap text-sm font-medium text-gray-500">
-                    <span>{visit.visitorID}</span>
+                    <span>{capitalizeFirstLetter(visit?.type)}</span>
                   </td>
                   <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
                     {moment.unix(visit.entryTimestamp.seconds).format("L")}
@@ -215,7 +218,7 @@ const VisitsPage: React.FC<{
                   </td>
                   {/* <td className="text-center px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
                     <Link to={"/editvisit/" + visit.id}>
-                      <span className="text-indigo-600 hover:text-indigo-900">
+                      <span className="text-blue-600 hover:text-blue-900">
                         Editar
                       </span>
                     </Link>
