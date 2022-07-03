@@ -14,12 +14,16 @@ const ProfileHeader: React.FC<{
 }> = ({ selectedUser }) => {
   return (
     <div>
-      <div>
-        <img
+      <div className="bg-gradient-to-r from-blue-600 to-blue-800">
+        {/* <img
           className="h-32 w-full object-cover lg:h-48"
           src={profile.coverImageUrl}
           alt=""
-        />
+        /> */}
+        <svg className="h-32 w-full object-cover lg:h-48" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 1463 360">
+              <path className="text-blue-500 text-opacity-40" fill="currentColor" d="M-82.673 72l1761.849 472.086-134.327 501.315-1761.85-472.086z"></path>
+              <path className="text-blue-700 text-opacity-40" fill="currentColor" d="M-217.088 544.086L1544.761 72l134.327 501.316-1761.849 472.086z"></path>
+            </svg>
       </div>
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5">
