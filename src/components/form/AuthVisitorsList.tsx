@@ -14,11 +14,12 @@ const AuthVisitorsList: React.FC<{
   open: boolean;
   authorizedVisitors: Directory<VisitorDataType>;
   unitResidents: ResidentInputDataType[];
+  residentName: React.RefObject<HTMLInputElement>;
   visitorName: React.RefObject<HTMLInputElement>;
   unit: React.RefObject<Select<UnitInputType>>;
   visitorID: React.RefObject<HTMLInputElement>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ open, authorizedVisitors, unitResidents, unit, visitorName, visitorID, setOpen }) => {
+}> = ({ open, authorizedVisitors, unitResidents, unit, residentName, visitorName, visitorID, setOpen }) => {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-9" onClose={() => null}>
@@ -60,6 +61,7 @@ const AuthVisitorsList: React.FC<{
                       <div className="relative mt-6 flex-1 px-4 sm:px-6">
                         <UnitInformation 
                         unitResidents={unitResidents}
+                        residentName={residentName}
                         unit={unit}
                         />
                         <AuthVisitorsListResults

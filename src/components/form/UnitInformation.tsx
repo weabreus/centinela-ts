@@ -6,8 +6,9 @@ import UnitInputType from "../../models/UnitInputType";
 
 const UnitInformation: React.FC<{
   unitResidents: ResidentInputDataType[];
+  residentName: React.RefObject<HTMLInputElement>;
   unit: React.RefObject<Select<UnitInputType>>;
-}> = ({ unitResidents, unit }) => {
+}> = ({ unitResidents, unit, residentName }) => {
   return (
     <div className="space-y-6 pb-6">
       <div>
@@ -37,7 +38,11 @@ const UnitInformation: React.FC<{
                 <div 
                 key={JSON.stringify(resident.value)}
                 className="flex justify-between py-3 text-sm font-medium">
-                  <dt className="text-gray-500">{resident.label}</dt>
+                  <dt className="text-gray-500">
+                    <button onClick={() => residentName.current!.value = resident.label}>
+                    {resident.label}
+                    </button>
+                    </dt>
                   <dd className="text-gray-900 flex inline-flex"><PhoneIcon className="h-6 w-6 pr-2"/> {resident.mobile}</dd>
                 </div>
               );

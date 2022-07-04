@@ -33,7 +33,6 @@ const VisitsPage: React.FC<{
     });
     const getVisits = async () => {
       const queryDate = new Date();
-      console.log(new Date(queryDate.setDate(queryDate.getDate() - 1)));
       const visitsCollectionRef = query(
         collection(db, "visits"),
         where("complex", "==", authCtx.complex),

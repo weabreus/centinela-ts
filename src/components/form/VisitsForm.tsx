@@ -26,6 +26,7 @@ import {
 } from "firebase/firestore";
 import db from "../../firestore/FirestoreConfig";
 import UserDataType from "../../models/UserDataType";
+import DefaultSelectInput from "./DefaultSelectInput";
 
 const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
   open,
@@ -35,6 +36,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
 
   const [errors, setErrors] = useState<FieldErrors>({});
 
+  const residentName = useRef<HTMLInputElement>(null);
   const visitorName = useRef<HTMLInputElement>(null);
   const visitorID = useRef<HTMLInputElement>(null);
   const vehicleMake = useRef<HTMLInputElement>(null);
@@ -126,6 +128,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
 
     const visitData: {
       entryTimestamp: Date;
+      residentName: string;
       visitorName: string;
       visitorID: string;
       unit: Options<UnitInputType>;
@@ -140,6 +143,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
       creator: UserDataType;
     } = {
       entryTimestamp: new Date(),
+      residentName: residentName.current!.value,
       visitorName: visitorName.current!.value,
       visitorID: visitorID.current!.value,
       unit: unit.current!.getValue(),
@@ -198,6 +202,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
         authorizedVisitors={authorizedVisitors}
         unitResidents={unitResidents}
         unit={unit}
+        residentName={residentName}
         visitorName={visitorName}
         visitorID={visitorID}
       />
@@ -270,7 +275,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                         </div>
 
                         {/* Type selection */}
-                        <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
+                        {/* <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
                           <div>
                             <label
                               htmlFor="type"
@@ -282,18 +287,45 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                           </div>
                           <div className="sm:col-span-2">
                             <select
+                              required
                               name="type"
                               id="type"
                               ref={type}
                               className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
                             >
+                              <option value=""></option>
                               <option value="visita">Visita</option>
                               <option value="servicio">Servicio</option>
                               <option value="delivery">Delivery</option>
                               <option value="otro">Otro</option>
                             </select>
+                            
                           </div>
-                        </div>
+                        </div> */}
+                        <DefaultSelectInput 
+                          inputName="type"
+                          labelText="Tipo"
+                          inputRef={type}
+                          options={
+                            [
+                              {value: "visita", label: "Visita"},
+                              {value: "servicio", label: "Servicio"},
+                              {value: "delivery", label: "Delivery"},
+                              {value: "otro", label: "Otro"},
+
+                            ]
+                          }
+                          errors={errors}
+                        />
+
+                        {/* Resident who authorized entry */}
+                        <DefaultInput
+                          inputName="residentName"
+                          labelText="Nombre del Residente"
+                          inputRef={residentName}
+                          inputType="text"
+                          errors={errors}
+                        />
 
                         {/* Visitor name input */}
                         <DefaultInput

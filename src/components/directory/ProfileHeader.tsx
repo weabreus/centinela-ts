@@ -4,22 +4,13 @@ import { Link } from "react-router-dom";
 import ResidentDataType from "../../models/ResidentDataType";
 import VisitorDataType from "../../models/VisitorDataType";
 
-let profile = {
-  coverImageUrl:
-    "https://images.unsplash.com/photo-1444628838545-ac4016a5418a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
-};
-
 const ProfileHeader: React.FC<{
   selectedUser: ResidentDataType | VisitorDataType | null;
 }> = ({ selectedUser }) => {
   return (
     <div>
+      {/* Profile top banner image */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-800">
-        {/* <img
-          className="h-32 w-full object-cover lg:h-48"
-          src={profile.coverImageUrl}
-          alt=""
-        /> */}
         <svg className="h-32 w-full object-cover lg:h-48" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 1463 360">
               <path className="text-blue-500 text-opacity-40" fill="currentColor" d="M-82.673 72l1761.849 472.086-134.327 501.315-1761.85-472.086z"></path>
               <path className="text-blue-700 text-opacity-40" fill="currentColor" d="M-217.088 544.086L1544.761 72l134.327 501.316-1761.849 472.086z"></path>

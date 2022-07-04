@@ -7,6 +7,7 @@ import UserDataType from "./UserDataType";
 export const schema = yup.object().shape({
   id: yup.string(),
   entryTimestamp: yup.date().default(() => new Date()),
+  residentName: yup.string(),
   visitorName: yup.string().required(),
   visitorID: yup.string().required(),
   unit: yup
@@ -28,12 +29,13 @@ export const schema = yup.object().shape({
   notes: yup.string(),
   visitors: yup.string(),
   complex: yup.string(),
-  type: yup.string()
+  type: yup.string().required()
 });
 
 interface VisitDataType {
   id?: string;
   entryTimestamp: Timestamp;
+  residentName?: string;
   visitorName: string;
   visitorID: string;
   unit: Options<UnitInputType>;
@@ -45,6 +47,7 @@ interface VisitDataType {
   visitors: string;
   type:  string;
   creator: UserDataType;
+  complex?: string;
 }
 
 export default VisitDataType;
