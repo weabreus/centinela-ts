@@ -7,7 +7,7 @@ class Visit {
   id?: string;
   visitor: Input[];
   vehicle: Input[];
-  unit: Options<InputType[]>;
+  unit: Options<InputType>;
   visitors: string;
   entryTimestamp: Timestamp;
   exitTimestamp?: Timestamp | undefined;
@@ -17,7 +17,7 @@ class Visit {
     idText: string,
     visitorInput: Input[],
     vehicleInput: Input[],
-    unitInput: Options<InputType[]>,
+    unitInput: Options<InputType>,
     visitorsText: string,
     entryTimestamp: Timestamp,
     exitTimestamp: Timestamp | undefined,

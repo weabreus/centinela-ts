@@ -1,20 +1,21 @@
 import { useContext, useEffect, useState } from "react";
 import Select, { Options } from "react-select";
 import InputType from "../../models/InputType";
+import ResidentInputDataType from "../../models/ResidentInputDataType";
 import AuthContext from "../../store/auth-context";
 
 
 const SelectMultipleInput: React.FC<{
   inputRef: any;
-  initial?: Options<InputType[]>;
+  initial?: Options<InputType> | Options<ResidentInputDataType>;
   getData: (
-    setOptions: React.Dispatch<React.SetStateAction<Options<InputType[]>>>,
+    setOptions: React.Dispatch<React.SetStateAction<Options<InputType>>>,
     complex: string
   ) => void;
 }> = ({ inputRef, initial, getData }) => {
 
   const authCtx = useContext(AuthContext);
-  const [options, setOptions] = useState<Options<InputType[]>>([]);
+  const [options, setOptions] = useState<Options<InputType | ResidentInputDataType>>([]);
   const [initialValue, setInitialValue] = useState(initial);
 
   useEffect(() => {

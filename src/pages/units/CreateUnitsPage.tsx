@@ -9,7 +9,9 @@ import SelectSingleInput from "../../components/form/SelectSingleInput";
 import { addUnit, getBuildingInput, getResidentPetsInput, getResidentsInput, getResidentVehiclesInput, getVisitorsInput } from "../../firestore/controllers/UnitsController";
 import InputType from "../../models/InputType";
 import PageTitle from "../../models/PageTitle";
+import ResidentInputDataType from "../../models/ResidentInputDataType";
 import UnitDataType from "../../models/UnitDataType";
+import VisitorInputDataType from "../../models/VisitorInputDataType";
 
 const CreateUnitsPage: React.FC<{
   setTitle: React.Dispatch<React.SetStateAction<PageTitle>>;
@@ -20,11 +22,11 @@ const CreateUnitsPage: React.FC<{
   const history = useHistory();
 
   const number = useRef<HTMLInputElement | null>(null);
-  const building = useRef<Select<InputType[]>>();
-  const residents = useRef<Select<InputType[]>>();
-  const vehicles = useRef<Select<InputType[]>>();
-  const visitors = useRef<Select<InputType[]>>();
-  const pets = useRef<Select<InputType[]>>();
+  const building = useRef<Select<InputType>>();
+  const residents = useRef<Select<ResidentInputDataType>>();
+  const vehicles = useRef<Select<InputType>>();
+  const visitors = useRef<Select<VisitorInputDataType>>();
+  const pets = useRef<Select<InputType>>();
 
   useEffect(() => {
     setTitle({

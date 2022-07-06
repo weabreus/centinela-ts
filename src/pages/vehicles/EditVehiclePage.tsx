@@ -34,13 +34,13 @@ const EditVehiclePage: React.FC<{
     getData();
   }, [id, setTitle]);
 
-  const complex = useRef<Select<InputType[]> | null>(null)
+  const complex = useRef<Select<InputType> | null>(null)
   const make = useRef<HTMLInputElement | null>(null);
   const model = useRef<HTMLInputElement | null>(null);
   const color = useRef<HTMLInputElement | null>(null);
   const plate = useRef<HTMLInputElement | null>(null);
   const year = useRef<HTMLInputElement | null>(null);
-  const unit = useRef<Select<InputType[]> | null>(null);
+  const unit = useRef<Select<InputType> | null>(null);
 
   const submitHandler: (event: React.SyntheticEvent) => void = async (event) => {
     event.preventDefault();

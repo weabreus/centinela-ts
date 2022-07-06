@@ -103,7 +103,7 @@ export async function getResidentsInput(setOptions, complex) {
   const options = [];
 
   collectionRef.forEach((doc) => {
-    options.push({ value: doc.id, label: doc.data().name, mobile: doc.data().contact.mobile});
+    options.push({ value: doc.id, label: doc.data().name, mobile: doc.data().contact.mobile, email: doc.data().email});
   });
 
   setOptions(options);
@@ -160,4 +160,93 @@ export async function getResidentPetsInput(setOptions, complex) {
   });
 
   setOptions(options);
+}
+
+export async function getSelectedUnit(
+  path,
+  setSelectedUnit
+) {
+  const unitSnap = await getDoc(doc(db, path));
+
+
+  if (unitSnap.exists()) {
+    let selectedUnitData = { id: unitSnap.id, path: unitSnap.ref.path, ...unitSnap.data() };
+
+    setSelectedUnit(selectedUnitData);
+
+  } else {
+    console.log("No such document exists!");
+  }
+}
+
+export async function getUnitSearchResults(
+  searchInputRef,
+  complex,
+  setDirectory,
+  setUnitCount
+) {
+  let count = 0;
+  const unitsSnap = await getDocs(
+    query(
+      collectionGroup(db, "units"),
+      where("complex", "==", complex)
+    )
+  );
+  
+  const units = unitsSnap.docs.filter((doc) => doc.data().number.includes(searchInputRef.current.value));
+
+  const newDirectory = units.reduce((acc, doc) => {
+    const firstLetter = doc.data().number.charAt(0).toUpperCase();
+
+    if (!acc[firstLetter]) {
+      acc[firstLetter] = [];
+    }
+
+    acc[firstLetter].push({ ...doc.data(), id: doc.id, path: doc.ref.path });
+    count++;
+
+    return acc;
+  }, {});
+
+  setDirectory(newDirectory);
+  setUnitCount(count);
+}
+
+export async function getUnitDirectory(
+  setDirectory,
+  setUnitCount,
+  setSelectedUnit,
+  complex
+) {
+  const newDirectory = {};
+  let count = 0;
+  let newSelectedUnit = {};
+
+  const unitsSnap = await getDocs(query(collectionGroup(db, "units"), where("complex", "==", complex)));
+
+  unitsSnap.docs.map((doc) => {
+    if (!newDirectory.hasOwnProperty(doc.data().number.charAt(0).toUpperCase())) {
+      newDirectory[doc.data().number.charAt(0).toUpperCase()] = [];
+      newDirectory[doc.data().number.charAt(0).toUpperCase()].push({
+        ...doc.data(),
+        id: doc.id,
+        path: doc.ref.path
+      });
+      count++;
+    } else {
+      newDirectory[doc.data().number.charAt(0).toUpperCase()].push({
+        ...doc.data(),
+        id: doc.id,
+        path: doc.ref.path
+      });
+      count++;
+    }
+    return doc;
+  }, []);
+
+  newSelectedUnit = newDirectory[Object.keys(newDirectory)[0]][0];
+
+  setDirectory(newDirectory);
+  setUnitCount(count);
+  setSelectedUnit(newSelectedUnit);
 }

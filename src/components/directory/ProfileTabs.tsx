@@ -1,17 +1,16 @@
+import React from "react";
 import { classNames } from "../../helpers";
 
-const tabs = [{ name: "Información", href: "", current: true }];
-
-const ProfileTabs: React.FC = () => {
+const ProfileTabs: React.FC<{tabs: {name: string, current: boolean}[], setActiveTab?: React.Dispatch<React.SetStateAction<string>>}> = ({tabs, setActiveTab}) => {
   return (
     <div className="mt-6 sm:mt-2 2xl:mt-5">
       <div className="border-b border-gray-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="-mb-px flex space-x-8" aria-label="Tabs">
             {tabs.map((tab) => (
-              <span
+              <button
                 key={tab.name}
-                // href={tab.href}
+                onClick={() => setActiveTab ? setActiveTab(tab.name): ""}
                 className={classNames(
                   tab.current
                     ? "border-blue-500 text-gray-900"
@@ -21,7 +20,7 @@ const ProfileTabs: React.FC = () => {
                 aria-current={tab.current ? "page" : undefined}
               >
                 {tab.name}
-              </span>
+              </button>
             ))}
           </nav>
         </div>

@@ -78,7 +78,11 @@ const UsersPage: React.FC<{
                 <ProfileHeader selectedUser={selectedResident} />
 
                 {/* Tabs */}
-                <ProfileTabs />
+                <ProfileTabs 
+                  tabs={
+                    [{ name: "Información", current: true }]
+                  }
+                />
 
                 {/* Profile Fields */}
                 <ProfileFields
