@@ -32,10 +32,10 @@ const AuthForm: React.FC = () => {
     let url: string;
     if (isLogin) {
       url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDkF_FmJ4wJ6InKcyi25yZgrh-vFNp67KQ";
+        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_FIREBASE_AUTH}`;
     } else {
       url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDkF_FmJ4wJ6InKcyi25yZgrh-vFNp67KQ";
+        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_AUTH}`;
     }
     fetch(url, {
       method: "POST",
