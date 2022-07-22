@@ -1,6 +1,7 @@
 import React, { LegacyRef } from "react";
 import { useHistory } from "react-router-dom";
 import { PlusIcon, SearchIcon } from "@heroicons/react/solid";
+import DirectoryType from "../../models/DirectoryTypes";
 
 
 
@@ -8,7 +9,7 @@ const DirectorySearch: React.FC<{
   userCount: number;
   searchHandler: (event: React.SyntheticEvent) => void;
   searchInputRef: LegacyRef<HTMLInputElement>;
-  directory: string;
+  directory: DirectoryType;
 }> = ({ userCount, searchHandler, searchInputRef, directory }) => {
   
   const history = useHistory();

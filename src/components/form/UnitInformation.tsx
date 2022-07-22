@@ -17,7 +17,7 @@ const UnitInformation: React.FC<{
             <h2 className="text-lg font-medium text-white">
               <span className="sr-only">Detalles para </span>
               <span className="font-bold">
-                {unit.current?.getValue().at(0)?.label}
+                {unit.current?.getValue().at(0)?.label ? unit.current?.getValue().at(0)?.label : ''}
               </span>
             </h2>
           </div>

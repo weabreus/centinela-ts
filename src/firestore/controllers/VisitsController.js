@@ -102,30 +102,32 @@ export async function setDocument(col, uid, data) {
 export function createAuthorizedVisitorDirectory(visitors, type) {
   const visitorDirectory = {};
   
-  visitors.map((visitor) => {
-    if (
-      !visitorDirectory.hasOwnProperty(visitor.label.charAt(0).toUpperCase())
-    ) {
-      if (visitor.type === type) {
-        visitorDirectory[visitor.label.charAt(0).toUpperCase()] = [];
-
-        visitorDirectory[visitor.label.charAt(0).toUpperCase()].push({
-          name: visitor.label,
-          identification: visitor.identification,
-        });
+  if (visitors !== undefined) {
+    visitors.map((visitor) => {
+      if (
+        !visitorDirectory.hasOwnProperty(visitor.label.charAt(0).toUpperCase())
+      ) {
+        if (visitor.type === type) {
+          visitorDirectory[visitor.label.charAt(0).toUpperCase()] = [
+            {
+              name: visitor.label,
+              identification: visitor.identification,
+            }
+          ];
+        }
+      } else {
+        if (visitor.type === type) {
+          visitorDirectory[visitor.label.charAt(0).toUpperCase()].push({
+            id: visitor.value,
+            name: visitor.label,
+            identification: visitor.identification,
+          });
+        }
       }
-    } else {
-      if (visitor.type === type) {
-        visitorDirectory[visitor.label.charAt(0).toUpperCase()].push({
-          id: visitor.value,
-          name: visitor.label,
-          identification: visitor.identification,
-        });
-      }
-    }
 
-    return visitor;
-  }, []);
+      return visitor;
+    }, []);
+  }
 
   return visitorDirectory;
 }

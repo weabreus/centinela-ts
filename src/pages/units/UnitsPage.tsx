@@ -21,11 +21,8 @@ const UnitsPage: React.FC<{
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const selectUnitHandler: (path: string | undefined) => void = (path) => {
-    const getUnit = async () => {
+  const selectUnitHandler: (path: string | undefined) => void = async (path) => {
       getSelectedUnit(path, setSelectedUnit);
-    };
-    getUnit();
   };
 
   const searchHandler: (event: React.SyntheticEvent) => void = (event) => {
