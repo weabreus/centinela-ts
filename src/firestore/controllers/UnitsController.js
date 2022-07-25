@@ -12,7 +12,10 @@ import {
 import db from "../FirestoreConfig";
 
 export async function getUnitsList(setOptions, complex) {
-  const units = query(collectionGroup(db, "units"), where("complex", "==", complex));
+  const units = query(
+    collectionGroup(db, "units"),
+    where("complex", "==", complex)
+  );
   const querySnapshot = await getDocs(units);
 
   const buildings = {};
@@ -78,7 +81,10 @@ export async function updateUnit(path, data) {
 }
 
 export async function getBuildingInput(setOptions, complex) {
-  const buildings = query(collectionGroup(db, "buildings"), where("complex", "==", complex));
+  const buildings = query(
+    collectionGroup(db, "buildings"),
+    where("complex", "==", complex)
+  );
   const querySnapshot = await getDocs(buildings);
 
   const options = [];
@@ -90,12 +96,14 @@ export async function getBuildingInput(setOptions, complex) {
 }
 
 export async function getResidentsInput(setOptions, complex) {
-  const collectionRef = await getDocs(query(collection(db, "residents"), where("complex", "==", complex)));
+  const collectionRef = await getDocs(
+    query(collection(db, "residents"), where("complex", "==", complex))
+  );
 
   const options = [];
 
   collectionRef.forEach((doc) => {
-    options.push({ value: doc.id, label: doc.data().name });
+    options.push({ value: doc.id, label: doc.data().name, mobile: doc.data().contact.mobile});
   });
 
   setOptions(options);
@@ -115,7 +123,7 @@ export async function getResidentVehiclesInput(setOptions, complex) {
       label: `(${doc.data().plate}) ${doc.data().make} ${doc.data().model} ${
         doc.data().year
       }`,
-      path: doc.ref.path
+      path: doc.ref.path,
     });
   });
 
@@ -123,12 +131,20 @@ export async function getResidentVehiclesInput(setOptions, complex) {
 }
 
 export async function getVisitorsInput(setOptions, complex) {
-  const collectionRef = await getDocs(query(collection(db, "visitors"), where("complex", "==", complex)));
+  const collectionRef = await getDocs(
+    query(collection(db, "visitors"), where("complex", "==", complex))
+  );
 
   const options = [];
 
   collectionRef.forEach((doc) => {
-    options.push({ value: doc.id, label: doc.data().name, path: doc.ref.path, identification: doc.data().identification });
+    options.push({
+      value: doc.id,
+      label: doc.data().name,
+      path: doc.ref.path,
+      identification: doc.data().identification,
+      type: doc.data().type
+    });
   });
 
   setOptions(options);

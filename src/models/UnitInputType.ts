@@ -1,9 +1,11 @@
-import InputType from "./InputType";
+import ResidentInputDataType from "./ResidentInputDataType";
+import VisitorInputDataType from "./VisitorInputDataType";
 
 type UnitInputType = {
     value: string;
     label: string;
-    authorizedVisitors: InputType[];
+    authorizedVisitors: VisitorInputDataType[];
+    residents: ResidentInputDataType[];
 }
 
 export default UnitInputType;
