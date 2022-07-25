@@ -1,13 +1,13 @@
 interface UserDataType {
-  address: string;
-  areacode: string;
-  country: string;
+  address?: string;
+  areacode?: string;
+  country?: string;
   email: string;
-  municipality: string;
+  municipality?: string;
   name: string;
   organization: string;
   phone: string;
-  title: string;
+  title?: string;
   role: string;
   complex: string;
 }

@@ -4,22 +4,17 @@ import { Link } from "react-router-dom";
 import ResidentDataType from "../../models/ResidentDataType";
 import VisitorDataType from "../../models/VisitorDataType";
 
-let profile = {
-  coverImageUrl:
-    "https://images.unsplash.com/photo-1444628838545-ac4016a5418a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
-};
-
 const ProfileHeader: React.FC<{
   selectedUser: ResidentDataType | VisitorDataType | null;
 }> = ({ selectedUser }) => {
   return (
     <div>
-      <div>
-        <img
-          className="h-32 w-full object-cover lg:h-48"
-          src={profile.coverImageUrl}
-          alt=""
-        />
+      {/* Profile top banner image */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-800">
+        <svg className="h-32 w-full object-cover lg:h-48" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 1463 360">
+              <path className="text-blue-500 text-opacity-40" fill="currentColor" d="M-82.673 72l1761.849 472.086-134.327 501.315-1761.85-472.086z"></path>
+              <path className="text-blue-700 text-opacity-40" fill="currentColor" d="M-217.088 544.086L1544.761 72l134.327 501.316-1761.849 472.086z"></path>
+            </svg>
       </div>
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5">
@@ -47,7 +42,7 @@ const ProfileHeader: React.FC<{
                   className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   <PencilAltIcon
-                    className="-ml-1 mr-2 h-5 w-5 text-gray-400"
+                    className="-ml-1 mr-2 h-5 w-5 text-white"
                     aria-hidden="true"
                   />
                   Editar

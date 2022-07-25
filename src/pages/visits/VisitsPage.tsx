@@ -33,11 +33,14 @@ const VisitsPage: React.FC<{
     });
     const getVisits = async () => {
       const queryDate = new Date();
-      console.log(new Date(queryDate.setDate(queryDate.getDate() - 1)))
       const visitsCollectionRef = query(
         collection(db, "visits"),
         where("complex", "==", authCtx.complex),
-        where("entryTimestamp", ">=", new Date(queryDate.setDate(queryDate.getDate() - 1))),
+        where(
+          "entryTimestamp",
+          ">=",
+          new Date(queryDate.setDate(queryDate.getDate() - 1))
+        ),
         orderBy("entryTimestamp", "desc")
       );
       const data = await getDocs(visitsCollectionRef);
@@ -54,7 +57,8 @@ const VisitsPage: React.FC<{
           visitors: doc.data().visitors,
           entryTimestamp: doc.data().entryTimestamp,
           notes: doc.data().notes,
-          type: doc.data()?.type
+          type: doc.data()?.type,
+          creator: doc.data()?.creator,
         };
       });
 
@@ -80,7 +84,11 @@ const VisitsPage: React.FC<{
       query(
         collection(db, "visits"),
         where("complex", "==", authCtx.complex),
-        where("entryTimestamp", ">=", new Date(queryDate.setDate(queryDate.getDate() - 1))),
+        where(
+          "entryTimestamp",
+          ">=",
+          new Date(queryDate.setDate(queryDate.getDate() - 1))
+        ),
         orderBy("entryTimestamp", "desc")
       ),
       (snap) => {
@@ -98,7 +106,8 @@ const VisitsPage: React.FC<{
             visitors: doc.data().visitors,
             entryTimestamp: doc.data().entryTimestamp,
             notes: doc.data().notes,
-            type: doc.data().type
+            type: doc.data().type,
+            creator: doc.data().creator,
           });
         });
         setVisits(snapVisits);
@@ -160,13 +169,7 @@ const VisitsPage: React.FC<{
                   scope="col"
                   className="text-center w-3/12 px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  <span className="lg:pl-2">Fecha</span>
-                </th>
-                <th
-                  scope="col"
-                  className="text-center w-1/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  H. Entrada
+                  <span className="lg:pl-2">Fecha / Hora</span>
                 </th>
                 <th
                   scope="col"
@@ -188,25 +191,28 @@ const VisitsPage: React.FC<{
                 </th>
                 <th
                   scope="col"
-                  className="text-center w-1/12 pr-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
-                />
+                  className="text-center w-1/12 hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-xxs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Agente
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
               {visits.map((visit) => (
                 <tr key={visit.id}>
                   <td className="text-center px-6 py-3 max-w-0 whitespace-nowrap text-sm font-medium text-gray-900">
-                    <span>{visit.visitorName} ({visit?.visitorID})</span>
+                    <span>
+                      {visit.visitorName} ({visit?.visitorID})
+                    </span>
                   </td>
                   <td className="text-center px-6 py-3 max-w-0 whitespace-nowrap text-sm font-medium text-gray-500">
                     <span>{capitalizeFirstLetter(visit?.type)}</span>
                   </td>
                   <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
-                    {moment.unix(visit.entryTimestamp.seconds).format("L")}
-                  </td>
-                  <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
+                    {moment.unix(visit.entryTimestamp.seconds).format("L")}{" "}
                     {moment.unix(visit.entryTimestamp.seconds).format("LT")}
                   </td>
+
                   <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
                     {
                       // @ts-ignore
@@ -219,6 +225,9 @@ const VisitsPage: React.FC<{
                   </td>
                   <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
                     {visit.visitors}
+                  </td>
+                  <td className="text-center hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500">
+                    {visit?.creator?.name}
                   </td>
                   {/* <td className="text-center px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
                     <Link to={"/editvisit/" + visit.id}>

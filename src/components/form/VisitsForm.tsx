@@ -18,6 +18,15 @@ import FieldErrors from "../../models/FieldErrors";
 import DefaultInput from "./DefaultInput";
 import AuthContext from "../../store/auth-context";
 import ResidentInputDataType from "../../models/ResidentInputDataType";
+import {
+  doc,
+  DocumentData,
+  DocumentReference,
+  getDoc,
+} from "firebase/firestore";
+import db from "../../firestore/FirestoreConfig";
+import UserDataType from "../../models/UserDataType";
+import DefaultSelectInput from "./DefaultSelectInput";
 
 const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
   open,
@@ -27,6 +36,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
 
   const [errors, setErrors] = useState<FieldErrors>({});
 
+  const residentName = useRef<HTMLInputElement>(null);
   const visitorName = useRef<HTMLInputElement>(null);
   const visitorID = useRef<HTMLInputElement>(null);
   const vehicleMake = useRef<HTMLInputElement>(null);
@@ -85,11 +95,40 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
     }
   };
 
-  function submitHandler(event: React.SyntheticEvent) {
+  async function submitHandler(event: React.SyntheticEvent) {
     event.preventDefault();
+    const userRef: DocumentReference<DocumentData> = doc(
+      db,
+      "users",
+      authCtx.id
+    );
+
+    const userData = await getDoc(userRef).then((doc) => {
+      if (!doc.exists) {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      } else {
+        const user: UserDataType = {
+          address: doc.data()?.address,
+          areacode: doc.data()?.areacode,
+          country: doc.data()?.country,
+          email: doc.data()?.email,
+          municipality: doc.data()?.municipality,
+          name: doc.data()?.name,
+          organization: doc.data()?.organization,
+          phone: doc.data()?.phone,
+          title: doc.data()?.title,
+          role: doc.data()?.role,
+          complex: doc.data()?.complex,
+        };
+
+        return user;
+      }
+    });
 
     const visitData: {
       entryTimestamp: Date;
+      residentName: string;
       visitorName: string;
       visitorID: string;
       unit: Options<UnitInputType>;
@@ -101,8 +140,10 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
       visitors: string;
       complex: string;
       type: string;
+      creator: UserDataType;
     } = {
       entryTimestamp: new Date(),
+      residentName: residentName.current!.value,
       visitorName: visitorName.current!.value,
       visitorID: visitorID.current!.value,
       unit: unit.current!.getValue(),
@@ -113,7 +154,8 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
       notes: notes.current!.value,
       visitors: quantity.current!.value,
       complex: authCtx.complex,
-      type: type.current!.value
+      type: type.current!.value,
+      creator: userData!,
     };
 
     schema
@@ -160,6 +202,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
         authorizedVisitors={authorizedVisitors}
         unitResidents={unitResidents}
         unit={unit}
+        residentName={residentName}
         visitorName={visitorName}
         visitorID={visitorID}
       />
@@ -232,7 +275,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                         </div>
 
                         {/* Type selection */}
-                        <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
+                        {/* <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
                           <div>
                             <label
                               htmlFor="type"
@@ -244,18 +287,45 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                           </div>
                           <div className="sm:col-span-2">
                             <select
+                              required
                               name="type"
                               id="type"
                               ref={type}
                               className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
                             >
+                              <option value=""></option>
                               <option value="visita">Visita</option>
                               <option value="servicio">Servicio</option>
                               <option value="delivery">Delivery</option>
                               <option value="otro">Otro</option>
                             </select>
+                            
                           </div>
-                        </div>
+                        </div> */}
+                        <DefaultSelectInput 
+                          inputName="type"
+                          labelText="Tipo"
+                          inputRef={type}
+                          options={
+                            [
+                              {value: "visita", label: "Visita"},
+                              {value: "servicio", label: "Servicio"},
+                              {value: "delivery", label: "Delivery"},
+                              {value: "otro", label: "Otro"},
+
+                            ]
+                          }
+                          errors={errors}
+                        />
+
+                        {/* Resident who authorized entry */}
+                        <DefaultInput
+                          inputName="residentName"
+                          labelText="Nombre del Residente"
+                          inputRef={residentName}
+                          inputType="text"
+                          errors={errors}
+                        />
 
                         {/* Visitor name input */}
                         <DefaultInput
