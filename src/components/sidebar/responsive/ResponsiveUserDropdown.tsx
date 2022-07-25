@@ -45,86 +45,87 @@ const ResponsiveUserDropdown: React.FC = () => {
           <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200 focus:outline-none">
             <div className="py-1">
               <Menu.Item>
+                {/* @ts-ignore */}
                 {({ active }) => (
-                  <a
-                    href="#"
+                  <span
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                       "block px-4 py-2 text-sm"
                     )}
                   >
                     Ver perfil
-                  </a>
+                  </span>
                 )}
               </Menu.Item>
               <Menu.Item>
+                {/* @ts-ignore */}
                 {({ active }) => (
-                  <a
-                    href="#"
+                  <span
+                    
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                       "block px-4 py-2 text-sm"
                     )}
                   >
                     Ajustes
-                  </a>
+                  </span>
                 )}
               </Menu.Item>
               <Menu.Item>
+                {/* @ts-ignore */}
                 {({ active }) => (
-                  <a
-                    href="#"
+                  <span
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                       "block px-4 py-2 text-sm"
                     )}
                   >
                     Notificaciones
-                  </a>
+                  </span>
                 )}
               </Menu.Item>
             </div>
             <div className="py-1">
               <Menu.Item>
+                {/* @ts-ignore */}
                 {({ active }) => (
-                  <a
-                    href="#"
+                  <span
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                       "block px-4 py-2 text-sm"
                     )}
                   >
                     App Escritorio
-                  </a>
+                  </span>
                 )}
               </Menu.Item>
               <Menu.Item>
+                {/* @ts-ignore */}
                 {({ active }) => (
-                  <a
-                    href="#"
+                  <span
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                       "block px-4 py-2 text-sm"
                     )}
                   >
                     Ayuda
-                  </a>
+                  </span>
                 )}
               </Menu.Item>
             </div>
             <div className="py-1">
               <Menu.Item>
+                {/* @ts-ignore */}
                 {({ active }) => (
-                  <a
+                  <span
                     onClick={logoutHandler}
-                    href="#"
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                       "block px-4 py-2 text-sm"
                     )}
                   >
                     Logout
-                  </a>
+                  </span>
                 )}
               </Menu.Item>
             </div>

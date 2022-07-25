@@ -1,4 +1,4 @@
-import React, { cloneElement } from "react";
+import React from "react";
 import AuthContext from "../store/auth-context";
 import { PERMISSIONS } from "./permission-maps";
 import useGetRole from "./useGetRole";

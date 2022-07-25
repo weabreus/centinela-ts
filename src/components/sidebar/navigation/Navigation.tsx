@@ -6,19 +6,12 @@ import {
   TruckIcon,
   UserGroupIcon,
 } from "@heroicons/react/outline";
-import { useContext } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import PermissionsGate from "../../../permissions/PermissionGate";
-import AuthContext from "../../../store/auth-context";
 import NavLink from "./NavLink";
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 const Navigation: React.FC = () => {
   const location = useLocation();
-  const authCtx = useContext(AuthContext);
 
   return (
     <nav className="px-3 mt-6">
