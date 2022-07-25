@@ -1,4 +1,4 @@
-import { HomeIcon } from "@heroicons/react/outline";
+import { HomeIcon, PhoneIcon } from "@heroicons/react/outline";
 import React from "react";
 import Select from "react-select/dist/declarations/src/Select";
 import ResidentInputDataType from "../../models/ResidentInputDataType";
@@ -38,7 +38,7 @@ const UnitInformation: React.FC<{
                 key={JSON.stringify(resident.value)}
                 className="flex justify-between py-3 text-sm font-medium">
                   <dt className="text-gray-500">{resident.label}</dt>
-                  <dd className="text-gray-900">{resident.mobile}</dd>
+                  <dd className="text-gray-900 flex inline-flex"><PhoneIcon className="h-6 w-6 pr-2"/> {resident.mobile}</dd>
                 </div>
               );
             })}

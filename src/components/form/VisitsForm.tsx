@@ -29,7 +29,9 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
 
   const visitorName = useRef<HTMLInputElement>(null);
   const visitorID = useRef<HTMLInputElement>(null);
+  const vehicleMake = useRef<HTMLInputElement>(null);
   const vehicleModel = useRef<HTMLInputElement>(null);
+  const vehicleColor = useRef<HTMLInputElement>(null);
   const vehiclePlate = useRef<HTMLInputElement>(null);
   const unit = useRef<Select<UnitInputType>>(null);
   const quantity = useRef<HTMLInputElement>(null);
@@ -91,7 +93,9 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
       visitorName: string;
       visitorID: string;
       unit: Options<UnitInputType>;
+      vehicleMake: string;
       vehicleModel: string;
+      vehicleColor: string;
       vehiclePlate: string;
       notes: string;
       visitors: string;
@@ -102,7 +106,9 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
       visitorName: visitorName.current!.value,
       visitorID: visitorID.current!.value,
       unit: unit.current!.getValue(),
+      vehicleMake: vehicleMake.current!.value,
       vehicleModel: vehicleModel.current!.value,
+      vehicleColor: vehicleColor.current!.value,
       vehiclePlate: vehiclePlate.current!.value,
       notes: notes.current!.value,
       visitors: quantity.current!.value,
@@ -250,6 +256,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                             </select>
                           </div>
                         </div>
+
                         {/* Visitor name input */}
                         <DefaultInput
                           inputName="visitorName"
@@ -268,11 +275,29 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                           errors={errors}
                         />
 
+                        {/* Vehicle make input */}
+                        <DefaultInput
+                          inputName="vehicleMake"
+                          labelText="Marca del Vehiculo"
+                          inputRef={vehicleMake}
+                          inputType="text"
+                          errors={errors}
+                        />
+
                         {/* Vehicle model input */}
                         <DefaultInput
                           inputName="vehicleModel"
-                          labelText="Vehiculo"
+                          labelText="Modelo del Vehiculo"
                           inputRef={vehicleModel}
+                          inputType="text"
+                          errors={errors}
+                        />
+
+                        {/* Vehicle color input */}
+                        <DefaultInput
+                          inputName="vehicleColor"
+                          labelText="Color del Vehiculo"
+                          inputRef={vehicleColor}
                           inputType="text"
                           errors={errors}
                         />

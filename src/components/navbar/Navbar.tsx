@@ -53,7 +53,9 @@ const Navbar: React.FC<{
         id: doc.id,
         visitorName: doc.data().visitorName,
         visitorID: doc.data().visitorID,
+        vehicleMake: doc.data().vehicleMake,
         vehicleModel: doc.data().vehicleModel,
+        vehicleColor: doc.data().vehicleColor,
         vehiclePlate: doc.data().vehiclePlate,
         unit: doc.data().unit,
         visitors: doc.data().visitors,
@@ -77,7 +79,7 @@ const Navbar: React.FC<{
 
     if (vehicleRef.current?.value !== "") {
       options = options.filter((visit) =>
-        (visit.vehicleModel.toLowerCase().includes(vehicleRef.current!.value.toLowerCase()) || visit.vehiclePlate.toLowerCase().includes(vehicleRef.current!.value.toLowerCase()))
+        (visit.vehicleMake.toLowerCase().includes(vehicleRef.current!.value.toLowerCase()) || visit.vehiclePlate.toLowerCase().includes(vehicleRef.current!.value.toLowerCase()))
       );
     }
 

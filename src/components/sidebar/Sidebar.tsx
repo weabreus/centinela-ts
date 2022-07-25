@@ -17,10 +17,10 @@ const Sidebar: React.FC<{
       />
 
       {/* Static sidebar for desktop */}
-      <div className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:border-r lg:border-gray-200 lg:pt-5 lg:pb-4 lg:bg-gray-100">
+      <div className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:border-r lg:border-gray-200 lg:pt-2 lg:pb-2 lg:bg-gray-100">
         <Logo />
         {/* Sidebar component, swap this element with another sidebar if you like */}
-        <div className="mt-6 h-0 flex-1 flex flex-col overflow-y-auto">
+        <div className=" h-0 flex-1 flex flex-col overflow-y-auto">
           {/* User account dropdown */}
           <UserDropdown />
           {/* Sidebar Search */}

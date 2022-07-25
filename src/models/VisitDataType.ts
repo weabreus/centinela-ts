@@ -20,7 +20,9 @@ export const schema = yup.object().shape({
           value: yup.string(),
         })
     ),
+  vehicleMake: yup.string().required(),
   vehicleModel: yup.string().required(),
+  vehicleColor: yup.string().required(),
   vehiclePlate: yup.string().required(),
   notes: yup.string(),
   visitors: yup.string(),
@@ -34,7 +36,9 @@ interface VisitDataType {
   visitorName: string;
   visitorID: string;
   unit: Options<UnitInputType>;
+  vehicleMake: string;
   vehicleModel: string;
+  vehicleColor: string;
   vehiclePlate: string;
   notes: string;
   visitors: string;
