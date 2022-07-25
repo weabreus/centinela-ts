@@ -100,7 +100,7 @@ const VisitsFilter: React.FC<{
                       type="text"
                       name="unit-filter"
                       id="unit-filter"
-                      className="ml-6 focus:ring-indigo-500 focus:border-indigo-500 block pl-4 sm:pl-4 sm:text-sm border-gray-300 rounded-md"
+                      className="ml-6 focus:ring-blue-500 focus:border-blue-500 block pl-4 sm:pl-4 sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
                   {/* End Unit range filter */}
@@ -119,7 +119,7 @@ const VisitsFilter: React.FC<{
                       type="text"
                       name="visitor-filter"
                       id="visitor-filter"
-                      className="ml-6 focus:ring-indigo-500 focus:border-indigo-500 block pl-4 sm:pl-4 sm:text-sm border-gray-300 rounded-md"
+                      className="ml-6 focus:ring-blue-500 focus:border-blue-500 block pl-4 sm:pl-4 sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
                   {/* End Visitor range filter */}
@@ -138,7 +138,7 @@ const VisitsFilter: React.FC<{
                       type="text"
                       name="vehicle-filter"
                       id="vehicle-filter"
-                      className="ml-6 focus:ring-indigo-500 focus:border-indigo-500 block pl-4 sm:pl-4 sm:text-sm border-gray-300 rounded-md"
+                      className="ml-6 focus:ring-blue-500 focus:border-blue-500 block pl-4 sm:pl-4 sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
                   {/* End Vehicle range filter */}

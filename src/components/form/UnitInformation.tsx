@@ -1,9 +1,7 @@
 import { HomeIcon } from "@heroicons/react/outline";
-import { PencilIcon, PlusSmIcon } from "@heroicons/react/solid";
-import React, { cloneElement } from "react";
+import React from "react";
 import Select from "react-select/dist/declarations/src/Select";
 import ResidentInputDataType from "../../models/ResidentInputDataType";
-import UnitDataType from "../../models/UnitDataType";
 import UnitInputType from "../../models/UnitInputType";
 
 const UnitInformation: React.FC<{
@@ -13,7 +11,7 @@ const UnitInformation: React.FC<{
   return (
     <div className="space-y-6 pb-6">
       <div>
-        <div className="mt-4 flex items-start justify-between w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <div className="mt-4 flex items-start justify-between w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
           <div>
             <h2 className="text-lg font-medium text-white">
               <span className="sr-only">Detalles para </span>
@@ -36,7 +34,9 @@ const UnitInformation: React.FC<{
             .at(0)
             ?.residents.map((resident) => {
               return (
-                <div className="flex justify-between py-3 text-sm font-medium">
+                <div 
+                key={JSON.stringify(resident.value)}
+                className="flex justify-between py-3 text-sm font-medium">
                   <dt className="text-gray-500">{resident.label}</dt>
                   <dd className="text-gray-900">{resident.mobile}</dd>
                 </div>

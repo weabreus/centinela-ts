@@ -11,17 +11,6 @@ import { addVisitor } from "../../firestore/controllers/VisitorsController";
 import SelectSingleInput from "../../components/form/SelectSingleInput";
 import { getComplexesInput } from "../../firestore/controllers/BuildingsController";
 
-const visitorsTypes = [
-  {
-    value: "visitor",
-    label: "Visitante",
-  },
-  {
-    value: "services",
-    label: "Servicios",
-  },
-];
-
 const CreateVisitorPage: React.FC<{
   setTitle: React.Dispatch<React.SetStateAction<PageTitle>>;
 }> = ({ setTitle }) => {
@@ -38,7 +27,7 @@ const CreateVisitorPage: React.FC<{
       name: nameRef.current!.value,
       identification: idRef.current!.value,
       complexInput: complex.current?.getValue(),
-      type: type.current!.value
+      type: type.current!.value,
     };
 
     addVisitor(visitorData);
@@ -82,7 +71,7 @@ const CreateVisitorPage: React.FC<{
                   </span>
                   <button
                     type="button"
-                    className="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
                     Cambiar
                   </button>
@@ -130,7 +119,7 @@ const CreateVisitorPage: React.FC<{
                     name="name"
                     id="name"
                     autoComplete="given-name"
-                    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
                 </div>
               </div>
@@ -149,7 +138,7 @@ const CreateVisitorPage: React.FC<{
                     name="identification"
                     type="text"
                     autoComplete="identification"
-                    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
                 </div>
               </div>
@@ -162,7 +151,12 @@ const CreateVisitorPage: React.FC<{
                   Tipo
                 </label>
                 <div className="mt-1">
-                  <select name="type" id="type" ref={type}>
+                  <select
+                    name="type"
+                    id="type"
+                    ref={type}
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  >
                     <option value="visitor">Visitante</option>
                     <option value="services">Servicios</option>
                   </select>
@@ -177,13 +171,13 @@ const CreateVisitorPage: React.FC<{
             <button
               onClick={() => history.push("/visitors")}
               type="button"
-              className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Guardar
             </button>

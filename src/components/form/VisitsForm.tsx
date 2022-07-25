@@ -8,7 +8,6 @@ import {
   getUnits,
 } from "../../firestore/controllers/VisitsController";
 import AuthVisitorsList from "./AuthVisitorsList";
-import UnitDataType from "../../models/UnitDataType";
 import SelectUnitInput from "./SelectUnitInput";
 import { ActionMeta, Options, SingleValue } from "react-select";
 import UnitInputType from "../../models/UnitInputType";
@@ -24,7 +23,6 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
   open,
   setOpen,
 }) => {
-
   const authCtx = useContext(AuthContext);
 
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -36,12 +34,15 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
   const unit = useRef<Select<UnitInputType>>(null);
   const quantity = useRef<HTMLInputElement>(null);
   const notes = useRef<HTMLTextAreaElement>(null);
+  const type = useRef<HTMLSelectElement>(null);
 
   const [openAuthList, setOpenAuthList] = useState<boolean>(false);
   const [authorizedVisitors, setAuthorizedVisitors] = useState<
     Directory<VisitorDataType>
   >({});
-  const [unitResidents, setUnitResidents] = useState<ResidentInputDataType[]>([]);
+  const [unitResidents, setUnitResidents] = useState<ResidentInputDataType[]>(
+    []
+  );
 
   const changeUnitHandler = (
     newValue: SingleValue<UnitInputType>,
@@ -54,16 +55,16 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
           "visitor"
         );
 
-        const residents = newValue?.residents
+        const residents = newValue?.residents;
 
         setAuthorizedVisitors(directory);
-        setUnitResidents(residents!)
+        setUnitResidents(residents!);
         setOpenAuthList(true);
       } else {
-        const residents = newValue?.residents
+        const residents = newValue?.residents;
 
         setAuthorizedVisitors({});
-        setUnitResidents(residents!)
+        setUnitResidents(residents!);
         setOpenAuthList(false);
       }
     } else {
@@ -73,10 +74,10 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
           "visitor"
         );
 
-        const residents = newValue?.residents
+        const residents = newValue?.residents;
 
         setAuthorizedVisitors(directory);
-        setUnitResidents(residents!)
+        setUnitResidents(residents!);
         setOpenAuthList(true);
       }
     }
@@ -95,6 +96,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
       notes: string;
       visitors: string;
       complex: string;
+      type: string;
     } = {
       entryTimestamp: new Date(),
       visitorName: visitorName.current!.value,
@@ -104,7 +106,8 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
       vehiclePlate: vehiclePlate.current!.value,
       notes: notes.current!.value,
       visitors: quantity.current!.value,
-      complex: authCtx.complex
+      complex: authCtx.complex,
+      type: type.current!.value
     };
 
     schema
@@ -222,6 +225,31 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                           </div>
                         </div>
 
+                        {/* Type selection */}
+                        <div className="space-y-1 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
+                          <div>
+                            <label
+                              htmlFor="type"
+                              className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
+                            >
+                              {" "}
+                              Tipo{" "}
+                            </label>
+                          </div>
+                          <div className="sm:col-span-2">
+                            <select
+                              name="type"
+                              id="type"
+                              ref={type}
+                              className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                            >
+                              <option value="visita">Visita</option>
+                              <option value="servicio">Servicio</option>
+                              <option value="delivery">Delivery</option>
+                              <option value="otro">Otro</option>
+                            </select>
+                          </div>
+                        </div>
                         {/* Visitor name input */}
                         <DefaultInput
                           inputName="visitorName"
@@ -283,7 +311,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                               id="notes"
                               name="notes"
                               rows={3}
-                              className="block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              className="block w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                               ref={notes}
                               defaultValue={""}
                             />
@@ -297,7 +325,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                       <div className="flex justify-end space-x-3">
                         <button
                           type="button"
-                          className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                           onClick={() => {
                             setOpenAuthList(false);
                             setOpen(false);
@@ -307,7 +335,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                         </button>
                         <button
                           type="submit"
-                          className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                           onClick={submitHandler}
                         >
                           Crear

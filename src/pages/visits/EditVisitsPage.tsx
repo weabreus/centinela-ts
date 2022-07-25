@@ -157,7 +157,7 @@ const EditVisitsPage: React.FC<{
                     type="number"
                     name="quantity"
                     id="quantity"
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                     ref={quantity}
                   />
                 </div>
@@ -188,7 +188,7 @@ const EditVisitsPage: React.FC<{
                     type="datetime-local"
                     name="entry"
                     id="entry"
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                     defaultValue={
                       visit
                         ? moment
@@ -213,7 +213,7 @@ const EditVisitsPage: React.FC<{
                     type="datetime-local"
                     name="exit"
                     id="exit"
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                     defaultValue={
                       (visit && visit.exitTimestamp) ? moment
                             .unix(visit?.exitTimestamp.seconds)
@@ -237,7 +237,7 @@ const EditVisitsPage: React.FC<{
                     id="notes"
                     name="notes"
                     rows={3}
-                    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border border-gray-300 rounded-md"
                     defaultValue={visit?.notes}
                   />
                 </div>
@@ -251,7 +251,7 @@ const EditVisitsPage: React.FC<{
             <Link to="/">
               <button
                 type="button"
-                className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 Cancelar
               </button>
@@ -260,7 +260,7 @@ const EditVisitsPage: React.FC<{
             <button
               onClick={submitHandler}
               type="submit"
-              className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Guardar
             </button>
