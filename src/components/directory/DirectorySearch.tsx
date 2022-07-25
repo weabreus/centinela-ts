@@ -1,6 +1,7 @@
 import React, { LegacyRef } from "react";
 import { useHistory } from "react-router-dom";
 import { PlusIcon, SearchIcon } from "@heroicons/react/solid";
+import DirectoryType from "../../models/DirectoryTypes";
 
 
 
@@ -8,7 +9,7 @@ const DirectorySearch: React.FC<{
   userCount: number;
   searchHandler: (event: React.SyntheticEvent) => void;
   searchInputRef: LegacyRef<HTMLInputElement>;
-  directory: string;
+  directory: DirectoryType;
 }> = ({ userCount, searchHandler, searchInputRef, directory }) => {
   
   const history = useHistory();
@@ -41,10 +42,16 @@ const DirectorySearch: React.FC<{
           </div>
         </form>
         <button
-          onClick={() =>
-            directory === "visitantes"
-              ? history.push("/createvisitor")
-              : history.push("/createresident")
+          onClick={() => {
+            if (directory === "visitantes") {
+              return history.push("/createvisitor");
+            } else if (directory === "residentes") {
+              return history.push("/createresident");
+            } else {
+              return history.push("/createunit");
+            }
+          }
+            
           }
           type="submit"
           className="inline-flex justify-center px-3.5 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"

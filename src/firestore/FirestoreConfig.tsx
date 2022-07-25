@@ -4,7 +4,7 @@ import { Firestore, getFirestore } from "firebase/firestore";
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://firebase.google.com/docs/web/learn-more#config-object
 const firebaseConfig = {
-    apiKey: "AIzaSyDkF_FmJ4wJ6InKcyi25yZgrh-vFNp67KQ",
+    apiKey: process.env.REACT_APP_FIREBASE_AUTH,
     authDomain: "centinela-a4253.firebaseapp.com",
     projectId: "centinela-a4253",
     storageBucket: "centinela-a4253.appspot.com",

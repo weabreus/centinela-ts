@@ -19,7 +19,7 @@ const EditBuildingsPage: React.FC<{
   let { id } = useParams<{ id: string }>();
 
   const [building, setBuilding] = useState<BuildingsShortType | null>(null);
-  const [complex, setComplex] = useState<Options<InputType[]> | undefined>();
+  const [complex, setComplex] = useState<Options<InputType> | undefined>();
 
   const history = useHistory();
 

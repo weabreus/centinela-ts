@@ -8,9 +8,9 @@ interface VehiclesDataType {
   model: string;
   plate: string;
   year: string;
-  visitor?: Options<InputType[]>;
-  unit?: Options<InputType[]>;
-  complexInput?: Options<InputType[]>;
+  visitor?: Options<InputType>;
+  unit?: Options<InputType>;
+  complexInput?: Options<InputType>;
   complex?: string;
 }
 

@@ -3,9 +3,9 @@ export function classNames(...classes) {
 }
 
 export function range(start, end, step) {
-  var range = [];
-  var typeofStart = typeof start;
-  var typeofEnd = typeof end;
+  const range = [];
+  const typeofStart = typeof start;
+  const typeofEnd = typeof end;
 
   if (step === 0) {
     throw TypeError("Step cannot be zero.");
@@ -46,15 +46,6 @@ export function range(start, end, step) {
 
   return range;
 }
-
-export const hasPermission = ({ permissions, scopes }) => {
-  const scopesMap = {};
-  scopes.forEach((scope) => {
-    scopesMap[scope] = true;
-  });
-
-  return permissions.some((permission) => scopesMap[permission]);
-};
 
 export const capitalizeFirstLetter = (string) => {
   if (string) {

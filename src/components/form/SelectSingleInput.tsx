@@ -5,10 +5,10 @@ import AuthContext from "../../store/auth-context";
 
 const SelectSingleInput: React.FC<{
   inputRef: any;
-  initial?: Options<InputType[]>;
-  options?: Options<InputType[]>;
+  initial?: Options<InputType>;
+  options?: Options<InputType>;
   getData: (
-    setOptions: React.Dispatch<React.SetStateAction<Options<InputType[]>>>,
+    setOptions: React.Dispatch<React.SetStateAction<Options<InputType>>>,
     complex: string
   ) => void;
   isDisabled?: boolean;
@@ -16,7 +16,7 @@ const SelectSingleInput: React.FC<{
 
   const authCtx = useContext(AuthContext);
 
-  const [options, setOptions] = useState<Options<InputType[]>>([]);
+  const [options, setOptions] = useState<Options<InputType>>([]);
   const [initialValue, setInitialValue] = useState(initial);
 
   useEffect(() => {
