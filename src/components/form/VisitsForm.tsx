@@ -321,7 +321,7 @@ const VisitsForm: React.FC<{ open: any; setOpen: any }> = ({
                         {/* Resident who authorized entry */}
                         <DefaultInput
                           inputName="residentName"
-                          labelText="Nombre del Residente"
+                          labelText="Autorizado por"
                           inputRef={residentName}
                           inputType="text"
                           errors={errors}
